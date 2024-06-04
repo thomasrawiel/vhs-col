@@ -1,0 +1,16 @@
+plugin.tx_vhscol {
+    settings {
+        viewHelpers {
+            image.svg {
+                # cat=VHS-Col/viewHelpers/a; type=string; label=Default path to svg directory
+                defaultPath = EXT:lin_vhs/Resources/Public/Dist/Images/
+                # cat=VHS-Col/viewHelpers/b; type=string; label=Theme path to svg directory
+                themePath = EXT:lin_vhs/Resources/Public/Dist/Images/
+            }
+            lazySizesImage {
+                # cat=VHS-Col/viewHelpers/c; type=string; label=lazy image sizes default sizes
+                defaultSizes = 375,768,1024,1920
+            }
+        }
+    }
+}

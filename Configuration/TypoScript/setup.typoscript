@@ -1,0 +1,24 @@
+plugin.tx_vhscol.settings {
+    maxGalleryWidth {
+        #default config for all elements
+        default {
+            #element colPos
+            default {
+                maxW = {$styles.content.textmedia.maxW}
+                maxWInText = {$styles.content.textmedia.maxWInText}
+            }
+        }
+    }
+
+    viewHelpers {
+        image.svg {
+            defaultPath = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.defaultPath}
+            themePath = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.themePath}
+        }
+        lazySizesImage {
+            defaultSizes = {$plugin.tx_vhscol.settings.viewHelpers.lazySizesImage.defaultSizes}
+        }
+    }
+}
+
+@import 'EXT:lin_vhs/Configuration/TypoScript/Setup/lib.contentElement.typoscript'

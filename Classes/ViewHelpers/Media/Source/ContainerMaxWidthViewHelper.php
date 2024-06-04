@@ -1,0 +1,56 @@
+<?php
+
+namespace TRAW\Vhscol\ViewHelpers\Media\Source;
+
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+
+/**
+ * ViewHelper to determine the maximum image width for container column
+ */
+class ContainerMaxWidthViewHelper extends AbstractViewHelper
+{
+    /**
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('width', 'integer', 'Width of image to apply the math');
+        $this->registerArgument('settings', 'array', 'Settings');
+    }
+
+    /**
+     * @return int
+     */
+    public function render(): int
+    {
+        $width = $this->arguments['width'];
+        $settings = $this->arguments['settings'];
+        $parentContainerUid = $this->renderingContext->getVariableProvider()->getByPath('data.tx_container_parent');
+
+        if ($parentContainerUid > 0) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+            $containerCType = $queryBuilder->select('CType')
+                ->from('tt_content')
+                ->where($queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter($parentContainerUid, \PDO::PARAM_INT)
+                ))->execute()->fetchOne();
+            if (!empty($containerCType)) {
+                $parentContainerColPos = $this->renderingContext->getVariableProvider()->getByPath('data.colPos');
+                $factor = (
+                    is_array($settings[$containerCType . '.']) &&
+                    array_key_exists($parentContainerColPos, $settings[$containerCType . '.']) ?
+                        $settings[$containerCType . '.'][$parentContainerColPos] :
+                        $settings[$containerCType]
+                );
+                if (is_numeric($factor)) {
+                    return round($width * $factor);
+                }
+            }
+        }
+
+        return (int)$width;
+    }
+}

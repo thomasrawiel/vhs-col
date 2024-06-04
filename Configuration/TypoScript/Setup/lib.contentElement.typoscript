@@ -1,0 +1,61 @@
+lib.contentElement {
+    partialRootPaths {
+        1 = EXT:lin_vhs/Resources/Private/Partials/Extensions/FluidStyledContent/
+        100 = EXT:lin_vhs/Resources/Private/Partials/Shared/
+    }
+
+    settings {
+        picture {
+            # Enable lazy loading
+            loading = lazy
+            # Define image sources for different viewports
+            sources {
+                desktop {
+                    minWidth = 1280
+                    cropVariant = desktop
+                    imageWidth = 1920
+                    pixelDensity = 1,2
+                }
+
+                tablet {
+                    minWidth = 768
+                    cropVariant = tablet
+                    imageWidth = 1280
+                    pixelDensity = 1,2
+                }
+
+                mobileLandscape {
+                    minWidth = 480
+                    cropVariant = mobile
+                    imageWidth = 768
+                    pixelDensity = 1,2,3
+                    quality = 60
+                }
+
+                mobilePortrait {
+                    minWidth = 320
+                    cropVariant = mobile
+                    imageWidth = 480
+                    pixelDensity = 1,2,3
+                    quality = 50
+                }
+            }
+
+            # Multiply desktop's imageWidth in container
+            containerFactors {
+                row-50-50 = 0.5
+                row-33-33-33 = 0.33
+                row-33-66.100 = 0.33
+                row-33-66.101 = 0.66
+                row-66-33.100 = 0.66
+                row-66-33.101 = 0.33
+                row-100 = 1
+                row-25-75.100 = 0.25
+                row-25-75.101 = 0.75
+                row-75-25.100 = 0.75
+                row-75-25.101 = 0.25
+                row-25-25-25-25 = 0.25
+            }
+        }
+    }
+}

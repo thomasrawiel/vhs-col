@@ -1,0 +1,25 @@
+{
+  "name": "traw/vhs-col",
+  "type": "typo3-cms-extension",
+  "description": "A collection of more or less useful ViewHelpers",
+  "authors": [
+    {
+      "name": "Thomas Rawiel",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "typo3/cms-fluid-styled-content": "^11 || ^12 || ^13",
+    "giggsey/libphonenumber-for-php": "^8.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "TRAW\\Vhscol\\": "Classes/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "vhscol"
+    }
+  }
+}
