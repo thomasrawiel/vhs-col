@@ -87,7 +87,7 @@ class ConfigurationBuilder implements SingletonInterface
      */
     protected function loadTypoScript(string $extKey = 'vhs_col'): void
     {
-        $tsExtKey = 'tx_' . str_replace(' ', '', str_replace('_', ' ', strtolower($extKey)));
+        $tsExtKey = \TRAW\VhsCol\Utility\GeneralUtility::getTyposcriptExtensionKey($extKey);
 
         if ($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']) {
             $typoScript = $this->getTypoScriptService()

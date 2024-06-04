@@ -1,7 +1,7 @@
 lib.contentElement {
     partialRootPaths {
-        1 = EXT:lin_vhs/Resources/Private/Partials/Extensions/FluidStyledContent/
-        100 = EXT:lin_vhs/Resources/Private/Partials/Shared/
+        1 = EXT:vhs_col/Resources/Private/Partials/Extensions/FluidStyledContent/
+        100 = EXT:vhs_col/Resources/Private/Partials/Shared/
     }
 
     settings {

@@ -21,4 +21,4 @@ plugin.tx_vhscol.settings {
     }
 }
 
-@import 'EXT:lin_vhs/Configuration/TypoScript/Setup/lib.contentElement.typoscript'
+@import 'EXT:vhs_col/Configuration/TypoScript/Setup/lib.contentElement.typoscript'

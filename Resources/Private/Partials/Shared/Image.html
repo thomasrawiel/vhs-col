@@ -1,22 +1,22 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       data-namespace-typo3-fluid="true">
-<linv:media.picture class="image-embed-item" src="{file}" treatIdAsReference="1" alt="{file.alternative}"
+<vcol:media.picture class="image-embed-item" src="{file}" treatIdAsReference="1" alt="{file.alternative}"
                     title="{file.title}"
                     loading="{settings.picture.loading}">
     <f:variable name="maxWidth"
-                value="{linv:media.source.maxWidth(sources: settings.picture.sources, width: dimensions.width)}"/>
+                value="{vcol:media.source.maxWidth(sources: settings.picture.sources, width: dimensions.width)}"/>
     <f:for each="{settings.picture.sources -> v:iterator.sort(sortBy: 'minWidth', order: 'DESC')}" as="source"
            key="title">
         <f:variable name="width"
-                    value="{f:if(condition: '{source.cropVariant} == \'desktop\'', then: '{linv:media.source.containerMaxWidth(width: maxWidth, settings: settings.picture.containerFactors)}', else: '{maxWidth}')}"/>
+                    value="{f:if(condition: '{source.cropVariant} == \'desktop\'', then: '{vcol:media.source.containerMaxWidth(width: maxWidth, settings: settings.picture.containerFactors)}', else: '{maxWidth}')}"/>
         <f:variable name="width"
                     value="{f:if(condition: '{width} > {source.imageWidth}', then: '{source.imageWidth}', else: '{width}')}"/>
-        <linv:media.source media="(min-width: {source.minWidth}px)"
+        <vcol:media.source media="(min-width: {source.minWidth}px)"
                           width="{width}"
                           cropVariant="{source.cropVariant}" pixelDensities="{source.pixelDensity}"
                           quality="{source.quality}"/>
     </f:for>
-    <linv:media.source width="{dimensions.width -> f:or(alternative: settings.picture.sources.desktop.imageWidth)}"
+    <vcol:media.source width="{dimensions.width -> f:or(alternative: settings.picture.sources.desktop.imageWidth)}"
                       cropVariant="{settings.picture.sources.desktop.cropVariant}"/>
-</linv:media.picture>
+</vcol:media.picture>
 </html>
