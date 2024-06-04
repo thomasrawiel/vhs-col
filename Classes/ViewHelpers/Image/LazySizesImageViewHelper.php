@@ -1,8 +1,8 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Image;
+namespace TRAW\VhsCol\ViewHelpers\Image;
 
-use TRAW\Vhscol\Utility\ConfigurationUtility;
+use TRAW\VhsCol\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Extension;
+namespace TRAW\VhsCol\ViewHelpers\Extension;
 
 /**
  * This file is part of the "news" Extension for TYPO3 CMS.

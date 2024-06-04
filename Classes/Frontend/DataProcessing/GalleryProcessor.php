@@ -1,8 +1,8 @@
 <?php
 
-namespace TRAW\Vhscol\Frontend\DataProcessing;
+namespace TRAW\VhsCol\Frontend\DataProcessing;
 
-use TRAW\Vhscol\Utility\ConfigurationUtility;
+use TRAW\VhsCol\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Media;
+namespace TRAW\VhsCol\ViewHelpers\Media;
 
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;

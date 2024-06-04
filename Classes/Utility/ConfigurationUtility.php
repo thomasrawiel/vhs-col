@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\Utility;
+namespace TRAW\VhsCol\Utility;
 
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Uri;
+namespace TRAW\VhsCol\ViewHelpers\Uri;
 
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;

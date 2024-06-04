@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Media;
+namespace TRAW\VhsCol\ViewHelpers\Media;
 
 /*
  * This file is part of the FluidTYPO3/Vhs project under GPLv2 or later.

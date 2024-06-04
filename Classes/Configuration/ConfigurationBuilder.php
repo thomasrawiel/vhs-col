@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\Configuration;
+namespace TRAW\VhsCol\Configuration;
 
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,7 +37,7 @@ class ConfigurationBuilder implements SingletonInterface
      *
      * @return array
      */
-    public function getSettings(string $extKey = 'vhscol'): array
+    public function getSettings(string $extKey = 'vhs_col'): array
     {
         if (empty($this->settings)) {
             $this->loadTypoScript($extKey);
@@ -85,7 +85,7 @@ class ConfigurationBuilder implements SingletonInterface
      *
      * @return void
      */
-    protected function loadTypoScript(string $extKey = 'vhscol'): void
+    protected function loadTypoScript(string $extKey = 'vhs_col'): void
     {
         $tsExtKey = 'tx_' . str_replace(' ', '', str_replace('_', ' ', strtolower($extKey)));
 

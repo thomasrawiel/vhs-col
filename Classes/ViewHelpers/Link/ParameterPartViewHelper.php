@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Link;
+namespace TRAW\VhsCol\ViewHelpers\Link;
 
 use TYPO3\CMS\Core\LinkHandling\TypoLinkCodecService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

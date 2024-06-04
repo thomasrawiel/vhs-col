@@ -1,8 +1,8 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Image;
+namespace TRAW\VhsCol\ViewHelpers\Image;
 
-use TRAW\Vhscol\Utility\SvgUtility;
+use TRAW\VhsCol\Utility\SvgUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;

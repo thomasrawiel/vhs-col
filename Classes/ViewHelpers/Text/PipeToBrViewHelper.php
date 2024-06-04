@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Text;
+namespace TRAW\VhsCol\ViewHelpers\Text;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 

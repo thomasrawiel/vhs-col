@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\Vhscol\ViewHelpers\Link;
+namespace TRAW\VhsCol\ViewHelpers\Link;
 
 /**
  * Class SolrLinkViewHelper

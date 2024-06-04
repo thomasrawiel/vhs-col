@@ -4,6 +4,6 @@ services:
     autoconfigure: true
     public: false
 
-  TRAW\Vhscol\:
+  TRAW\VhsCol\:
     resource: '../Classes/*'
 
