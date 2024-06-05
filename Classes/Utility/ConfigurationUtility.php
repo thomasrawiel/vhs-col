@@ -20,7 +20,7 @@ class ConfigurationUtility
 
         $tsExtKey = 'tx_' . GeneralUtility::underscoredToLowerCase($extKey);
 
-        $settings = $configuration['plugin.'][$tsExtKey . '.']['settings.'];
+        $settings = $configuration['plugin.'][$tsExtKey . '.']['settings.'] ?? null;
 
         if (empty($settings)) {
             throw new \Exception(TYPO3GeneralUtility::underscoredToUpperCamelCase($extKey) . ' Typoscript is missing! Add EXT:' . $extKey . ' Typoscript to your websites static template.');
