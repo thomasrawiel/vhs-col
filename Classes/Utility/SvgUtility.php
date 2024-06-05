@@ -11,7 +11,7 @@ class SvgUtility implements SingletonInterface
     /**
      * @var array
      */
-    protected static array $settings = [];
+    protected array $settings = [];
 
     /**
      * @var array
