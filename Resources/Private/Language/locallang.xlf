@@ -4,13 +4,13 @@
           date="2024-06-07T10:00:00Z" product-name="vhs_col">
         <header/>
         <body>
-            <trans-unit id="dateformat" resname="dateformat">
+            <trans-unit id="dateFormat" resname="dateFormat">
                 <source>m/d/Y</source>
             </trans-unit>
-            <trans-unit id="dateformatMonth" resname="dateformatMonth">
+            <trans-unit id="dateFormatMonth" resname="dateFormatMonth">
                 <source>m/d</source>
             </trans-unit>
-            <trans-unit id="dateformatDay" resname="dateformatDay">
+            <trans-unit id="dateFormatDay" resname="dateFormatDay">
                 <source>m/d</source>
             </trans-unit>
             <trans-unit id="dateFormatSeperator" resname="dateFormatSeperator">

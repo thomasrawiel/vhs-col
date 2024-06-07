@@ -20,8 +20,9 @@ class DateRangeViewHelper extends AbstractViewHelper
 
     public function render()
     {
-        $startDate = $endDate = new DateTime();
+        $startDate = new DateTime();
         $startDate->setTimestamp($this->arguments['start']);
+        $endDate = new DateTime();
         $endDate->setTimestamp($this->arguments['end']);
         $formats = $this->getDateFormats();
         $interval = $startDate->diff($endDate);
@@ -46,18 +47,18 @@ class DateRangeViewHelper extends AbstractViewHelper
     protected function getDateFormats(): array
     {
         $formats = [];
-        $formats['date'] = !empty($this->arguments['dateformat'])
-            ? $this->arguments['dateformat']
-            : LocalizationUtility::translate('dateformat', 'VhsCol');
-        $formats['d'] = !empty($this->arguments['dateformatDay'])
-            ? $this->arguments['dateformatDay']
-            : LocalizationUtility::translate('dateformatDay', 'VhsCol');
-        $formats['m'] = !empty($this->arguments['dateformatMonth'])
-            ? $this->arguments['dateformatMonth']
-            : LocalizationUtility::translate('dateformatMonth', 'VhsCol');
+        $formats['date'] = !empty($this->arguments['dateFormat'])
+            ? $this->arguments['dateFormat']
+            : LocalizationUtility::translate('dateFormat', 'VhsCol');
+        $formats['d'] = !empty($this->arguments['dateFormatDay'])
+            ? $this->arguments['dateFormatDay']
+            : LocalizationUtility::translate('dateFormatDay', 'VhsCol');
+        $formats['m'] = !empty($this->arguments['dateFormatMonth'])
+            ? $this->arguments['dateFormatMonth']
+            : LocalizationUtility::translate('dateFormatMonth', 'VhsCol');
         $formats['sep'] = !empty($this->arguments['sep'])
             ? $this->arguments['sep']
-            : LocalizationUtility::translate('dateformatSeparator', 'VhsCol');
+            : LocalizationUtility::translate('dateFormatSeperator', 'VhsCol');
         return $formats;
     }
 }
