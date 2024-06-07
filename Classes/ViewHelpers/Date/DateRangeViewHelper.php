@@ -12,9 +12,9 @@ class DateRangeViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('start', 'int', 'start timestamp', true);
         $this->registerArgument('end', 'int', 'end timestamp', true);
-        $this->registerArgument('dateformat', 'string', 'format', false);
-        $this->registerArgument('dateformatDay', 'string', 'format', false);
-        $this->registerArgument('dateformatMonth', 'string', 'format', false);
+        $this->registerArgument('dateFormat', 'string', 'format', false);
+        $this->registerArgument('dateFormatDay', 'string', 'format', false);
+        $this->registerArgument('dateFormatMonth', 'string', 'format', false);
         $this->registerArgument('sep', 'string', 'format', false);
     }
 
