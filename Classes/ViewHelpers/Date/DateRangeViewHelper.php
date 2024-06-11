@@ -10,8 +10,8 @@ class DateRangeViewHelper extends AbstractViewHelper
 {
     public function initializeArguments()
     {
-        $this->registerArgument('start', 'int', 'start timestamp', true);
-        $this->registerArgument('end', 'int', 'end timestamp', true);
+        $this->registerArgument('start', 'integer', 'start timestamp', true);
+        $this->registerArgument('end', 'integer', 'end timestamp', true);
         $this->registerArgument('dateFormat', 'string', 'format', false);
         $this->registerArgument('dateFormatDay', 'string', 'format', false);
         $this->registerArgument('dateFormatMonth', 'string', 'format', false);
@@ -20,14 +20,20 @@ class DateRangeViewHelper extends AbstractViewHelper
 
     public function render()
     {
+        $arguments = $this->arguments;
+
         $startDate = new DateTime();
-        $startDate->setTimestamp($this->arguments['start']);
+        if($this->arguments['start'] ?? false) {
+            $startDate->setTimestamp($this->arguments['start']);
+        }
         $endDate = new DateTime();
-        $endDate->setTimestamp($this->arguments['end']);
+        if($this->arguments['end'] ?? false) {
+            $endDate->setTimestamp($this->arguments['end']);
+        }
         $formats = $this->getDateFormats();
         $interval = $startDate->diff($endDate);
 
-        if ($interval->d > 0) {
+        if ($interval !== false && $interval->d > 0) {
             $startFormat = $formats['d'];
             if ($interval->m > 0 || $startDate->format('n') !== $endDate->format('n')) {
                 if ($interval->y > 0 || $startDate->format('Y') !== $endDate->format('Y')) {
