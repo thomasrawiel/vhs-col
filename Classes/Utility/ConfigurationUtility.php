@@ -13,31 +13,61 @@ class ConfigurationUtility
      * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public static function getConfiguration(string $extKey = 'vhs_col'): array
+    public static function getConfiguration(string $extKey = 'vhs_col', bool $returnFullConfiguration = false, bool $throwException = true): array
     {
         $configurationManager = TYPO3GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class);
         $configuration = $configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
 
-        $tsExtKey = 'tx_' . GeneralUtility::underscoredToLowerCase($extKey);
+        $tsExtKey = GeneralUtility::getTyposcriptExtensionKey($extKey);
 
         $settings = $configuration['plugin.'][$tsExtKey . '.']['settings.'] ?? null;
 
-        if (empty($settings)) {
+        if (empty($settings) && $throwException) {
             throw new \Exception(TYPO3GeneralUtility::underscoredToUpperCamelCase($extKey) . ' Typoscript is missing! Add EXT:' . $extKey . ' Typoscript to your websites static template.');
         }
 
-        return $settings;
+        return $returnFullConfiguration ? self::convert($configuration) : self::convert($settings);
     }
 
     /**
-     * Convert the typoscript array to a plain array
+     * @param string $extKey
+     *
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public static function getViewSettings(string $extKey = 'vhs_col'): array
+    {
+        return self::getConfiguration($extKey)['view'] ?? [];
+    }
+
+    /**
+     * @param string $extKey
+     *
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public static function getPersistenceSettings(string $extKey = 'vhs_col'): array
+    {
+        return self::getConfiguration($extKey)['persistence'] ?? [];
+    }
+
+    /**
      * @return array
      */
     public static function getSettings(string $extKey = 'vhs_col'): array
     {
+        return self::getConfiguration($extKey);
+    }
 
-
+    /**
+     * Convert the typoscript array to a plain array
+     * @param array $configuration
+     *
+     * @return array
+     */
+    protected static function convert(array $configuration): array
+    {
         return TYPO3GeneralUtility::makeInstance(TypoScriptService::class)
-            ->convertTypoScriptArrayToPlainArray(self::getConfiguration());
+            ->convertTypoScriptArrayToPlainArray($configuration);
     }
 }

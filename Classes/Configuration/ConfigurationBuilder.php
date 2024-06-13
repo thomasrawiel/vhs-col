@@ -47,35 +47,49 @@ class ConfigurationBuilder implements SingletonInterface
     }
 
     /**
+     * @param string $extKey
+     *
      * @return array
      */
-    public function getPersistenceSettings()
+    public function getPersistenceSettings(string $extKey = 'vhs_col'): array
     {
-        if (!count($this->persistenceSettings)) {
-            $this->loadTypoScript();
+        if (empty($this->persistenceSettings)) {
+            $this->loadTypoScript($extKey);
         }
 
         return $this->persistenceSettings;
     }
 
     /**
+     * @param string $extKey
+     *
      * @return array
      */
-    public function getViewSettings()
+    public function getViewSettings(string $extKey = 'vhs_col'): array
     {
-        if (!count($this->viewSettings)) {
-            $this->loadTypoScript();
+        if (empty($this->viewSettings)) {
+            $this->loadTypoScript($extKey);
         }
 
         return $this->viewSettings;
     }
 
-    public function injectConfigurationManager(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager)
+    /**
+     * @param \TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager
+     *
+     * @return void
+     */
+    public function injectConfigurationManager(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager): void
     {
         $this->configurationManager = $configurationManager;
     }
 
-    public function injectTypoScriptService(\TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService)
+    /**
+     * @param \TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService
+     *
+     * @return void
+     */
+    public function injectTypoScriptService(\TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService): void
     {
         $this->typoScriptService = $typoScriptService;
     }
