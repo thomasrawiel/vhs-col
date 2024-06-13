@@ -25,6 +25,36 @@ class GeneralUtility
      */
     public static function getTyposcriptExtensionKey(string $extKey): string
     {
-        return 'tx_' . self::underScoredToLowerCase($extKey);
+        return str_starts_with($extKey, 'tx_') === false ? 'tx_' . self::underScoredToLowerCase($extKey) : strtolower($extKey);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTypo3Version():string
+    {
+        return (new \TYPO3\CMS\Core\Information\Typo3Version())->getVersion();
+    }
+
+    /**
+     * @return int
+     */
+    public static function getTypo3MajorVersion(): int
+    {
+        return (new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isFrontend():bool {
+        \TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isBackend():bool {
+        return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend();
     }
 }
