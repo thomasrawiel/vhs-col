@@ -1,10 +1,15 @@
-lib.contentElement {
-    partialRootPaths {
-        1 = EXT:vhs_col/Resources/Private/Partials/Extensions/FluidStyledContent/
-        100 = EXT:vhs_col/Resources/Private/Partials/Shared/
-    }
-
+plugin.tx_vhscol {
     settings {
+        maxGalleryWidth {
+            #default config for all elements
+            default {
+                #element colPos
+                default {
+                    maxW = {$styles.content.textmedia.maxW}
+                    maxWInText = {$styles.content.textmedia.maxWInText}
+                }
+            }
+        }
         picture {
             # Enable lazy loading
             loading = lazy
@@ -59,3 +64,4 @@ lib.contentElement {
         }
     }
 }
+@import 'EXT:vhs_col/Configuration/TypoScript/GalleryProcessor/lib.contentElement.typoscript'

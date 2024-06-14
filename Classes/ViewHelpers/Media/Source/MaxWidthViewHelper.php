@@ -2,6 +2,7 @@
 
 namespace TRAW\VhsCol\ViewHelpers\Media\Source;
 
+use TRAW\VhsCol\Utility\ConfigurationUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -23,6 +24,10 @@ class MaxWidthViewHelper extends AbstractViewHelper
      */
     public function render(): int
     {
+        if (empty(ConfigurationUtility::getSettings('vhs_col')['picture']['sources'])) {
+            throw new Exception('Gallery processor typoscript probably not loaded');
+        }
+
         // If given width is empty, return first (largest) source's imageWidth
         if ($this->arguments['width'] === null) {
             return reset($this->arguments['sources'])['imageWidth'];

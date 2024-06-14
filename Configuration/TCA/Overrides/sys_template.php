@@ -4,6 +4,13 @@ call_user_func(function ($_EXTKEY = "vhs_col") {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
         $_EXTKEY,
         'Configuration/TypoScript/',
-        'ViewHelpers Collection'
+        'Misc - ViewHelpers Collection'
     );
+    if(\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+            $_EXTKEY,
+            'Configuration/TypoScript/GalleryProcessor/',
+            'GalleryProcessor - ViewHelpers Collection'
+        );
+    }
 });

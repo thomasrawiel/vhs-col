@@ -2,6 +2,7 @@
 
 namespace TRAW\VhsCol\Utility;
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility as TYPO3GeneralUtility;
 
@@ -60,7 +61,25 @@ class ConfigurationUtility
     }
 
     /**
+     * @param string $extKey
+     * @param string $variable
+     *
+     * @return mixed
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
+     * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
+     */
+    public static function getEmConfigurationSettings(string $extKey, string $variable = ''): mixed
+    {
+        $extConf = TYPO3GeneralUtility::makeInstance(ExtensionConfiguration::class);
+
+        return empty($variable)
+            ? $extConf->get($extKey)
+            : $extConf->get($extKey, $variable);
+    }
+
+    /**
      * Convert the typoscript array to a plain array
+     *
      * @param array $configuration
      *
      * @return array

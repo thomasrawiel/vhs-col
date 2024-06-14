@@ -1,0 +1,10 @@
+lib.contentElement {
+    partialRootPaths {
+        1 = EXT:vhs_col/Resources/Private/Partials/Extensions/FluidStyledContent/
+        100 = EXT:vhs_col/Resources/Private/Partials/Shared/
+    }
+
+    settings {
+       picture < plugin.tx_vhscol.settings.picture
+    }
+}

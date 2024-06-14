@@ -1,15 +1,4 @@
 plugin.tx_vhscol.settings {
-    maxGalleryWidth {
-        #default config for all elements
-        default {
-            #element colPos
-            default {
-                maxW = {$styles.content.textmedia.maxW}
-                maxWInText = {$styles.content.textmedia.maxWInText}
-            }
-        }
-    }
-
     viewHelpers {
         image.svg {
             defaultPath = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.defaultPath}
@@ -20,5 +9,3 @@ plugin.tx_vhscol.settings {
         }
     }
 }
-
-@import 'EXT:vhs_col/Configuration/TypoScript/Setup/lib.contentElement.typoscript'

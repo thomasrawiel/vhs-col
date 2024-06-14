@@ -3,6 +3,7 @@
 namespace TRAW\VhsCol\Frontend\DataProcessing;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
+use TRAW\VhsCol\Utility\EmConfigurationUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -14,20 +15,24 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
      */
     protected function determineMaximumGalleryWidth()
     {
-        $recordData = $this->contentObjectRenderer->data;
-        $settings = ConfigurationUtility::getSettings();
+        if(\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
+            $recordData = $this->contentObjectRenderer->data;
+            $settings = ConfigurationUtility::getSettings();
 
-        if (!empty($settings['maxGalleryWidth']['default'])) {
-            $recordSettings = $this->determineRecordSettings($recordData, $settings['maxGalleryWidth']);
+            if (!empty($settings['maxGalleryWidth']['default'])) {
+                $recordSettings = $this->determineRecordSettings($recordData, $settings['maxGalleryWidth']);
 
-            if (empty($recordSettings)) {
-                parent::determineMaximumGalleryWidth();
-            } else {
-                if (!is_array($recordSettings)) {
-                    $recordSettings = ['maxW' => $recordSettings];
+                if (empty($recordSettings)) {
+                    parent::determineMaximumGalleryWidth();
+                } else {
+                    if (!is_array($recordSettings)) {
+                        $recordSettings = ['maxW' => $recordSettings];
+                    }
+                    $this->overrideMaxWidth($recordSettings);
                 }
-                $this->overrideMaxWidth($recordSettings);
             }
+        }else {
+            parent::determineMaximumGalleryWidth();
         }
     }
 
@@ -82,8 +87,6 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
      */
     protected function getParentGridType(int $gridContainerUid)
     {
-
-        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tt_content')
             ->createQueryBuilder();

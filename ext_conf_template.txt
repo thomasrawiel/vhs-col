@@ -1,0 +1,2 @@
+# cat=Image Processing; type=boolean; label=Enable the gallery processor
+enableGalleryProcessor = 0
