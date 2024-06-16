@@ -1,6 +1,6 @@
 <?php
 
-namespace TRAW\VhsCol\Frontend\DataProcessing;
+namespace TRAW\VhsCol\DataProcessing;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
 use TRAW\VhsCol\Utility\EmConfigurationUtility;
