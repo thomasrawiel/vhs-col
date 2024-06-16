@@ -2,7 +2,7 @@
 
 namespace TRAW\VhsCol\ViewHelpers\Date;
 
-use ApacheSolrForTypo3\Solr\System\Data\DateTime;
+use \DateTime;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -29,6 +29,10 @@ class DateRangeViewHelper extends AbstractViewHelper
         $endDate = new DateTime();
         if($this->arguments['end'] ?? false) {
             $endDate->setTimestamp($this->arguments['end']);
+        }
+        //if no end date is given, assume same day as end
+        if($this->arguments['end'] === 0) {
+            $endDate->setTimestamp($startDate->getTimestamp());
         }
         $formats = $this->getDateFormats();
         $interval = $startDate->diff($endDate);
