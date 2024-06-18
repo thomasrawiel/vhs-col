@@ -8,6 +8,6 @@ call_user_func(function () {
     ];
 
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\DataProcessing\\GalleryProcessor'] = [
-        'className' => \TRAW\VhsCol\Frontend\DataProcessing\GalleryProcessor::class,
+        'className' => \TRAW\VhsCol\DataProcessing\GalleryProcessor::class,
     ];
 });
