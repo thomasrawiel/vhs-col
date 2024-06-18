@@ -29,6 +29,6 @@ class ParameterPartViewHelper extends AbstractViewHelper
         $extractedPart = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Service\TypoLinkCodecService::class)
             ->decode($this->renderChildren())[$part] ?? null;
 
-        return $extractedPart ?? $fallback ?? '';
+        return $extractedPart ?? $this->arguments['fallback'] ?? '';
     }
 }
