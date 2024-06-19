@@ -3,10 +3,8 @@
 namespace TRAW\VhsCol\DataProcessing;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
+use TRAW\VhsCol\Utility\DatabaseUtility;
 use TRAW\VhsCol\Utility\EmConfigurationUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcessor
 {
@@ -15,7 +13,7 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
      */
     protected function determineMaximumGalleryWidth()
     {
-        if(\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
+        if (\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
             $recordData = $this->contentObjectRenderer->data;
             $settings = ConfigurationUtility::getSettings();
 
@@ -31,7 +29,7 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
                     $this->overrideMaxWidth($recordSettings);
                 }
             }
-        }else {
+        } else {
             parent::determineMaximumGalleryWidth();
         }
     }
@@ -48,56 +46,33 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
     protected function determineRecordSettings(array $recordData, array $settings)
     {
         $CType = $recordData['CType'];
-        $parentUid = $recordData['tx_container_parent'];
+        $parentUid = intval($recordData['tx_container_parent']);
 
-        if (empty($parentUid) || intval($parentUid) === 0) {
+        if ($parentUid === 0) {
             $colPos = $recordData['colPos'];
 
             if (!empty($settings['CType'][$CType])) {
                 return $settings['CType'][$CType][$colPos]
-                    ?? $settings['CType'][$CType][$colPos]
-                    ?? $settings['CType'][$CType]['default']
                     ?? $settings['CType'][$CType]['default']
                     ?? null;
             }
         } else {
             if (!empty($settings['container'])) {
-                $parentGridType = $this->getParentGridType($parentUid);
+                $parentGridType = DatabaseUtility::getContentAttributeByUid($parentUid, 'CType');
 
                 if (empty($parentGridType)) return null;
                 $colPos = $recordData['colPos'];
 
-                return $settings['container'][$parentGridType][$colPos]
-                    ?? $settings['container'][$parentGridType][$colPos . '']
-                    ?? $settings['container'][$parentGridType]['default']
-                    ?? $settings['container'][$parentGridType]['default']
-                    ?? null;
+                if (!empty($settings['container'][$parentGridType])) {
+                    return $settings['container'][$parentGridType][$colPos]
+                        ?? $settings['container'][$parentGridType]['default']
+                        ?? null;
+                }
             }
         }
         return $settings['default'][$recordData['colPos']]
             ?? $settings['default']['default']
-            ?? $settings['default']['default']
             ?? null;
-    }
-
-    /**
-     * @param int $gridContainerUid
-     *
-     * @return mixed|false
-     */
-    protected function getParentGridType(int $gridContainerUid)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tt_content')
-            ->createQueryBuilder();
-
-        return $queryBuilder->select('CType')
-            ->from('tt_content')
-            ->where(
-                $queryBuilder->expr()->eq('uid', $gridContainerUid)
-            )
-            ->execute()
-            ->fetchOne();
     }
 
     /**

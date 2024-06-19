@@ -2,6 +2,7 @@
 
 namespace TRAW\VhsCol\ViewHelpers\Media\Source;
 
+use TRAW\VhsCol\Utility\DatabaseUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -29,22 +30,12 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
         $settings = $this->arguments['settings'];
         $parentContainerUid = $this->renderingContext->getVariableProvider()->getByPath('data.tx_container_parent');
 
-        if ($parentContainerUid > 0) {
+        if ($parentContainerUid > 0 && ($settings['enable'] ?? false)) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-            $containerCType = $queryBuilder->select('CType')
-                ->from('tt_content')
-                ->where($queryBuilder->expr()->eq(
-                    'uid',
-                    $queryBuilder->createNamedParameter($parentContainerUid, \PDO::PARAM_INT)
-                ))->execute()->fetchOne();
+            $containerCType = DatabaseUtility::getContentAttributeByUid($parentContainerUid, 'CType');
             if (!empty($containerCType)) {
                 $parentContainerColPos = $this->renderingContext->getVariableProvider()->getByPath('data.colPos');
-                $factor = (
-                    is_array($settings[$containerCType . '.']) &&
-                    array_key_exists($parentContainerColPos, $settings[$containerCType . '.']) ?
-                        $settings[$containerCType . '.'][$parentContainerColPos] :
-                        $settings[$containerCType]
-                );
+                $factor = $settings[$containerCType . '.'][$parentContainerColPos] ?? $settings[$containerCType] ?? 1;
                 if (is_numeric($factor)) {
                     return round($width * $factor);
                 }

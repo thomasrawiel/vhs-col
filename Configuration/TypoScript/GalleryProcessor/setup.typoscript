@@ -48,6 +48,7 @@ plugin.tx_vhscol {
 
             # Multiply desktop's imageWidth in container
             containerFactors {
+                enable = {$plugin.tx_vhscol.settings.galleryProcessor.enableContainerFactors}
                 row-50-50 = 0.5
                 row-33-33-33 = 0.33
                 row-33-66.100 = 0.33

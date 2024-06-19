@@ -7,3 +7,13 @@ services:
   TRAW\VhsCol\:
     resource: '../Classes/*'
 
+  TRAW\VhsCol\DataProcessing\FlexFormProcessor:
+    tags:
+      - name: 'data.processor'
+        identifier: 'traw-flexform'
+
+  TRAW\VhsCol\DataProcessing\GalleryProcessor:
+    tags:
+      - name: 'data.processor'
+        identifier: 'traw-gallery'
+
