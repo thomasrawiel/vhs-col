@@ -6,11 +6,13 @@
 Configuration
 =============
 
+There are some ViewHelpers that need a typoscript configuration. See Typoscript Reference
+
+
 ..  toctree::
    :maxdepth: 5
    :titlesonly:
 
-   General
    TypoScriptReference/Index
    TSconfig
 

@@ -33,6 +33,9 @@ VHS Col
 
 A collection of more or less useful ViewHelpers, Utilities and other example classes
 
+.. important::
+   Documentation is work in progress, if you have any questions consult https://github.com/thomasrawiel/vhs-col/issues
+
 
 
 ----
