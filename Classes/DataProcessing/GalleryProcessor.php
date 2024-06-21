@@ -45,15 +45,21 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
      */
     protected function determineRecordSettings(array $recordData, array $settings)
     {
-        $CType = $recordData['CType'];
-        $parentUid = intval($recordData['tx_container_parent']);
+        $CType = $recordData['CType'] ?? 'page';
+        $parentUid = intval($recordData['tx_container_parent'] ?? 0);
+        $colPos = $recordData['colPos'] ?? $recordData['doktype'] ?? 'default';;
 
         if ($parentUid === 0) {
-            $colPos = $recordData['colPos'];
-
             if (!empty($settings['CType'][$CType])) {
                 return $settings['CType'][$CType][$colPos]
                     ?? $settings['CType'][$CType]['default']
+                    ?? $settings['CType'][$CType]
+                    ?? null;
+            }
+            if (!empty($settings[$CType])) {
+                return $settings[$CType][$colPos]
+                    ?? $settings[$CType]['default']
+                    ?? $settings['CType'][$CType]
                     ?? null;
             }
         } else {
@@ -66,12 +72,14 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
                 if (!empty($settings['container'][$parentGridType])) {
                     return $settings['container'][$parentGridType][$colPos]
                         ?? $settings['container'][$parentGridType]['default']
+                        ?? $settings['container'][$parentGridType]
                         ?? null;
                 }
             }
         }
-        return $settings['default'][$recordData['colPos']]
+        return $settings['default'][$colPos]
             ?? $settings['default']['default']
+            ?? $settings['default']
             ?? null;
     }
 

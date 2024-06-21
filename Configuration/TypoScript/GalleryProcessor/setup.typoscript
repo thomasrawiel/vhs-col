@@ -9,6 +9,20 @@ plugin.tx_vhscol {
                     maxWInText = {$styles.content.textmedia.maxWInText}
                 }
             }
+
+#            CType {
+#                textmedia {
+#                    maxW = {$styles.content.textmedia.maxW}
+#                    maxWInText = {$styles.content.textmedia.maxWInText}
+#                }
+#            }
+
+            page {
+                default {
+                    maxW = {$styles.content.textmedia.maxW}
+                    maxWInText = {$styles.content.textmedia.maxWInText}
+                }
+            }
         }
         picture {
             # Enable lazy loading
