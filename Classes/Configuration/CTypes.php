@@ -21,6 +21,7 @@ class CTypes
      */
     public static function registerCTypes(array $cTypes, string $table = 'tt_content'): void
     {
+        //todo: sort original items by relativeposition and relativetofield
         foreach ($cTypes as $cType) {
             $c = null;
             if (($cType instanceof CType || is_array($cType)) && !empty($cType)) {
@@ -33,12 +34,18 @@ class CTypes
                 throw new \Exception('CType must be an instance of CType or array');
             }
 
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem($table, 'CType', [
-                'label' => $c->getLabel(),
-                'value' => $c->getValue(),
-                'icon' => $c->getIcon(),
-                'group' => $c->getGroup(),
-            ]);
+            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+                $table,
+                'CType',
+                [
+                    'label' => $c->getLabel(),
+                    'value' => $c->getValue(),
+                    'icon' => $c->getIcon(),
+                    'group' => $c->getGroup(),
+                ],
+                $c->getRelativeToField(),
+                $c->getRelativePosition()
+            );
             if (!empty($c->getGroup()) && empty($GLOBALS['TCA'][$table]['columns']['CType']['config']['itemGroups'][$c->getGroup()])) {
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup($table, 'CType', $c->getGroup(), $c->getGroup());
             }
@@ -55,5 +62,10 @@ class CTypes
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('', $c->getFlexform(), $c->getValue());
             }
         }
+    }
+
+    protected static function sortByRelativePosition(array &$cTypes)
+    {
+
     }
 }

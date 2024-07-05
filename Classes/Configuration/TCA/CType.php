@@ -5,37 +5,47 @@ namespace TRAW\VhsCol\Configuration\TCA;
 /**
  * Class CType
  */
-final class CType
+final readonly class CType
 {
     /**
      * @var string|null
      */
-    protected readonly ?string $label;
+    protected ?string $label;
     /**
      * @var string|null
      */
-    protected readonly ?string $value;
+    protected ?string $value;
     /**
      * @var string|null
      */
-    protected readonly ?string $icon;
+    protected ?string $icon;
     /**
      * @var string|null
      */
-    protected readonly ?string $group;
+    protected ?string $group;
 
     /**
      * @var string|null
      */
-    protected readonly ?string $showitem;
+    protected ?string $showitem;
     /**
      * @var string|null
      */
-    protected readonly ?string $flexform;
+    protected ?string $flexform;
     /**
      * @var array|null
      */
-    protected readonly ?array $columnsOverrides;
+    protected ?array $columnsOverrides;
+
+    /**
+     * @var string|mixed|null
+     */
+    protected ?string $relativeToField;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $relativePosition;
 
 
     /**
@@ -52,8 +62,10 @@ final class CType
         $this->showitem = $cType['showitem'] ?? null;
         $this->flexform = $cType['flexform'] ?? null;
         $this->columnsOverrides = $cType['columnsOverrides'] ?? null;
+        $this->relativeToField = $cType['relativeToField'] ?? null;
+        $this->relativePosition = $cType['relativePosition'] ?? null;
 
-        if(empty($this->label) || empty($this->value)){
+        if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A CType must have at least a label and a value');
         }
     }
@@ -112,5 +124,21 @@ final class CType
     public function getColumnsOverrides(): array|null
     {
         return $this->columnsOverrides;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativeToField(): string
+    {
+        return $this->relativeToField ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativePosition(): string
+    {
+        return $this->relativePosition ?? '';
     }
 }
