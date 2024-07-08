@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-11-16T11:03:17Z"
+          product-name="vhs_col">
+        <header/>
+        <body>
+            <trans-unit id="imwizard.crop_variant.desktop">
+                <source>Desktop</source>
+            </trans-unit>
+            <trans-unit id="imwizard.crop_variant.tablet">
+                <source>Tablet</source>
+            </trans-unit>
+            <trans-unit id="imwizard.crop_variant.mobile">
+                <source>Mobile</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
