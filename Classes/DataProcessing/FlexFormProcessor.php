@@ -25,7 +25,7 @@ class FlexFormProcessor implements DataProcessorInterface
         if (!isset($processedData['data'][$fieldName])) {
             return $processedData;
         }
-        $originalValue = $processedData['data'][$fieldName];
+        $originalValue = $processedData['data'][$fieldName] ?? null;
         if (!is_string($originalValue)) {
             return $processedData;
         }
