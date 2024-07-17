@@ -41,7 +41,7 @@ class RequestType
     {
         $r = $request ?? $GLOBALS['TYPO3_REQUEST'] ?? null;
 
-        if (empty($r)) {
+        if (empty($r) || !(($r ?? null) instanceof ServerRequestInterface)) {
             throw new Exception('No request object provided');
         }
 

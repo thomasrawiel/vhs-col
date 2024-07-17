@@ -11,6 +11,7 @@ namespace TRAW\VhsCol\ViewHelpers\Media;
 
 use FluidTYPO3\Vhs\Utility\FrontendSimulationUtility;
 use Psr\Http\Message\ServerRequestInterface;
+use TRAW\VhsCol\Information\RequestType;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -49,7 +50,7 @@ class SourceViewHelper extends \FluidTYPO3\Vhs\ViewHelpers\Media\SourceViewHelpe
     {
         $imageSource = $this->renderingContext->getViewHelperVariableContainer()->get(static::SCOPE, static::SCOPE_VARIABLE_SRC);
         $treatIdAsRerefence = $this->renderingContext->getViewHelperVariableContainer()->get(static::SCOPE, static::SCOPE_VARIABLE_ID);
-        $isBackend = ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend();
+        $isBackend = RequestType::isBackend();
 
         if ($isBackend) {
             $tsfeBackup = FrontendSimulationUtility::simulateFrontendEnvironment();
