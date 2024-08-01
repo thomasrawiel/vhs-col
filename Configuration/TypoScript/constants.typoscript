@@ -6,6 +6,8 @@ plugin.tx_vhscol {
                 defaultPath = EXT:vhs_col/Resources/Public/Dist/Images/
                 # cat=VHS-Col/viewHelpers/b; type=string; label=Theme path to svg directory
                 themePath = EXT:vhs_col/Resources/Public/Dist/Images/
+                # cat=VHS-Col/viewHelpers/d; type=boolean; label=Throw exception if svg file is not found
+                fileNotFoundException = 1
             }
             lazySizesImage {
                 # cat=VHS-Col/viewHelpers/c; type=string; label=lazy image sizes default sizes

@@ -3,6 +3,7 @@ plugin.tx_vhscol.settings {
         image.svg {
             defaultPath = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.defaultPath}
             themePath = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.themePath}
+            fileNotFoundException = {$plugin.tx_vhscol.settings.viewHelpers.image.svg.fileNotFoundException}
         }
         lazySizesImage {
             defaultSizes = {$plugin.tx_vhscol.settings.viewHelpers.lazySizesImage.defaultSizes}

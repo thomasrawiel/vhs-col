@@ -32,12 +32,12 @@ class SvgUtility implements SingletonInterface
             if (empty($this->settings)) {
                 $this->settings = ConfigurationUtility::getSettings();
             }
-            if ($useThemePath && isset($this->settings['viewHelpers']['image']['svg']['themePath']) && !empty($this->settings['viewHelpers']['image']['svg']['themePath'])) {
+            if ($useThemePath && !empty($this->settings['viewHelpers']['image']['svg']['themePath'])) {
                 $path = $this->settings['viewHelpers']['image']['svg']['themePath'];
-            } elseif (isset($this->settings['viewHelpers']['image']['svg']['defaultPath']) && !empty($this->settings['viewHelpers']['image']['svg']['defaultPath'])) {
+            } elseif (!empty($this->settings['viewHelpers']['image']['svg']['defaultPath'])) {
                 $path = $this->settings['viewHelpers']['image']['svg']['defaultPath'];
             } else {
-                return '[SVG ViewHelper] Our monkey horde do not know where to search for files. Please provide a valid path.';
+                return '[SVG ViewHelper] Our monkey horde does not know where to search for files. Please provide a valid path.';
             }
         }
 
@@ -62,6 +62,10 @@ class SvgUtility implements SingletonInterface
                 if (file_exists($svgRealPath)) {
                     $svgContent = GeneralUtility::getURL($svgRealPath);
                     static::$svgCache[$svgPath] = $svgContent;
+                } else {
+                    if ($this->settings['viewHelpers']['image']['svg']['fileNotFoundException']) {
+                        throw new \Exception('File not found: ' . $name . '.svg in ' . $this->settings['viewHelpers']['image']['svg']['themePath'] . ', ' . $this->settings['viewHelpers']['image']['svg']['defaultPath']);
+                    }
                 }
             }
         }
