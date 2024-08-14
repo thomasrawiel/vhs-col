@@ -8,7 +8,7 @@ Installation
 
 Install this extension via composer::
 
-    composer require traw/powermailcaptcha
+    composer require traw/vhs-col
 
 or add it to your extension's composer.json file::
 

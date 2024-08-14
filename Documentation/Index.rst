@@ -49,8 +49,7 @@ A collection of more or less useful ViewHelpers, Utilities and other example cla
     Introduction/Index
     Installation/Index
     Configuration/Index
-    Templates/Index
-    Developer/Index
+    ViewHelpers/Index
     KnownProblems/Index
 
 ..  Meta Menu
