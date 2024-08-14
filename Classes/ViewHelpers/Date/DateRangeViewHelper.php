@@ -2,12 +2,21 @@
 
 namespace TRAW\VhsCol\ViewHelpers\Date;
 
-use \DateTime;
+use DateTime;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
+/**
+ * Class DateRangeViewHelper
+ *
+ * Usage:
+ * <vcol:date.dateRange start="{data.dateRangeStart}" end="{data.dateRangeEnd}"/>
+ */
 class DateRangeViewHelper extends AbstractViewHelper
 {
+    /**
+     * @return void
+     */
     public function initializeArguments()
     {
         $this->registerArgument('start', 'integer', 'start timestamp', true);
@@ -18,27 +27,40 @@ class DateRangeViewHelper extends AbstractViewHelper
         $this->registerArgument('sep', 'string', 'format', false);
     }
 
+    /**
+     * @return string
+     */
     public function render()
     {
         $arguments = $this->arguments;
 
         $startDate = new DateTime();
-        if($this->arguments['start'] ?? false) {
-            $startDate->setTimestamp($this->arguments['start']);
-        }
         $endDate = new DateTime();
-        if($this->arguments['end'] ?? false) {
-            $endDate->setTimestamp($this->arguments['end']);
+
+        if (($arguments['start'] ?? 0) > 0) {
+            $startDate->setTimestamp($arguments['start']);
         }
-        //if no end date is given, assume same day as end
-        if($this->arguments['end'] === 0) {
+        if (($arguments['end'] ?? 0) > 0) {
+            $endDate->setTimestamp($arguments['end']);
+        }
+        //fallbacks:
+        //if no start date is given, assume same day as end
+        if ($arguments['start'] === 0) {
+            $startDate->setTimestamp($endDate->getTimestamp());
+        }
+        //if no end date is given, assume same day as start
+        if ($arguments['end'] === 0) {
             $endDate->setTimestamp($startDate->getTimestamp());
         }
+
         $formats = $this->getDateFormats();
         $interval = $startDate->diff($endDate);
 
         if ($interval !== false && $interval->d > 0) {
             $startFormat = $formats['d'];
+            if ($interval->y > 0 || $startDate->format('Y') !== $endDate->format('Y')) {
+                $startFormat = $formats['date'];
+            }
             if ($interval->m > 0 || $startDate->format('n') !== $endDate->format('n')) {
                 if ($interval->y > 0 || $startDate->format('Y') !== $endDate->format('Y')) {
                     $startFormat = $formats['date'];
@@ -47,13 +69,16 @@ class DateRangeViewHelper extends AbstractViewHelper
                 }
             }
             return $startDate->format($startFormat)
-                . ' '.$formats['sep'].' '
+                . ' ' . $formats['sep'] . ' '
                 . $endDate->format($formats['date']);
         } else {
             return $startDate->format($formats['date']);
         }
     }
 
+    /**
+     * @return array
+     */
     protected function getDateFormats(): array
     {
         $formats = [];
