@@ -132,14 +132,14 @@ class TcaOptionsMap
     {
         if (isset($conditions['fields'])) {
             foreach ($conditions['fields'] as $startField => $compareFields) {
-                if (empty($this->properties[$startField]) || in_array($this->properties[$startField][0] ?? $this->properties[$startField], $compareFields) === false) {
+                if (!isset($this->properties[$startField]) || in_array($this->properties[$startField][0] ?? $this->properties[$startField], $compareFields) === false) {
                     return false;
                 }
             }
         }
         if (isset($conditions['notFields'])) {
             foreach ($conditions['notFields'] as $startField => $compareFields) {
-                if (!empty($this->properties[$startField]) && in_array($this->properties[$startField][0] ?? $this->properties[$startField], $compareFields) === true) {
+                if (isset($this->properties[$startField]) && in_array($this->properties[$startField][0] ?? $this->properties[$startField], $compareFields) === true) {
                     return false;
                 }
             }
