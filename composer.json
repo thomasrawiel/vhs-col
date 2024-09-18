@@ -1,7 +1,7 @@
 {
   "name": "traw/vhs-col",
   "type": "typo3-cms-extension",
-  "description": "A collection of more or less useful ViewHelpers",
+  "description": "A collection of more or less useful ViewHelpers and Utilities",
   "authors": [
     {
       "name": "Thomas Rawiel",

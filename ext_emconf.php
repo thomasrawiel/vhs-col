@@ -8,10 +8,12 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Thomas Rawiel',
     'author_email' => 'thomas.rawiel@gmail.com',
     'clearCacheOnLoad' => 0,
-    'version' => '1.4.0',
+    'version' => '1.5.0',
     'constraints' => [
         'depends' => [
+            'extbase' => '',
             'fluid_styled_content' => '',
+            'vhs' => '',
         ],
         'conflicts' => [],
         'suggests' => [],
