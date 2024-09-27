@@ -18,7 +18,7 @@ final class CType
     /**
      * @var string|null
      */
-    protected ?string $icon;
+    protected ?string $iconIdentifier;
     /**
      * @var string|null
      */
@@ -57,7 +57,7 @@ final class CType
     {
         $this->label = $cType['label'];
         $this->value = $cType['value'];
-        $this->icon = $cType['icon'] ?? null;
+        $this->iconIdentifier = $cType['icon'] ?? null;
         $this->group = $cType['group'] ?? null;
         $this->showitem = $cType['showitem'] ?? null;
         $this->flexform = $cType['flexform'] ?? null;
@@ -89,9 +89,9 @@ final class CType
     /**
      * @return string|null
      */
-    public function getIcon(): string|null
+    public function getIconIdentifier(): string|null
     {
-        return $this->icon;
+        return $this->iconIdentifier;
     }
 
     /**

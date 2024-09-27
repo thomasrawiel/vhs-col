@@ -40,7 +40,7 @@ class CTypes
                 [
                     'label' => $c->getLabel(),
                     'value' => $c->getValue(),
-                    'icon' => $c->getIcon(),
+                    'icon' => $c->getIconIdentifier(),
                     'group' => $c->getGroup(),
                 ],
                 $c->getRelativeToField(),
@@ -49,8 +49,8 @@ class CTypes
             if (!empty($c->getGroup()) && empty($GLOBALS['TCA'][$table]['columns']['CType']['config']['itemGroups'][$c->getGroup()])) {
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup($table, 'CType', $c->getGroup(), $c->getGroup());
             }
-            if (!empty($c->getIcon())) {
-                $GLOBALS['TCA'][$table]['ctrl']['typeicon_classes'][$c->getValue()] = $c->getIcon();
+            if (!empty($c->getIconIdentifier())) {
+                $GLOBALS['TCA'][$table]['ctrl']['typeicon_classes'][$c->getValue()] = $c->getIconIdentifier();
             }
             if (!empty($c->getShowitem())) {
                 $GLOBALS['TCA'][$table]['types'][$c->getValue()]['showitem'] = $c->getShowitem();

@@ -74,7 +74,7 @@ class TcaOptionsMap
      */
     public function addOptions(array &$params): void
     {
-        $this->init($params);
+        $this->initialize($params);
         $this->setOptions();
     }
 
@@ -83,7 +83,7 @@ class TcaOptionsMap
      *
      * @return void
      */
-    protected function init(array &$params): void
+    protected function initialize(array &$params): void
     {
         $table = $params['table'];
 
