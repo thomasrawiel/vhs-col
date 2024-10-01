@@ -194,7 +194,7 @@ class TcaOptionsMap
             ->select(
                 array_merge(['uid'], array_keys($configuration)),
                 $table,
-                ['uid' => $this->properties[$parentDetectionField]]
+                ['uid' => $this->properties[$parentDetectionField][0] ?? $this->properties[$parentDetectionField]]
             )->fetchAssociative();
 
         if (empty($result) || $result === false) return false;
