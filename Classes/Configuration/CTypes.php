@@ -61,6 +61,9 @@ class CTypes
             if (!empty($c->getFlexform())) {
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('', $c->getFlexform(), $c->getValue());
             }
+            if(!empty($c->getPreviewRenderer()) && class_exists($c->getPreviewRenderer())) {
+                $GLOBALS['TCA'][$table]['types'][$c->getValue()]['previewRenderer'] = $c->getPreviewRenderer();
+            }
         }
     }
 

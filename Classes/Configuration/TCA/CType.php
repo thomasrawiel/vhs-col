@@ -47,6 +47,11 @@ final class CType
      */
     protected ?string $relativePosition;
 
+    /**
+     * @var string|mixed|null
+     */
+    protected ?string $previewRenderer;
+
 
     /**
      * @param array $cType
@@ -64,6 +69,7 @@ final class CType
         $this->columnsOverrides = $cType['columnsOverrides'] ?? null;
         $this->relativeToField = $cType['relativeToField'] ?? null;
         $this->relativePosition = $cType['relativePosition'] ?? null;
+        $this->previewRenderer = $cType['previewRenderer'] ?? null;
 
         if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A CType must have at least a label and a value');
@@ -140,5 +146,13 @@ final class CType
     public function getRelativePosition(): string
     {
         return $this->relativePosition ?? '';
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPreviewRenderer(): ?string
+    {
+        return $this->previewRenderer;
     }
 }
