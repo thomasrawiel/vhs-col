@@ -45,7 +45,6 @@ class TcaOptionsMap
     /**
      * Usage:
      * Add a map to your table with conditions for when the items should be (or should not be) added
-
      * @var array
      */
 
@@ -90,8 +89,8 @@ class TcaOptionsMap
         $this->mapping = $GLOBALS['TCA'][$table]['tx_vhscol_option_map'] ?? [];
         $this->properties = $params['row'];
 
-        foreach($this->mapping as $propertyName => $mapping) {
-            if(isset($this->properties[$propertyName])) {
+        foreach ($this->mapping as $propertyName => $mapping) {
+            if (isset($this->properties[$propertyName])) {
                 //if it's an array (tt_content) use the first entry
                 $this->properties[$propertyName] = $this->properties[$propertyName][0]
                     ?? $this->properties[$propertyName]
@@ -189,12 +188,16 @@ class TcaOptionsMap
      */
     protected function parentAnythingProperties(array $configuration, string $table, string $parentDetectionField): bool
     {
+        $parentUid = $this->properties[$parentDetectionField][0] ?? $this->properties[$parentDetectionField] ?? false;
+
+        if ($parentUid === false) return false;
+
         $result = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table)
             ->select(
                 array_merge(['uid'], array_keys($configuration)),
                 $table,
-                ['uid' => $this->properties[$parentDetectionField][0] ?? $this->properties[$parentDetectionField]]
+                ['uid' => $parentUid]
             )->fetchAssociative();
 
         if (empty($result) || $result === false) return false;
