@@ -16,4 +16,21 @@ class Typo3Version
     {
         return (new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion();
     }
+
+    /**
+     * @param string      $version
+     * @param string|null $operator
+     *
+     * @return bool|int -1 if the current TYPO3 version is lower than the provided,
+     *                  0 if they are equal, and
+     *                  1 if the provided version is lower than the current TYPO3 verion.
+     *
+     *                  When using the optional operator argument, the
+     *                  function will return true if the relationship is the one specified
+     *                  by the operator, false otherwise.
+     */
+    public static function compareCurrentTypo3Version(string $version, #[ExpectedValues(values: ["<", "lt", "<=", "le", ">", "gt", ">=", "ge", "==", "=", "eq", "!=", "<>", "ne",])] ?string $operator): bool|int
+    {
+        return version_compare(Typo3Version::getTypo3Version(), $version, $operator);
+    }
 }
