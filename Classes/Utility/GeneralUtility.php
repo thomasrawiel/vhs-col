@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace TRAW\VhsCol\Utility;
+
+use TRAW\VhsCol\Information\RequestType;
+use TRAW\VhsCol\Information\Typo3Version;
 
 class GeneralUtility
 {
@@ -31,7 +35,7 @@ class GeneralUtility
     /**
      * @return string
      */
-    public static function getTypo3Version():string
+    public static function getTypo3Version(): string
     {
         return (new \TYPO3\CMS\Core\Information\Typo3Version())->getVersion();
     }
@@ -41,20 +45,22 @@ class GeneralUtility
      */
     public static function getTypo3MajorVersion(): int
     {
-        return (new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion();
+        return Typo3Version::getTypo3MajorVersion();
     }
 
     /**
      * @return bool
      */
-    public static function isFrontend():bool {
-        \TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
+    public static function isFrontend(): bool
+    {
+        return RequestType::isFrontend();
     }
 
     /**
      * @return bool
      */
-    public static function isBackend():bool {
-        return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend();
+    public static function isBackend(): bool
+    {
+        return RequestType::isBackend();
     }
 }

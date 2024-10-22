@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\ViewHelpers\Media\Source;
 
 use TRAW\VhsCol\Utility\DatabaseUtility;

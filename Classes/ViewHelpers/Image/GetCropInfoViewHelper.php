@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -28,12 +28,12 @@ class GetCropInfoViewHelper extends AbstractViewHelper
      * Returns the crop information as array
      *   [
      *      cropArea => [
-     *          height 
-     *          width 
-     *          x 
-     *          y 
+     *          height
+     *          width
+     *          x
+     *          y
      *      ]
-     *      selectedRatio 
+     *      selectedRatio
      *      focusArea => NULL
      *  ]
      *

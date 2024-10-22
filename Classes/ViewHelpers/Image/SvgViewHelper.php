@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TRAW\VhsCol\Utility\SvgUtility;

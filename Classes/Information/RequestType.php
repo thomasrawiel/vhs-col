@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\Information;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,7 +30,6 @@ class RequestType
     {
         return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request))->isBackend();
     }
-
 
     /**
      * @param ServerRequestInterface|null $request

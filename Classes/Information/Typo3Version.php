@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\Information;
 
 class Typo3Version
@@ -19,7 +19,7 @@ class Typo3Version
 
     /**
      * @param string      $version
-     * @param string|null $operator
+     * @param string|null $operator #[ExpectedValues(values: ["<", "lt", "<=", "le", ">", "gt", ">=", "ge", "==", "=", "eq", "!=", "<>", "ne",])]
      *
      * @return bool|int -1 if the current TYPO3 version is lower than the provided,
      *                  0 if they are equal, and
@@ -29,7 +29,7 @@ class Typo3Version
      *                  function will return true if the relationship is the one specified
      *                  by the operator, false otherwise.
      */
-    public static function compareCurrentTypo3Version(string $version, #[ExpectedValues(values: ["<", "lt", "<=", "le", ">", "gt", ">=", "ge", "==", "=", "eq", "!=", "<>", "ne",])] ?string $operator): bool|int
+    public static function compareCurrentTypo3Version(string $version, ?string $operator): bool|int
     {
         return version_compare(Typo3Version::getTypo3Version(), $version, $operator);
     }

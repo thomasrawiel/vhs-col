@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\Information;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;

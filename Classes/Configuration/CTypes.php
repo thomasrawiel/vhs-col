@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\Configuration;
 
 use TRAW\VhsCol\Configuration\TCA\CType;

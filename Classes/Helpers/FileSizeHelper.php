@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace TRAW\VhsCol\Helpers;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
