@@ -16,4 +16,9 @@ services:
     tags:
       - name: 'data.processor'
         identifier: 'traw-gallery'
+        
+  TRAW\VhsCol\Listener\PageTsConfig:
+    tags:
+      - name: event.listener
+        identifier: 'txvhscol-page-ts-config'
 

@@ -1,16 +1,22 @@
 <?php
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Configuration\TCA;
 
 /**
  * Class CType
  */
-final class CType
+final readonly class CType
 {
     /**
      * @var string|null
      */
     protected ?string $label;
+
+    /**
+     * @var string
+     */
+    protected string $description;
     /**
      * @var string|null
      */
@@ -52,6 +58,16 @@ final class CType
      */
     protected ?string $previewRenderer;
 
+    /**
+     * @var bool|mixed
+     */
+    protected bool $registerInNewContentElementWizard;
+
+    /**
+     * @var array|mixed
+     */
+    protected array $defaultValues;
+
 
     /**
      * @param array $cType
@@ -62,6 +78,7 @@ final class CType
     {
         $this->label = $cType['label'];
         $this->value = $cType['value'];
+        $this->description = $cType['description'] ?? '';
         $this->iconIdentifier = $cType['icon'] ?? null;
         $this->group = $cType['group'] ?? null;
         $this->showitem = $cType['showitem'] ?? null;
@@ -70,6 +87,8 @@ final class CType
         $this->relativeToField = $cType['relativeToField'] ?? null;
         $this->relativePosition = $cType['relativePosition'] ?? null;
         $this->previewRenderer = $cType['previewRenderer'] ?? null;
+        $this->registerInNewContentElementWizard = $cType['registerInNewContentElementWizard'] ?? false;
+        $this->defaultValues = $cType['defaultValues'] ?? [];
 
         if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A CType must have at least a label and a value');
@@ -82,6 +101,14 @@ final class CType
     public function getLabel(): string
     {
         return $this->label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     /**
@@ -154,5 +181,21 @@ final class CType
     public function getPreviewRenderer(): ?string
     {
         return $this->previewRenderer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRegisterInNewContentElementWizard(): bool
+    {
+        return $this->registerInNewContentElementWizard;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultValues(): array
+    {
+        return $this->defaultValues;
     }
 }
