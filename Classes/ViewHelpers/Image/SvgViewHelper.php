@@ -25,7 +25,7 @@ class SvgViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        return GeneralUtility::makeInstance(SvgUtility::class)->render($arguments['name'], $arguments['path'] ?? '', $arguments['file'] ?? null, $arguments['useThemePath'] ?? false);
+        return GeneralUtility::makeInstance(SvgUtility::class)->render($arguments['name'], $arguments['path'] ?? '', $arguments['file'] ?? null, (bool)($arguments['useThemePath'] ?? false));
     }
 
     public function initializeArguments()

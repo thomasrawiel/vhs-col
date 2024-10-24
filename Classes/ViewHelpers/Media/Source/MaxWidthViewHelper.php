@@ -30,7 +30,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
 
         // If given width is empty, return first (largest) source's imageWidth
         if ($this->arguments['width'] === null) {
-            return reset($this->arguments['sources'])['imageWidth'];
+            return (int)(reset($this->arguments['sources'])['imageWidth']);
         }
 
         $imageWidth = 0;
