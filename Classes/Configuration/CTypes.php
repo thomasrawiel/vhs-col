@@ -81,15 +81,18 @@ class CTypes
             return $pageTs;
         }
         if (!empty($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'])) {
+            $pageTs = '';
+            $headerAdded = false;
             foreach ($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] as $cTypeKey => $configuration) {
                 $cType = new \TRAW\VhsCol\Configuration\TCA\CType($configuration);
                 if ($cType->getRegisterInNewContentElementWizard()) {
                     $group = $cType->getGroup() ?? 'default';
                     $groupLabel = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group] ?? $group;
-                    $pageTs = '';
-                    if (!in_array($group, ['common', 'default' . 'menu', 'special', 'forms', 'plugins'])) {
+
+                    if (!in_array($group, ['common', 'default' . 'menu', 'special', 'forms', 'plugins']) && !$headerAdded) {
                         // do not override EXT:backend dummy placeholders for item groups
                         $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.header = ' . $groupLabel . LF;
+                        $headerAdded = true;
                     }
                     $ttContentDefValues = 'CType = ' . $cType->getValue() . LF . implode(LF, $cType->getDefaultValues());
                     $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.elements {' . LF;
