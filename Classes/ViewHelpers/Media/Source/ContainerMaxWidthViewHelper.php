@@ -22,9 +22,9 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function render(): int
+    public function render(): float
     {
         $width = $this->arguments['width'];
         $settings = $this->arguments['settings'];
@@ -42,6 +42,6 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
             }
         }
 
-        return (int)$width;
+        return round($width);
     }
 }

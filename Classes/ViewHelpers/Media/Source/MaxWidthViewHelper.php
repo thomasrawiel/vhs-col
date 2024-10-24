@@ -44,6 +44,6 @@ class MaxWidthViewHelper extends AbstractViewHelper
                 break;
             }
         }
-        return $imageWidth > 0 ? $imageWidth : $this->arguments['width'];
+        return (int)($imageWidth > 0 ? $imageWidth : $this->arguments['width']);
     }
 }
