@@ -30,6 +30,7 @@ plugin.tx_vhscol {
             # Define image sources for different viewports
             sources {
                 desktop {
+                    enable = 1
                     minWidth = 1280
                     cropVariant = desktop
                     imageWidth = 1920
@@ -37,6 +38,7 @@ plugin.tx_vhscol {
                 }
 
                 tablet {
+                    enable = 1
                     minWidth = 768
                     cropVariant = tablet
                     imageWidth = 1280
@@ -44,6 +46,7 @@ plugin.tx_vhscol {
                 }
 
                 mobileLandscape {
+                    enable = 1
                     minWidth = 480
                     cropVariant = mobile
                     imageWidth = 768
@@ -52,6 +55,7 @@ plugin.tx_vhscol {
                 }
 
                 mobilePortrait {
+                    enable = 1
                     minWidth = 320
                     cropVariant = mobile
                     imageWidth = 480

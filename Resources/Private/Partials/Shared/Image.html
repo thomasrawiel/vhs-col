@@ -7,14 +7,16 @@
                 value="{vcol:media.source.maxWidth(sources: settings.picture.sources, width: dimensions.width)}"/>
     <f:for each="{settings.picture.sources -> v:iterator.sort(sortBy: 'minWidth', order: 'DESC')}" as="source"
            key="title">
-        <f:variable name="width"
-                    value="{f:if(condition: '{source.cropVariant} == \'desktop\'', then: '{vcol:media.source.containerMaxWidth(width: maxWidth, settings: settings.picture.containerFactors)}', else: '{maxWidth}')}"/>
-        <f:variable name="width"
-                    value="{f:if(condition: '{width} > {source.imageWidth}', then: '{source.imageWidth}', else: '{width}')}"/>
-        <vcol:media.source media="(min-width: {source.minWidth}px)"
-                          width="{width}"
-                          cropVariant="{source.cropVariant}" pixelDensities="{source.pixelDensity}"
-                          quality="{source.quality}"/>
+        <f:if condition="{source.enable}">
+            <f:variable name="width"
+                        value="{f:if(condition: '{source.cropVariant} == \'desktop\'', then: '{vcol:media.source.containerMaxWidth(width: maxWidth, settings: settings.picture.containerFactors)}', else: '{maxWidth}')}"/>
+            <f:variable name="width"
+                        value="{f:if(condition: '{width} > {source.imageWidth}', then: '{source.imageWidth}', else: '{width}')}"/>
+            <vcol:media.source media="(min-width: {source.minWidth}px)"
+                               width="{width}"
+                               cropVariant="{source.cropVariant}" pixelDensities="{source.pixelDensity}"
+                               quality="{source.quality}"/>
+        </f:if>
     </f:for>
     <vcol:media.source width="{dimensions.width -> f:or(alternative: settings.picture.sources.desktop.imageWidth)}"
                       cropVariant="{settings.picture.sources.desktop.cropVariant}"/>
