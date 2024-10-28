@@ -39,12 +39,13 @@ class TelephoneViewHelper extends AbstractViewHelper
         try {
             $inputNumberString = $this->arguments['phoneNumber'] ?? $this->renderChildren();
             $phoneUtil = PhoneNumberUtil::getInstance();
-            $phoneNumber = $phoneUtil->parse($inputNumberString, $this->arguments['defaultRegion']);
 
             //if it's already a uri, then we just want the number
-            if (str_starts_with('tel:', $phoneNumber)) {
-                $phoneNumber = substr($phoneNumber, 4);
+            if (str_starts_with('tel:', $inputNumberString)) {
+                $inputNumberString = substr($inputNumberString, 4);
             }
+
+            $phoneNumber = $phoneUtil->parse($inputNumberString, $this->arguments['defaultRegion'] ?? null);
 
             //if we don't know the format, set rfc as format
             if (!in_array($this->arguments['format'], [0, 1, 2, 3])) {
