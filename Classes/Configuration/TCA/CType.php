@@ -6,7 +6,7 @@ namespace TRAW\VhsCol\Configuration\TCA;
 /**
  * Class CType
  */
-final readonly class CType
+final class CType
 {
     /**
      * @var string|null
