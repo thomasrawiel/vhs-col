@@ -1,11 +1,12 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:vcol="https://typo3.org/ns/TRAW/VhsCol/ViewHelpers"
       data-namespace-typo3-fluid="true">
 <vcol:media.picture class="image-embed-item" src="{file}" treatIdAsReference="1" alt="{file.alternative}"
                     title="{file.title}"
                     loading="{settings.picture.loading}">
     <f:variable name="maxWidth"
                 value="{vcol:media.source.maxWidth(sources: settings.picture.sources, width: dimensions.width)}"/>
-    <f:for each="{settings.picture.sources -> v:iterator.sort(sortBy: 'minWidth', order: 'DESC')}" as="source"
+    <f:for each="{settings.picture.sources -> vcol:iterator.sort(sortBy: 'minWidth', order: 'DESC')}" as="source"
            key="title">
         <f:if condition="{source.enable}">
             <f:variable name="width"

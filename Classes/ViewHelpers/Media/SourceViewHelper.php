@@ -42,24 +42,6 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'source';
 
-    /**
-     * @var ContentObjectRenderer
-     */
-    protected $contentObject;
-
-    /**
-     * @var ConfigurationManagerInterface
-     */
-    protected $configurationManager;
-
-    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void
-    {
-        $this->configurationManager = $configurationManager;
-        /** @var ContentObjectRenderer $contentObject */
-        $contentObject = $this->configurationManager->getContentObject();
-        $this->contentObject = $contentObject;
-    }
-
     public function initializeArguments(): void
     {
         parent::initializeArguments();
