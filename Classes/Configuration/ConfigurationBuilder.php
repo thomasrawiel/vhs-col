@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Configuration;
 
 use TYPO3\CMS\Core\SingletonInterface;
@@ -8,29 +9,29 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ConfigurationBuilder implements SingletonInterface
 {
     /**
-     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManager
+     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManager|null
      */
-    protected \TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager;
+    protected ?\TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager = null;
 
     /**
-     * @var \TYPO3\CMS\Core\TypoScript\TypoScriptService
+     * @var \TYPO3\CMS\Core\TypoScript\TypoScriptService|null
      */
-    protected \TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService;
-
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected ?\TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService = null;
 
     /**
      * @var array
      */
-    protected $persistenceSettings = [];
+    protected array $settings = [];
 
     /**
      * @var array
      */
-    protected $viewSettings = [];
+    protected array $persistenceSettings = [];
+
+    /**
+     * @var array
+     */
+    protected array $viewSettings = [];
 
     /**
      * @param string $extKey
@@ -102,14 +103,12 @@ class ConfigurationBuilder implements SingletonInterface
     protected function loadTypoScript(string $extKey = 'vhs_col'): void
     {
         $tsExtKey = \TRAW\VhsCol\Utility\GeneralUtility::getTyposcriptExtensionKey($extKey);
-
+        $typoscriptService = $this->getTypoScriptService();
         if ($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']) {
-            $typoScript = $this->getTypoScriptService()
-                ->convertTypoScriptArrayToPlainArray($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']);
+            $typoScript = $typoscriptService->convertTypoScriptArrayToPlainArray($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']);
         } else {
             $fullTypoScript = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
-            $typoScript = $this->getTypoScriptService()
-                ->convertTypoScriptArrayToPlainArray($fullTypoScript['plugin.'][$tsExtKey . '.']);
+            $typoScript = $typoscriptService->convertTypoScriptArrayToPlainArray($fullTypoScript['plugin.'][$tsExtKey . '.']);
         }
         $this->settings = $typoScript['settings'];
         $this->persistenceSettings = $typoScript['persistence'] ?? [];
@@ -122,7 +121,7 @@ class ConfigurationBuilder implements SingletonInterface
      *
      * @return \TYPO3\CMS\Core\TypoScript\TypoScriptService
      */
-    protected function getTypoScriptService()
+    protected function getTypoScriptService(): TypoScriptService
     {
         if (is_null($this->typoScriptService)) {
             $this->typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class);
