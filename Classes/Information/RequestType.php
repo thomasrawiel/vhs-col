@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Information;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,6 +30,19 @@ class RequestType
     public static function isBackend(ServerRequestInterface $request = null): bool
     {
         return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request))->isBackend();
+    }
+
+    /**
+     * @param ServerRequestInterface|null $request
+     * @param bool                        $abbreviate - return "BE" or ""FE" if true
+     *
+     * @return string
+     */
+    public static function getRequestType(ServerRequestInterface $request = null, bool $abbreviate = true): string
+    {
+        $applicationType = \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request));
+
+        return $abbreviate ? $applicationType->abbreviate() : $applicationType;
     }
 
     /**
