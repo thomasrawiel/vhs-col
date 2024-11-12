@@ -5,6 +5,7 @@ namespace TRAW\VhsCol\Configuration;
 
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 
 class ConfigurationBuilder implements SingletonInterface
 {
