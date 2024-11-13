@@ -107,11 +107,12 @@ final class Doktypes
      * Call this in ext_localconf.php
      * @return string
      */
-//    public static function registerDoktypesInUserTsConfig(): void
-//    {
-//        if (!empty($GLOBALS['TCA']['pages']['tx_vhscol_doktypes'])) {
-//            $doktypesString = implode(',', $GLOBALS['TCA']['pages']['tx_vhscol_doktypes']);
-//            ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
-//        }
-//    }
+    public static function registerDoktypesInUserTsConfig(array $doktypes): void
+    {
+        $doktypesString = implode(',', array_column($doktypes, 'value'));
+
+        if (!empty($doktypesString)) {
+            ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
+        }
+    }
 }
