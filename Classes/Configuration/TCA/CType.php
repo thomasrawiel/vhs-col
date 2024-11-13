@@ -70,25 +70,25 @@ final class CType
 
 
     /**
-     * @param array $cType
+     * @param array $cTypeConfiguration
      *
      * @throws \Exception
      */
-    public function __construct(array $cType)
+    public function __construct(array $cTypeConfiguration)
     {
-        $this->label = $cType['label'];
-        $this->value = $cType['value'];
-        $this->description = $cType['description'] ?? '';
-        $this->iconIdentifier = $cType['icon'] ?? null;
-        $this->group = $cType['group'] ?? null;
-        $this->showitem = $cType['showitem'] ?? null;
-        $this->flexform = $cType['flexform'] ?? null;
-        $this->columnsOverrides = $cType['columnsOverrides'] ?? null;
-        $this->relativeToField = $cType['relativeToField'] ?? null;
-        $this->relativePosition = $cType['relativePosition'] ?? null;
-        $this->previewRenderer = $cType['previewRenderer'] ?? null;
-        $this->registerInNewContentElementWizard = $cType['registerInNewContentElementWizard'] ?? false;
-        $this->defaultValues = $cType['defaultValues'] ?? [];
+        $this->label = $cTypeConfiguration['label'];
+        $this->value = $cTypeConfiguration['value'];
+        $this->description = $cTypeConfiguration['description'] ?? '';
+        $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
+        $this->group = $cTypeConfiguration['group'] ?? 'default';
+        $this->showitem = $cTypeConfiguration['showitem'] ?? null;
+        $this->flexform = $cTypeConfiguration['flexform'] ?? null;
+        $this->columnsOverrides = $cTypeConfiguration['columnsOverrides'] ?? null;
+        $this->relativeToField = $cTypeConfiguration['relativeToField'] ?? null;
+        $this->relativePosition = $cTypeConfiguration['relativePosition'] ?? null;
+        $this->previewRenderer = $cTypeConfiguration['previewRenderer'] ?? null;
+        $this->registerInNewContentElementWizard = $cTypeConfiguration['registerInNewContentElementWizard'] ?? false;
+        $this->defaultValues = $cTypeConfiguration['defaultValues'] ?? [];
 
         if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A CType must have at least a label and a value');
