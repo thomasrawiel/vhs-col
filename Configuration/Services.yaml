@@ -16,9 +16,17 @@ services:
     tags:
       - name: 'data.processor'
         identifier: 'traw-gallery'
-        
+
   TRAW\VhsCol\Listener\PageTsConfig:
     tags:
       - name: event.listener
         identifier: 'txvhscol-page-ts-config'
+  TRAW\VhsCol\Listener\UserTsConfig:
+    tags:
+      - name: event.listener
+        identifier: 'txvhscol-page-user-config'
+  TRAW\VhsCol\Listener\BootCompleted:
+    tags:
+      - name: event.listener
+        identifier: 'txvhscol-boot-completed'
 

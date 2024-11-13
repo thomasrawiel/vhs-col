@@ -74,13 +74,12 @@ final class Doktypes
                 if (!isset($GLOBALS['TCA']['pages']['tx_vhscol_doktypes'])) {
                     $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'] = [];
                 }
-                $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'][] = $d->getValue();
+                $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'][] = [
+                    'value' => $d->getValue(),
+                    'allowedTables' => $d->getAllowedTables(),
+                ];
             }
         }
-
-//        if(Typo3Version::getTypo3MajorVersion() < 13) {
-//            self::registerDoktypesInUserTsConfig();
-//        }
     }
 
     /**
@@ -97,7 +96,7 @@ final class Doktypes
             $dokTypeRegistry->add(
                 $doktype['value'],
                 [
-                    'allowedTables' => $config['allowedTables'] ?? '*',
+                    'allowedTables' => $doktype['allowedTables'],
                 ],
             );
         }

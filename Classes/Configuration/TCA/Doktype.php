@@ -51,7 +51,15 @@ final class Doktype
      */
     protected ?string $showitem;
 
+    /**
+     * @var bool|mixed
+     */
     protected bool $registerInDragArea = true;
+
+    /**
+     * @var string|mixed|null
+     */
+    protected ?string $allowedTables;
 
     /**
      * @param array $doktypeConfiguration
@@ -70,6 +78,7 @@ final class Doktype
         $this->columnsOverrides = $doktypeConfiguration['columnsOverrides'] ?? null;
         $this->showitem = $doktypeConfiguration['showitem'] ?? null;
         $this->registerInDragArea = $doktypeConfiguration['registerInDragArea'] ?? true;
+        $this->allowedTables = $doktypeConfiguration['allowedTables'] ?? '*';
 
         if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A Doktype must have at least a label and a value');
@@ -156,8 +165,19 @@ final class Doktype
         return $this->showitem;
     }
 
+    /**
+     * @return bool
+     */
     public function isRegisterInDragArea(): bool
     {
         return $this->registerInDragArea;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAllowedTables(): ?string
+    {
+        return $this->allowedTables;
     }
 }
