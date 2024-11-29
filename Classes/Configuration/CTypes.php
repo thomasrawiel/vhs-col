@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration;
 
+use TRAW\VhsCol\Configuration\TCA\CType;
+
 /**
  * Class CTypes
  */
@@ -11,7 +13,7 @@ class CTypes
     /**
      *
      *
-     * @param array  $cTypes
+     * @param array $cTypes
      *
      * @throws \Exception
      */
@@ -86,6 +88,7 @@ class CTypes
             foreach ($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] as $cTypeKey => $configuration) {
                 $cType = new \TRAW\VhsCol\Configuration\TCA\CType($configuration);
                 if ($cType->getRegisterInNewContentElementWizard()) {
+                    $pageTs .= '### New content element wizard configuration for CType "' . $cType->getValue() . '"' . LF;
                     $group = $cType->getGroup() ?? 'default';
                     $groupLabel = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group] ?? $group;
 
@@ -94,22 +97,54 @@ class CTypes
                         $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.header = ' . $groupLabel . LF;
                         $headerAdded = true;
                     }
-                    $ttContentDefValues = 'CType = ' . $cType->getValue() . LF . implode(LF, $cType->getDefaultValues());
+
                     $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.elements {' . LF;
                     $pageTs .= '  ' . $cType->getValue() . ' {' . LF
                         . '    title = ' . $cType->getLabel() . LF
                         . '    description = ' . $cType->getDescription() . LF
                         . '    iconIdentifier = ' . $cType->getIconIdentifier() . LF
                         . '      tt_content_defValues {' . LF
-                        . '          ' . $ttContentDefValues . LF
+                        . '          ' . self::getDefaultValuesPageTsString($cType) . LF
                         . '     }' . LF
-                        . '      }' . LF
+                        . '  }' . LF
                         . '}' . LF;
 
-                    $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.show := addToList(' . $cType->getValue() . ')' . LF;
+                    $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.show := addToList(' . $cType->getValue() . ')' . LF . LF;
                 }
             }
         }
         return $pageTs;
+    }
+
+    /**
+     * 'defaultValues' => [
+     *      'header_layout' => 2,
+     *      'header_style' => 3,
+     *      'sectionIndex' => 0,
+     *      'nonexistentcolumnname' => 123,
+     * ],
+     *
+     * column names that don't exist in TCA tt_content columns are skipped
+     *
+     *
+     * @param CType $cType
+     *
+     * @return string
+     */
+    protected static function getDefaultValuesPageTsString(CType $cType): string
+    {
+        $pageTsString = 'CType = ' . $cType->getValue();;
+
+        if (!empty($cType->getDefaultValues())) {
+            $defaultValues = array_map(function ($value, $key) {
+                if (!empty($GLOBALS['TCA']['tt_content']['columns'][$key])) {
+                    return $key . ' = ' . $value;
+                }
+                return '';
+            }, $cType->getDefaultValues(), array_keys($cType->getDefaultValues()));
+
+            $pageTsString = $pageTsString . LF . '          ' . implode(LF . '          ', array_filter($defaultValues));
+        }
+        return $pageTsString;
     }
 }
