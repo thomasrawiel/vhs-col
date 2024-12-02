@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Iterator;
 
 /*
@@ -55,7 +57,7 @@ class SortViewHelper extends AbstractViewHelper
         'SORT_NUMERIC',
         'SORT_NATURAL',
         'SORT_LOCALE_STRING',
-        'SORT_FLAG_CASE'
+        'SORT_FLAG_CASE',
     ];
 
     public function initializeArguments(): void
@@ -72,6 +74,12 @@ class SortViewHelper extends AbstractViewHelper
             'ASC, DESC, RAND or SHUFFLE. RAND preserves keys, SHUFFLE does not - but SHUFFLE is faster',
             false,
             'ASC'
+        );
+        $this->registerArgument(
+            'keepOldIndex',
+            'string',
+            'Keep the old index as this new variable',
+            false
         );
         $this->registerArgument(
             'sortFlags',
@@ -95,10 +103,11 @@ class SortViewHelper extends AbstractViewHelper
      * @return mixed
      */
     public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
+        array                     $arguments,
+        \Closure                  $renderChildrenClosure,
         RenderingContextInterface $renderingContext
-    ) {
+    )
+    {
         /** @var string|null $as */
         $as = $arguments['as'] ?? null;
         $candidate = $arguments['subject'] ?? $renderChildrenClosure();
@@ -126,13 +135,18 @@ class SortViewHelper extends AbstractViewHelper
      * Sort an array
      *
      * @param array|\Iterator $array
-     * @param array $arguments
+     * @param array           $arguments
+     *
      * @return array
      */
     protected static function sortArray($array, $arguments)
     {
         $sorted = [];
         foreach ($array as $index => $object) {
+            if (is_array($object) && $arguments['keepOldIndex'] ?? false) {
+                $oldIndex = $index;
+                $object[(isset($object[$arguments['keepOldIndex']]) ? '_' : '') . $arguments['keepOldIndex']] = $oldIndex;
+            }
             if (isset($arguments['sortBy'])) {
                 $index = static::getSortValue($object, $arguments);
             }
@@ -163,7 +177,8 @@ class SortViewHelper extends AbstractViewHelper
      * Sort an ObjectStorage instance
      *
      * @param ObjectStorage<object> $storage
-     * @param array $arguments
+     * @param array                 $arguments
+     *
      * @return ObjectStorage
      */
     protected static function sortObjectStorage($storage, $arguments)
@@ -187,6 +202,7 @@ class SortViewHelper extends AbstractViewHelper
      *
      * @param mixed $object
      * @param array $arguments
+     *
      * @return mixed
      */
     protected static function getSortValue($object, $arguments)
@@ -194,7 +210,7 @@ class SortViewHelper extends AbstractViewHelper
         $field = $arguments['sortBy'];
         $value = ObjectAccess::getPropertyPath($object, $field);
         if ($value instanceof \DateTimeInterface) {
-            $value = (integer) $value->format('U');
+            $value = (integer)$value->format('U');
         } elseif ($value instanceof ObjectStorage || $value instanceof LazyObjectStorage) {
             $value = $value->count();
         } elseif (is_array($value)) {
@@ -208,6 +224,7 @@ class SortViewHelper extends AbstractViewHelper
      * function.
      *
      * @param array $arguments
+     *
      * @return int
      * @throws Exception
      */
