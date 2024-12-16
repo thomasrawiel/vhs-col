@@ -5,7 +5,7 @@ namespace TRAW\VhsCol\Configuration\TCA;
 /**
  * Class Doktype
  */
-final class Doktype
+final readonly class Doktype
 {
     /**
      * @var string|mixed|null
@@ -51,10 +51,12 @@ final class Doktype
      */
     protected ?string $showitem;
 
+    protected ?string $additionalShowitem;
+
     /**
      * @var bool|mixed
      */
-    protected bool $registerInDragArea = true;
+    protected bool $registerInDragArea;
 
     /**
      * @var string|mixed|null
@@ -77,6 +79,7 @@ final class Doktype
         $this->itemType = $doktypeConfiguration['itemType'] ?? \TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT;
         $this->columnsOverrides = $doktypeConfiguration['columnsOverrides'] ?? null;
         $this->showitem = $doktypeConfiguration['showitem'] ?? null;
+        $this->additionalShowitem = $doktypeConfiguration['additionalShowitem'] ?? null;
         $this->registerInDragArea = $doktypeConfiguration['registerInDragArea'] ?? true;
         $this->allowedTables = $doktypeConfiguration['allowedTables'] ?? '*';
 
@@ -179,5 +182,10 @@ final class Doktype
     public function getAllowedTables(): ?string
     {
         return $this->allowedTables;
+    }
+
+    public function getAdditionalShowitem(): ?string
+    {
+        return $this->additionalShowitem;
     }
 }

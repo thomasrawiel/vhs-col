@@ -64,7 +64,13 @@ final class Doktypes
 
             $types = &$GLOBALS['TCA']['pages']['types'];
 
-            $types[(string)$d->getValue()]['showitem'] = $types[(string)$d->getItemType()]['showitem'];
+            $showitem = $types[(string)$d->getItemType()]['showitem'] ?? '';
+
+            if(!empty($d->getAdditionalShowitem())) {
+                $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(),',') ? '.' : '') . $d->getAdditionalShowitem();
+            }
+
+            $types[(string)$d->getValue()]['showitem'] = $showitem;
 
             if (!empty($d->getColumnsOverrides())) {
                 $types[(string)$d->getValue()]['columnsOverrides'] = $d->getColumnsOverrides();
