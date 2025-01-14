@@ -20,11 +20,11 @@ services:
   TRAW\VhsCol\Listener\PageTsConfig:
     tags:
       - name: event.listener
-        identifier: 'txvhscol-page-ts-config'
+        identifier: 'txvhscol-page-tsconfig'
   TRAW\VhsCol\Listener\UserTsConfig:
     tags:
       - name: event.listener
-        identifier: 'txvhscol-page-user-config'
+        identifier: 'txvhscol-user-tsconfig'
   TRAW\VhsCol\Listener\BootCompleted:
     tags:
       - name: event.listener

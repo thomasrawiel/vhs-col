@@ -3,10 +3,9 @@
 namespace TRAW\VhsCol\Configuration;
 
 use TRAW\VhsCol\Configuration\TCA\Doktype;
-use TRAW\VhsCol\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class Doktypes
@@ -66,8 +65,8 @@ final class Doktypes
 
             $showitem = $types[(string)$d->getItemType()]['showitem'] ?? '';
 
-            if(!empty($d->getAdditionalShowitem())) {
-                $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(),',') ? '.' : '') . $d->getAdditionalShowitem();
+            if (!empty($d->getAdditionalShowitem())) {
+                $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(), ',') ? '.' : '') . $d->getAdditionalShowitem();
             }
 
             $types[(string)$d->getValue()]['showitem'] = $showitem;
@@ -76,15 +75,7 @@ final class Doktypes
                 $types[(string)$d->getValue()]['columnsOverrides'] = $d->getColumnsOverrides();
             }
 
-            if ($d->isRegisterInDragArea()) {
-                if (!isset($GLOBALS['TCA']['pages']['tx_vhscol_doktypes'])) {
-                    $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'] = [];
-                }
-                $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'][] = [
-                    'value' => $d->getValue(),
-                    'allowedTables' => $d->getAllowedTables(),
-                ];
-            }
+            $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'][$d->getValue()] = $doktype;
         }
     }
 
@@ -102,7 +93,7 @@ final class Doktypes
             $dokTypeRegistry->add(
                 $doktype['value'],
                 [
-                    'allowedTables' => $doktype['allowedTables'],
+                    'allowedTables' => $doktype['allowedTables'] ?? '*',
                 ],
             );
         }
@@ -114,7 +105,24 @@ final class Doktypes
      */
     public static function registerDoktypesInUserTsConfig(array $doktypes): void
     {
-        $doktypesString = implode(',', array_column($doktypes, 'value'));
+        $register = [];
+        
+        foreach($doktypes as $doktype) {
+            $d = null;
+            if ($doktype instanceof Doktype || is_array($doktype) && !empty($doktype)) {
+                if (is_array($doktype)) {
+                    $d = new Doktype($doktype);
+                } else {
+                    $d = $doktype;
+                }
+            }
+
+            if($d->isRegisterInDragArea()) {
+                $register[] = $d->getValue();
+            }
+        }
+        
+        $doktypesString = implode(',', $register);
 
         if (!empty($doktypesString)) {
             ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');

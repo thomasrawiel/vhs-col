@@ -63,9 +63,7 @@ class CTypes
                 $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['previewRenderer'] = $c->getPreviewRenderer();
             }
 
-            if ($c->getRegisterInNewContentElementWizard()) {
-                $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'][$c->getValue()] = $cType;
-            }
+            $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'][$c->getValue()] = $cType;
         }
     }
 
