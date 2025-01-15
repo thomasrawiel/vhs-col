@@ -2,6 +2,9 @@
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+
 /**
  * Class Doktype
  */
@@ -85,6 +88,10 @@ final readonly class Doktype
 
         if (empty($this->label) || empty($this->value)) {
             throw new \Exception('A Doktype must have at least a label and a value');
+        }
+
+        if(!MathUtility::canBeInterpretedAsInteger($this->value)) {
+            throw new \Exception('A Doktype must have a value that can be interpreted as integer');
         }
     }
 
