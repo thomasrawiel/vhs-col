@@ -80,52 +80,42 @@ final class Doktypes
     }
 
     /**
-     * Call this in ext_tables.php
-     *
-     * @param array $doktypes
-     *
-     * @return void
+     * @throws \Exception
      */
-    public static function registerDoktypesInExtTables(array $doktypes): void
+    public static function registerDoktypesAfterBootCompleted(): void
     {
-        $dokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
-        foreach ($doktypes as $doktype) {
-            $dokTypeRegistry->add(
-                $doktype['value'],
-                [
-                    'allowedTables' => $doktype['allowedTables'] ?? '*',
-                ],
-            );
-        }
-    }
+        $doktypes = $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'] ?? null;
+        if (!empty($doktypes)) {
+            $dokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
+            $registerDoktypeInTSConfig = [];
 
-    /**
-     * Call this in ext_localconf.php
-     * @return string
-     */
-    public static function registerDoktypesInUserTsConfig(array $doktypes): void
-    {
-        $register = [];
-        
-        foreach($doktypes as $doktype) {
-            $d = null;
-            if ($doktype instanceof Doktype || is_array($doktype) && !empty($doktype)) {
-                if (is_array($doktype)) {
-                    $d = new Doktype($doktype);
-                } else {
-                    $d = $doktype;
+            foreach ($doktypes as $doktype) {
+                $d = null;
+                if ($doktype instanceof Doktype || is_array($doktype) && !empty($doktype)) {
+                    if (is_array($doktype)) {
+                        $d = new Doktype($doktype);
+                    } else {
+                        $d = $doktype;
+                    }
+                }
+
+                $dokTypeRegistry->add(
+                    $d->getValue(),
+                    [
+                        'allowedTables' => $d->getAllowedTables() ?? '*',
+                    ],
+                );
+
+                if ($d->isRegisterInDragArea()) {
+                    $registerDoktypeInTSConfig[] = $d->getValue();
                 }
             }
 
-            if($d->isRegisterInDragArea()) {
-                $register[] = $d->getValue();
-            }
-        }
-        
-        $doktypesString = implode(',', $register);
+            $doktypesString = implode(',', $registerDoktypeInTSConfig);
 
-        if (!empty($doktypesString)) {
-            ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
+            if (!empty($doktypesString)) {
+                ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
+            }
         }
     }
 }

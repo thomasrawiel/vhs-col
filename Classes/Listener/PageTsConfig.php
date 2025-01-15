@@ -9,6 +9,14 @@ use TRAW\VhsCol\Configuration\CTypes;
 
 final class PageTsConfig
 {
+    /**
+     * Generate Page tsconfig for registered CTypes
+     *
+     * @param ModifyLoadedPageTsConfigEvent $event
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function __invoke(ModifyLoadedPageTsConfigEvent $event): void
     {
         if (Typo3Version::getTypo3MajorVersion() < 12) {

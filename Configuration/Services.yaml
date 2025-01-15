@@ -21,10 +21,6 @@ services:
     tags:
       - name: event.listener
         identifier: 'txvhscol-page-tsconfig'
-  TRAW\VhsCol\Listener\UserTsConfig:
-    tags:
-      - name: event.listener
-        identifier: 'txvhscol-user-tsconfig'
   TRAW\VhsCol\Listener\BootCompleted:
     tags:
       - name: event.listener
