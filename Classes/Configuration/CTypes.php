@@ -11,13 +11,13 @@ use TRAW\VhsCol\Configuration\TCA\CType;
 class CTypes
 {
     /**
+     * @param array       $cTypes
+     * @param string|null $selectItemGroupLabel
      *
-     *
-     * @param array $cTypes
-     *
+     * @return void
      * @throws \Exception
      */
-    public static function registerCTypes(array $cTypes): void
+    public static function registerCTypes(array $cTypes, ?string $selectItemGroupLabel = null): void
     {
         //todo: sort original items by relativeposition and relativetofield
         foreach ($cTypes as $cType) {
@@ -29,7 +29,7 @@ class CTypes
                     $c = $cType;
                 }
             } else {
-                throw new \Exception('CType must be an instance of CType or array');
+                throw new \Exception('CType must be an instance of ' . CType::class . ' or array');
             }
 
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
@@ -45,7 +45,7 @@ class CTypes
                 $c->getRelativePosition()
             );
             if (!empty($c->getGroup()) && empty($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$c->getGroup()])) {
-                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup('tt_content', 'CType', $c->getGroup(), $c->getGroup());
+                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup('tt_content', 'CType', $c->getGroup(), $selectItemGroupLabel ?? $c->getGroup());
             }
             if (!empty($c->getIconIdentifier())) {
                 $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$c->getValue()] = $c->getIconIdentifier();
