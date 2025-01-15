@@ -3,12 +3,12 @@
 $EM_CONF[$_EXTKEY] = [
     'title' => 'ViewHelpers Collection',
     'description' => 'A collection of more or less useful ViewHelpers',
-    'state' => 'beta',
+    'state' => 'stable',
     'category' => 'misc',
     'author' => 'Thomas Rawiel',
     'author_email' => 'thomas.rawiel@gmail.com',
     'clearCacheOnLoad' => 0,
-    'version' => '1.12.2',
+    'version' => '1.13.0',
     'constraints' => [
         'depends' => [
             'typo3' => '12.4.0-13.4.99',
