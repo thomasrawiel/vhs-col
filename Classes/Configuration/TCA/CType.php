@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class CType
  */
@@ -78,8 +81,16 @@ final class CType
     {
         $this->label = $cTypeConfiguration['label'];
         $this->value = $cTypeConfiguration['value'];
+        if (empty($this->label) || empty($this->value)) {
+            throw new \Exception('A CType must have at least a label and a value');
+        }
+
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
+        if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
+            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for CType "' . $this->value . '" does not exist. It must be registered in your Configuraion/Icons.php');
+        };
+
         $this->group = $cTypeConfiguration['group'] ?? 'default';
         $this->showitem = $cTypeConfiguration['showitem'] ?? null;
         $this->flexform = $cTypeConfiguration['flexform'] ?? null;
@@ -89,10 +100,6 @@ final class CType
         $this->previewRenderer = $cTypeConfiguration['previewRenderer'] ?? null;
         $this->registerInNewContentElementWizard = $cTypeConfiguration['registerInNewContentElementWizard'] ?? false;
         $this->defaultValues = $cTypeConfiguration['defaultValues'] ?? [];
-
-        if (empty($this->label) || empty($this->value)) {
-            throw new \Exception('A CType must have at least a label and a value');
-        }
     }
 
     /**
