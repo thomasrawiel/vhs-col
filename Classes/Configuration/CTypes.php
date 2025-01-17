@@ -83,18 +83,13 @@ final class CTypes
     public static function getPageTsString(): string
     {
         $pageTs = '';
-        if (\TRAW\VhsCol\Information\Typo3Version::getTypo3MajorVersion() > 12) {
-            // s. https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/13.0/Breaking-102834-RemoveItemsFromNewContentElementWizard.html
-            return $pageTs;
-        }
         if (!empty($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'])) {
-            $pageTs = '';
             $headerAdded = false;
             foreach ($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] as $cTypeKey => $configuration) {
                 $cType = new \TRAW\VhsCol\Configuration\TCA\CType($configuration);
-                if ($cType->getRegisterInNewContentElementWizard()) {
+                $group = $cType->getGroup();
+                if ($cType->getRegisterInNewContentElementWizard() && Typo3Version::getTypo3MajorVersion() < 13) {
                     $pageTs .= '### New content element wizard configuration for CType "' . $cType->getValue() . '"' . LF;
-                    $group = $cType->getGroup() ?? 'default';
                     $groupLabel = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group] ?? $group;
 
                     if (!in_array($group, ['common', 'default' . 'menu', 'special', 'forms', 'plugins']) && !$headerAdded) {
@@ -115,6 +110,10 @@ final class CTypes
                         . '}' . LF;
 
                     $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.show := addToList(' . $cType->getValue() . ')' . LF . LF;
+                }
+
+                if ($cType->getRegisterInNewContentElementWizard() === false && Typo3Version::getTypo3MajorVersion() > 12) {
+                    $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.removeItems := addToList(' . $cType->getValue() . ')' . LF;
                 }
             }
         }
