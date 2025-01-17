@@ -3,10 +3,10 @@
 ..  _ctypes:
 
 ============
-Registering Content Element Types (cTypes)
+Register content elements
 ============
 
-EXT:vhs_col provides an "api" function to easily register new content element types (cTypes), register them in the new element wizard, add a flexform, add columnsOverrides etc.
+This extension provides an "api" function to easily register new content element types (cTypes), register them in the new element wizard, add a flexform, add columnsOverrides etc.
 
 Just call the function `\TRAW\VhsCol\Configuration\CTypes::registerCTypes()` in your extension's `Configuration/Overrides/tt_content.php` file
 
@@ -188,10 +188,12 @@ Configuration options
 
     If true, the extension will automatically create the necessary TSConfig to register your content element in the new element wizard
 
-    .. versionchanged:: 13
+    .. versionchanged:: TYPO3 13
 
-        All new content elements are automatically registered into the new element wizard.
-        Since the default value is false, you still need to explicitly set this to true
+       **The default value is true.**
+       If explicitly set to *false*, the extension will create the necessary TSConfig to remove your content element from the new element wizard.
+
+
 
     .. hint::
         relevant configuration options:
@@ -204,6 +206,7 @@ Configuration options
 
 .. confval:: defaultValues
    :type: array
+   :name: ctype-defaultvalues
 
     Values, that should be set, when the content element is added via the new element wizard
 
@@ -219,9 +222,12 @@ Configuration options
 .. confval:: saveAndClose
    :type: boolean
    :default: false
+   :name: ctype-save
 
     If true, clicking on the new element wizard will take the user directly to the page module, rather than showing the edit form from the form engine.
 
     ..  versionadded:: 13
+
+        New create option in TYPO3 13. Has no effect in TYPO3 12
 
 

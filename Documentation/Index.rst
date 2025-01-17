@@ -13,7 +13,7 @@ VHS Col
     traw/vhs-col
 
 :Version:
-    1.0
+    1.14.0
 
 :Language:
     en
@@ -48,6 +48,7 @@ A collection of more or less useful ViewHelpers, Utilities and other example cla
 ..  toctree::
     :maxdepth: 3
     :titlesonly:
+    :glob:
 
     Installation/Index
     Configuration/Index
