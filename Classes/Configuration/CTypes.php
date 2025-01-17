@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TRAW\VhsCol\Configuration;
 
 use TRAW\VhsCol\Configuration\TCA\CType;
+use TRAW\VhsCol\Information\Typo3Version;
 
 /**
  * Class CTypes
@@ -61,6 +62,12 @@ final class CTypes
             }
             if (!empty($c->getPreviewRenderer()) && class_exists($c->getPreviewRenderer())) {
                 $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['previewRenderer'] = $c->getPreviewRenderer();
+            }
+            if ($c->getSaveAndClose() && Typo3Version::getTypo3MajorVersion() > 12) {
+                $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['creationOptions']['saveAndClose'] = true;
+            }
+            if (!empty($cType->getDefaultValues()) && Typo3Version::getTypo3MajorVersion() > 12) {
+                $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['creationOptions']['defaultValues'] = $cType->getDefaultValues();
             }
 
             $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'][$c->getValue()] = $cType;
@@ -133,7 +140,7 @@ final class CTypes
     {
         $pageTsString = 'CType = ' . $cType->getValue();;
 
-        if (!empty($cType->getDefaultValues())) {
+        if (!empty($cType->getDefaultValues()) && Typo3Version::getTypo3MajorVersion() < 13) {
             $defaultValues = array_map(function ($value, $key) {
                 if (!empty($GLOBALS['TCA']['tt_content']['columns'][$key])) {
                     return $key . ' = ' . $value;

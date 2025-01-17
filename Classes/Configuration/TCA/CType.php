@@ -71,6 +71,11 @@ final class CType
      */
     protected array $defaultValues;
 
+    /**
+     * @var bool|mixed
+     */
+    protected bool $saveAndClose;
+
 
     /**
      * @param array $cTypeConfiguration
@@ -100,6 +105,7 @@ final class CType
         $this->previewRenderer = $cTypeConfiguration['previewRenderer'] ?? null;
         $this->registerInNewContentElementWizard = $cTypeConfiguration['registerInNewContentElementWizard'] ?? false;
         $this->defaultValues = $cTypeConfiguration['defaultValues'] ?? [];
+        $this->saveAndClose = $cTypeConfiguration['saveAndClose'] ?? false;
     }
 
     /**
@@ -204,5 +210,10 @@ final class CType
     public function getDefaultValues(): array
     {
         return $this->defaultValues;
+    }
+
+    public function getSaveAndClose(): bool
+    {
+        return $this->saveAndClose;
     }
 }
