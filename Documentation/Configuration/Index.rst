@@ -13,6 +13,10 @@ There are some ViewHelpers that need a typoscript configuration. See Typoscript 
    :maxdepth: 5
    :titlesonly:
 
-   TypoScriptReference/Index
-   TSconfig
+   #TypoScriptReference/Index
+   #TSconfig
+   CTypes
+   Doktypes
+   RootlineFields
+   TCAOptions
 

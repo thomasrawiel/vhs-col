@@ -33,6 +33,9 @@ VHS Col
 
 A collection of more or less useful ViewHelpers, Utilities and other example classes
 
+.. note::
+    A Composer based installation is recommended. If you wish to use this extension in a legacy installation you will need `"giggsey/libphonenumber-for-php": "^8.12"` for some ViewHelpers
+
 .. important::
    Documentation is work in progress, if you have any questions consult https://github.com/thomasrawiel/vhs-col/issues
 
@@ -43,10 +46,9 @@ A collection of more or less useful ViewHelpers, Utilities and other example cla
 **Table of Contents:**
 
 ..  toctree::
-    :maxdepth: 2
+    :maxdepth: 3
     :titlesonly:
 
-    Introduction/Index
     Installation/Index
     Configuration/Index
     ViewHelpers/Index
