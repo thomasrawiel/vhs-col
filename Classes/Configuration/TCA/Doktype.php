@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 /**
  * Class Doktype
  */
-final readonly class Doktype
+final class Doktype
 {
     /**
      * @var string|mixed|null

@@ -8,7 +8,7 @@ use TRAW\VhsCol\Configuration\TCA\CType;
 /**
  * Class CTypes
  */
-class CTypes
+final class CTypes
 {
     /**
      * @param array       $cTypes
