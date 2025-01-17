@@ -74,10 +74,28 @@ final class Doktype
     public function __construct(array $doktypeConfiguration) {
         $this->label = $doktypeConfiguration['label'] ?? null;
         $this->value = $doktypeConfiguration['value'] ?? null;
+        if (empty($this->label) || empty($this->value)) {
+            throw new \Exception('A page type must have at least a label and a value');
+        }
+        if(!MathUtility::canBeInterpretedAsInteger($this->value)) {
+            throw new \Exception('A page type must have a value that can be interpreted as integer');
+        }
         $this->iconIdentifier = $doktypeConfiguration['icon'] ?? null;
+        if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
+            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+        };
         $this->iconIdentifierHide = $doktypeConfiguration['icon-hide'] ?? null;
+        if (!empty($this->iconIdentifierHide) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierHide)->getIdentifier() === 'default-not-found') {
+            throw new \Exception('The icon "' . $this->iconIdentifierHide . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+        };
         $this->iconIdentifierRoot = $doktypeConfiguration['icon-root'] ?? null;
+        if (!empty($this->iconIdentifierRoot) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierRoot)->getIdentifier() === 'default-not-found') {
+            throw new \Exception('The icon "' . $this->iconIdentifierRoot . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+        };
         $this->iconIdentifierContentFromPid = $doktypeConfiguration['icon-contentFromPid'] ?? null;
+        if (!empty($this->iconIdentifierContentFromPid) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierContentFromPid)->getIdentifier() === 'default-not-found') {
+            throw new \Exception('The icon "' . $this->iconIdentifierContentFromPid . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+        };
         $this->group = $doktypeConfiguration['group'] ?? 'default';
         $this->itemType = $doktypeConfiguration['itemType'] ?? \TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT;
         $this->columnsOverrides = $doktypeConfiguration['columnsOverrides'] ?? null;
@@ -85,14 +103,6 @@ final class Doktype
         $this->additionalShowitem = $doktypeConfiguration['additionalShowitem'] ?? null;
         $this->registerInDragArea = $doktypeConfiguration['registerInDragArea'] ?? true;
         $this->allowedTables = $doktypeConfiguration['allowedTables'] ?? '*';
-
-        if (empty($this->label) || empty($this->value)) {
-            throw new \Exception('A Doktype must have at least a label and a value');
-        }
-
-        if(!MathUtility::canBeInterpretedAsInteger($this->value)) {
-            throw new \Exception('A Doktype must have a value that can be interpreted as integer');
-        }
     }
 
     /**

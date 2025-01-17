@@ -93,7 +93,7 @@ final class CType
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
         if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for CType "' . $this->value . '" does not exist. It must be registered in your Configuraion/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for CType "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
         };
 
         $this->group = $cTypeConfiguration['group'] ?? 'default';
