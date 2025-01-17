@@ -91,6 +91,7 @@ Configuration options
 ..  confval:: label
     :type: string
     :required: true
+    :name: ctype-label
 
     Label of the content element type (cType)
 
@@ -100,11 +101,13 @@ Configuration options
 .. confval:: value
    :type: string
    :required: true
+   :name: ctype-value
 
     Database value of the cType column
 
 .. confval:: description
    :type: string
+   :name: ctype-description
 
    Description of the content element.
 
@@ -113,6 +116,7 @@ Configuration options
 
 .. confval:: iconIdentifier
    :type: string
+   :name: ctype-icon
 
     The icon that should be displayed for this content element.
 
@@ -125,17 +129,20 @@ Configuration options
 .. confval:: group
    :type: string
    :Default: default
+   :name: ctype-group
 
     The group identifier where the content element is displayed in.
     This is relevant for the cType dropdown and the new element wizard.
 .. confval:: showitem
    :type: string
+   :name: ctype-showitem
 
     Configuration of the displayed order of fields in FormEngine and their tab alignment.
 
     :ref:`TYPO3 Docs - showitem <t3tca:confval-types-showitem>`
 .. confval:: flexform
    :type: string
+   :name: ctype-flexform
 
     File path to a flexform xml that you want to include.
 
@@ -148,6 +155,7 @@ Configuration options
 
 .. confval:: columnsOverrides
    :type: array
+   :name: ctype-columns
 
     Changed or added ['columns'] field display definitions
 
@@ -167,6 +175,7 @@ Configuration options
 
 .. confval:: previewRenderer
    :type: classname
+   :name: ctype-preview
 
     Configures a backend preview for a content element.
 
@@ -174,9 +183,15 @@ Configuration options
 
 .. confval:: registerInNewContentElementWizard
    :type: boolean
-   :Default: false
+   :name: ctype-wizard
+   :default: false
 
     If true, the extension will automatically create the necessary TSConfig to register your content element in the new element wizard
+
+    .. versionchanged:: 13
+
+        All new content elements are automatically registered into the new element wizard.
+        Since the default value is false, you still need to explicitly set this to true
 
     .. hint::
         relevant configuration options:
