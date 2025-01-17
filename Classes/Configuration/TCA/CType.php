@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
+use TRAW\VhsCol\Information\Typo3Version;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -103,7 +104,7 @@ final class CType
         $this->relativeToField = $cTypeConfiguration['relativeToField'] ?? null;
         $this->relativePosition = $cTypeConfiguration['relativePosition'] ?? null;
         $this->previewRenderer = $cTypeConfiguration['previewRenderer'] ?? null;
-        $this->registerInNewContentElementWizard = $cTypeConfiguration['registerInNewContentElementWizard'] ?? false;
+        $this->registerInNewContentElementWizard = (bool)($cTypeConfiguration['registerInNewContentElementWizard'] ?? Typo3Version::getTypo3MajorVersion() > 12);
         $this->defaultValues = $cTypeConfiguration['defaultValues'] ?? [];
         $this->saveAndClose = $cTypeConfiguration['saveAndClose'] ?? false;
     }
