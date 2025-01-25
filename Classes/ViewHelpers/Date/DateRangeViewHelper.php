@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Date;
 
 use DateTime;
@@ -20,7 +21,7 @@ class DateRangeViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         $this->registerArgument('start', 'integer', 'start timestamp', true);
-        $this->registerArgument('end', 'integer', 'end timestamp', true);
+        $this->registerArgument('end', 'integer', 'end timestamp', false);
         $this->registerArgument('dateFormat', 'string', 'format', false);
         $this->registerArgument('dateFormatDay', 'string', 'format', false);
         $this->registerArgument('dateFormatMonth', 'string', 'format', false);

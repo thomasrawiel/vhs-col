@@ -13,6 +13,11 @@ The following ViewHelpers can be used:
     :maxdepth: 2
     :titlesonly:
 
+    DateRange
     ExtensionLoaded
+    ParameterPart
     Pipe2Br
+    RenderSvgContent
+    Sort
+    Svg
     Telephone

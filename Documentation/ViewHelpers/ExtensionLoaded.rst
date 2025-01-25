@@ -1,13 +1,18 @@
 ..  include:: /Includes.rst.txt
 ..  highlight:: php
 
-..  _pipe2br:
+..  _extensionloaded:
 
 ================
 ExtensionLoaded
 ================
 
 Checks if a specific extension is loaded. This is a ConditionViewhelper, so there's a then and else
+
+..  code-block:: html
+     <vcol:extension.extensionLoaded extensionKey="my_ext">
+        my_ext is loaded.
+     </vcol:extension.extensionLoaded>
 
 ..  code-block:: html
      <vcol:extension.extensionLoaded extensionKey="my_ext">

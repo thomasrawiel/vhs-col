@@ -33,8 +33,8 @@ class ParameterPartViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('part', 'string', 'Parameter part to be extracted', true);
         $this->registerArgument('link', 'string', 'Link to parameter part');
+        $this->registerArgument('part', 'string', 'Parameter part to be extracted', true);
         $this->registerArgument('fallback', 'string', 'Fallback text if parameter part is not set');
     }
 
