@@ -66,8 +66,8 @@ final class CTypes
             if ($c->getSaveAndClose() && Typo3Version::getTypo3MajorVersion() > 12) {
                 $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['creationOptions']['saveAndClose'] = true;
             }
-            if (!empty($cType->getDefaultValues()) && Typo3Version::getTypo3MajorVersion() > 12) {
-                $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['creationOptions']['defaultValues'] = $cType->getDefaultValues();
+            if (!empty($c->getDefaultValues()) && Typo3Version::getTypo3MajorVersion() > 12) {
+                $GLOBALS['TCA']['tt_content']['types'][$c->getValue()]['creationOptions']['defaultValues'] = $c->getDefaultValues();
             }
 
             $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'][$c->getValue()] = $cType;
