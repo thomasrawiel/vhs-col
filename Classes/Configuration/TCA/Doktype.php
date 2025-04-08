@@ -4,6 +4,7 @@ namespace TRAW\VhsCol\Configuration\TCA;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 
 /**
  * Class Doktype
