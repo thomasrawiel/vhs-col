@@ -16,7 +16,10 @@ services:
     tags:
       - name: 'data.processor'
         identifier: 'traw-gallery'
-
+  TRAW\VhsCol\DataProcessing\Menu\SplitMenuProcessor:
+    tags:
+      - name: 'data.processor'
+        identifier: 'traw-splitmenu'
   TRAW\VhsCol\Listener\PageTsConfig:
     tags:
       - name: event.listener
