@@ -74,9 +74,11 @@ class SplitMenuProcessor extends MenuProcessor
         $processorConfiguration['includeSpacer'] = $this->getConfigurationValue('includeSpacer') ? : 1;
         $processedData = parent::process($cObj, $contentObjectConfiguration, $processorConfiguration, $processedData);
 
-        $splitMenu = $this->removeSpacers($this->splitMenu($processedData[$this->menuTargetVariableName], $maxSplits), $keepSpacersAfterSplit);
+        $splitMenu = $this->removeSpacers($this->splitMenu($processedData[$this->menuTargetVariableName] ?? [], $maxSplits), $keepSpacersAfterSplit);
 
-        $processedData[$this->menuTargetVariableName] = $splitMenu;
+        if (!empty($splitMenu)) {
+            $processedData[$this->menuTargetVariableName] = $splitMenu;
+        }
 
         return $processedData;
     }
@@ -103,6 +105,10 @@ class SplitMenuProcessor extends MenuProcessor
             }
         }
 
+        if (empty($splitMenu)) {
+            return [];
+        }
+
         $firstPart = array_diff_key($menu, ...$splitMenu);
         array_unshift($splitMenu, $firstPart);
 
@@ -117,7 +123,7 @@ class SplitMenuProcessor extends MenuProcessor
 
         foreach ($menu as $key => $part) {
             $part = array_filter($part, function ($item) {
-                return $item['spacer'] !== 1;
+                return ($item['spacer'] ?? 0) !== 1;
             });
             $menu[$key] = array_values($part);
         }
