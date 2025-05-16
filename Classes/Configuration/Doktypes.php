@@ -47,32 +47,30 @@ final class Doktypes
                     'group' => $d->getGroup(),
                 ],
             );
-            $typeIconClasses = &$GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'];
+
             if (!empty($d->getIconIdentifier())) {
-                $typeIconClasses[$d->getValue()] = $d->getIconIdentifier();
+                $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue()] = $d->getIconIdentifier();
             }
             if (!empty($d->getIconIdentifierHide())) {
-                $typeIconClasses[$d->getValue() . '-hideinmenu'] = $d->getIconIdentifierHide();
+                $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-hideinmenu'] = $d->getIconIdentifierHide();
             }
             if (!empty($d->getIconIdentifierContentFromPid())) {
-                $typeIconClasses[$d->getValue() . '-contentFromPid'] = $d->getIconIdentifierContentFromPid();
+                $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-contentFromPid'] = $d->getIconIdentifierContentFromPid();
             }
             if (!empty($d->getIconIdentifierRoot())) {
-                $typeIconClasses[$d->getValue() . '-root'] = $d->getIconIdentifierRoot();
+                $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-root'] = $d->getIconIdentifierRoot();
             }
 
-            $types = &$GLOBALS['TCA']['pages']['types'];
-
-            $showitem = $types[(string)$d->getItemType()]['showitem'] ?? '';
+            $showitem = $d->getShowItem() ?? $GLOBALS['TCA']['pages']['types'][(string)$d->getItemType()]['showitem'] ?? '';
 
             if (!empty($d->getAdditionalShowitem())) {
-                $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(), ',') ? '.' : '') . $d->getAdditionalShowitem();
+                $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(), ',') ? '' : ',') . $d->getAdditionalShowitem();
             }
 
-            $types[(string)$d->getValue()]['showitem'] = $showitem;
+            $GLOBALS['TCA']['pages']['types'][(string)$d->getValue()]['showitem'] = $showitem;
 
             if (!empty($d->getColumnsOverrides())) {
-                $types[(string)$d->getValue()]['columnsOverrides'] = $d->getColumnsOverrides();
+                $GLOBALS['TCA']['pages']['types'][(string)$d->getValue()]['columnsOverrides'] = $d->getColumnsOverrides();
             }
 
             $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'][$d->getValue()] = $doktype;
