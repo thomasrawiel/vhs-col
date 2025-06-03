@@ -84,9 +84,11 @@ final class CTypes
     {
         $pageTs = '';
         if (!empty($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'])) {
-            $headerAdded = false;
+            $headerAddedGroups = [];
+
             foreach ($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] as $cTypeKey => $configuration) {
                 $cType = new \TRAW\VhsCol\Configuration\TCA\CType($configuration);
+                $headerAdded = array_key_exists($cType->getGroup(), $headerAddedGroups);
                 $group = $cType->getGroup();
                 if ($cType->getRegisterInNewContentElementWizard() && Typo3Version::getTypo3MajorVersion() < 13) {
                     $pageTs .= '### New content element wizard configuration for CType "' . $cType->getValue() . '"' . LF;
@@ -95,7 +97,7 @@ final class CTypes
                     if (!in_array($group, ['common', 'default' . 'menu', 'special', 'forms', 'plugins']) && !$headerAdded) {
                         // do not override EXT:backend dummy placeholders for item groups
                         $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.header = ' . $groupLabel . LF;
-                        $headerAdded = true;
+                        $headerAddedGroups[$cType->getGroup()] = true;
                     }
 
                     $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.elements {' . LF;
