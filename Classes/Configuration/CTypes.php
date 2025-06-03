@@ -95,9 +95,11 @@ final class CTypes
                     $groupLabel = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group] ?? $group;
 
                     if (!in_array($group, ['common', 'default' . 'menu', 'special', 'forms', 'plugins']) && !$headerAdded) {
-                        // do not override EXT:backend dummy placeholders for item groups
-                        $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.header = ' . $groupLabel . LF;
-                        $headerAddedGroups[$cType->getGroup()] = true;
+                        if(self::groupHasElements($group)) {
+                            // do not override EXT:backend dummy placeholders for item groups
+                            $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . $group . '.header = ' . $groupLabel . LF;
+                            $headerAddedGroups[$cType->getGroup()] = true;
+                        }
                     }
 
                     $pageTs .= 'mod.wizards.newContentElement.wizardItems.' . ($group === 'default' ? 'common' : $group) . '.elements {' . LF;
@@ -152,5 +154,24 @@ final class CTypes
             $pageTsString = $pageTsString . LF . '          ' . implode(LF . '          ', array_filter($defaultValues));
         }
         return $pageTsString;
+    }
+
+    /**
+     *
+     * @param string $group
+     *
+     * @return bool
+     */
+    protected static function groupHasElements(string $group): bool
+    {
+        $items = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'];
+
+        foreach ($items as $item) {
+            if (($item['group'] ?? null) === $group) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
