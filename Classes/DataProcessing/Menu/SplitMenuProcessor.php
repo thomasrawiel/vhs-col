@@ -5,8 +5,15 @@ namespace TRAW\VhsCol\DataProcessing\Menu;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\DataProcessing\MenuProcessor;
 
+/**
+ * Class SplitMenuProcessor
+ * @package TRAW\VhsCol\DataProcessing\Menu
+ */
 class SplitMenuProcessor extends MenuProcessor
 {
+    /**
+     * @var int[]
+     */
     public $menuDefaults = [
         'levels' => 1,
         'expandAll' => 1,
@@ -17,6 +24,9 @@ class SplitMenuProcessor extends MenuProcessor
         'titleField' => 'nav_title // title',
     ];
 
+    /**
+     * @var string[]
+     */
     public $allowedConfigurationKeys = [
         'cache',
         'cache.',
@@ -62,6 +72,14 @@ class SplitMenuProcessor extends MenuProcessor
         'keepSpacersAfterSplit',
     ];
 
+    /**
+     * @param ContentObjectRenderer $cObj
+     * @param array                 $contentObjectConfiguration
+     * @param array                 $processorConfiguration
+     * @param array                 $processedData
+     *
+     * @return array
+     */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
     {
         $this->processorConfiguration = $processorConfiguration;
@@ -83,49 +101,56 @@ class SplitMenuProcessor extends MenuProcessor
         return $processedData;
     }
 
+    /**
+     * @param array $menu
+     * @param int   $maxSplits
+     *
+     * @return array
+     */
     protected function splitMenu(array $menu, int $maxSplits = 0): array
     {
         if ($maxSplits === 0) {
             return $menu;
         }
-        $spacers = array_filter($menu, function ($item) {
-            return $item['spacer'] === 1;
-        }, ARRAY_FILTER_USE_BOTH);
-
-        if (count($spacers) > $maxSplits) {
-            $spacers = array_slice($spacers, 0, $maxSplits);
+        $spacerKeys = array_keys(array_filter($menu, fn($item) => $item['spacer'] === 1));
+        if (count($spacerKeys) > $maxSplits) {
+            $spacerKeys = array_slice($spacerKeys, 0, $maxSplits);
         }
+
+        $menuKeys = array_keys($menu);
+        $splitIndexes = array_map(fn($key) => array_search($key, $menuKeys, true), $spacerKeys);
 
         $splitMenu = [];
-
-        foreach ($spacers as $originalKey => $spacer) {
-            $key = array_search($originalKey, array_keys($menu), true);
-            if ($key !== false) {
-                $splitMenu[] = array_slice($menu, $key, null, true);
-            }
+        $start = 0;
+        foreach ($splitIndexes as $index) {
+            $length = $index - $start;
+            $part = array_slice($menu, $start, $length, true);
+            $splitMenu[] = $part;
+            $start = $index;
         }
 
-        if (empty($splitMenu)) {
-            return [];
-        }
-
-        $firstPart = array_diff_key($menu, ...$splitMenu);
-        array_unshift($splitMenu, $firstPart);
+        $splitMenu[] = array_slice($menu, $start, null, true);
 
         return $splitMenu;
     }
 
+    /**
+     * @param array $menu
+     * @param bool  $keepSpacersAfterSplit
+     *
+     * @return array
+     */
     protected function removeSpacers(array $menu, bool $keepSpacersAfterSplit = true): array
     {
         if ($keepSpacersAfterSplit) {
             return $menu;
         }
-
         foreach ($menu as $key => $part) {
-            $part = array_filter($part, function ($item) {
-                return ($item['spacer'] ?? 0) !== 1;
-            });
-            $menu[$key] = array_values($part);
+            if (!is_array($part)) {
+                continue;
+            }
+            $filtered = array_filter($part, fn($item) => ($item['spacer'] ?? 0) !== 1);
+            $menu[$key] = array_values($filtered);
         }
         return $menu;
     }
