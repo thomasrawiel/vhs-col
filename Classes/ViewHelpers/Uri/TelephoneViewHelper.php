@@ -24,7 +24,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class TelephoneViewHelper extends AbstractViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('phoneNumber', 'string', 'The phone number to convert to a link');
         $this->registerArgument('defaultRegion', 'string', 'Region that we are expecting the number to be from');

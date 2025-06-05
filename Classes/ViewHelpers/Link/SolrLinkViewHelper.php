@@ -10,7 +10,7 @@ class SolrLinkViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewH
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('host', 'string', '', true);
         $this->registerArgument('url', 'string', 'document url', true);

@@ -76,26 +76,26 @@ final class Doktype
         $this->label = $doktypeConfiguration['label'] ?? null;
         $this->value = $doktypeConfiguration['value'] ?? null;
         if (empty($this->label) || empty($this->value)) {
-            throw new \Exception('A page type must have at least a label and a value');
+            throw new \Exception('A page type must have at least a label and a value', 5869846286);
         }
         if(!MathUtility::canBeInterpretedAsInteger($this->value)) {
-            throw new \Exception('A page type must have a value that can be interpreted as integer');
+            throw new \Exception('A page type must have a value that can be interpreted as integer', 6038008085);
         }
         $this->iconIdentifier = $doktypeConfiguration['icon'] ?? null;
         if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 7520653051);
         };
         $this->iconIdentifierHide = $doktypeConfiguration['icon-hide'] ?? null;
         if (!empty($this->iconIdentifierHide) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierHide)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierHide . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifierHide . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 7101129442);
         };
         $this->iconIdentifierRoot = $doktypeConfiguration['icon-root'] ?? null;
         if (!empty($this->iconIdentifierRoot) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierRoot)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierRoot . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifierRoot . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 8669148969);
         };
         $this->iconIdentifierContentFromPid = $doktypeConfiguration['icon-contentFromPid'] ?? null;
         if (!empty($this->iconIdentifierContentFromPid) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierContentFromPid)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierContentFromPid . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifierContentFromPid . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 8646205785);
         };
         $this->group = $doktypeConfiguration['group'] ?? 'default';
         $this->itemType = $doktypeConfiguration['itemType'] ?? \TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT;

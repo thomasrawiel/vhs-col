@@ -30,7 +30,7 @@ final class CTypes
                     $c = $cType;
                 }
             } else {
-                throw new \Exception('CType must be an instance of ' . CType::class . ' or array');
+                throw new \Exception('CType must be an instance of ' . CType::class . ' or array', 9552057115);
             }
 
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(

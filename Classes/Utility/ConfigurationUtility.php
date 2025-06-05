@@ -24,7 +24,7 @@ class ConfigurationUtility
         $settings = $configuration['plugin.'][$tsExtKey . '.']['settings.'] ?? null;
 
         if (empty($settings) && $throwException) {
-            throw new \Exception(TYPO3GeneralUtility::underscoredToUpperCamelCase($extKey) . ' Typoscript is missing! Add EXT:' . $extKey . ' Typoscript to your websites static template.');
+            throw new \Exception(TYPO3GeneralUtility::underscoredToUpperCamelCase($extKey) . ' Typoscript is missing! Add EXT:' . $extKey . ' Typoscript to your websites static template.', 7222888877);
         }
 
         return $returnFullConfiguration ? self::convert($configuration) : self::convert($settings);

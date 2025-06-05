@@ -64,7 +64,7 @@ class SvgUtility implements SingletonInterface
                     static::$svgCache[$svgPath] = $svgContent;
                 } else {
                     if ($this->settings['viewHelpers']['image']['svg']['fileNotFoundException']) {
-                        throw new \Exception('File not found: ' . $name . '.svg in ' . $this->settings['viewHelpers']['image']['svg']['themePath'] . ', ' . $this->settings['viewHelpers']['image']['svg']['defaultPath']);
+                        throw new \Exception('File not found: ' . $name . '.svg in ' . $this->settings['viewHelpers']['image']['svg']['themePath'] . ', ' . $this->settings['viewHelpers']['image']['svg']['defaultPath'], 2102940040);
                     }
                 }
             }

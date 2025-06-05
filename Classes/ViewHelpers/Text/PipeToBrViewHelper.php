@@ -24,7 +24,7 @@ class PipeToBrViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('text', 'string', 'Text to convert');
         $this->registerArgument('search', 'string', 'String that should be replaced', false, '|');

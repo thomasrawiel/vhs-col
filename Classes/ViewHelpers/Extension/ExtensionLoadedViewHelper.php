@@ -19,7 +19,7 @@ class ExtensionLoadedViewHelper extends AbstractConditionViewHelper
     /**
      * Initialize additional argument
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('extensionKey', 'string', 'Extension which must be checked', true);
         parent::initializeArguments();

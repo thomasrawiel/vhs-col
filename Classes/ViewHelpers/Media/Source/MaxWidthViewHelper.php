@@ -13,7 +13,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
     /**
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('sources', 'array', 'Sources to check', true);
         $this->registerArgument('width', 'integer', 'Width of image');
@@ -25,7 +25,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
     public function render(): int
     {
         if (empty(ConfigurationUtility::getSettings('vhs_col')['picture']['sources'])) {
-            throw new Exception('Gallery processor typoscript probably not loaded');
+            throw new Exception('Gallery processor typoscript probably not loaded', 2701324351);
         }
 
         // If given width is empty, return first (largest) source's imageWidth

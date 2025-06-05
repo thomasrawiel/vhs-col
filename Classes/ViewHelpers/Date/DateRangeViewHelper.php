@@ -17,7 +17,7 @@ class DateRangeViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('start', 'integer', 'start timestamp', true);
         $this->registerArgument('end', 'integer', 'end timestamp', true);

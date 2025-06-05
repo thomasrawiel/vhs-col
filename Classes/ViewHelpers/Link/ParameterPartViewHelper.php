@@ -31,7 +31,7 @@ class ParameterPartViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('part', 'string', 'Parameter part to be extracted', true);
         $this->registerArgument('link', 'string', 'Link to parameter part');
@@ -45,7 +45,7 @@ class ParameterPartViewHelper extends AbstractViewHelper
     {
         $part = $this->arguments['part'] ?? null;
         if (empty($part) || !in_array($part, $this->allowedParts)) {
-            throw new \Exception('Given parameter part is not allowed');
+            throw new \Exception('Given parameter part is not allowed', 2029894796);
         }
 
         $extractedPart = GeneralUtility::makeInstance(\TYPO3\CMS\Core\LinkHandling\TypoLinkCodecService::class)

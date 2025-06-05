@@ -28,7 +28,7 @@ class SvgViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
         return GeneralUtility::makeInstance(SvgUtility::class)->render((string)$arguments['name'], $arguments['path'] ?? '', $arguments['file'] ?? null, (bool)($arguments['useThemePath'] ?? false));
     }
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
 

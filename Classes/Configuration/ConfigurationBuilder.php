@@ -33,6 +33,11 @@ class ConfigurationBuilder implements SingletonInterface
      * @var array
      */
     protected array $viewSettings = [];
+    public function __construct(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager, \TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService)
+    {
+        $this->configurationManager = $configurationManager;
+        $this->typoScriptService = $typoScriptService;
+    }
 
     /**
      * @param string $extKey
@@ -77,26 +82,6 @@ class ConfigurationBuilder implements SingletonInterface
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager
-     *
-     * @return void
-     */
-    public function injectConfigurationManager(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager): void
-    {
-        $this->configurationManager = $configurationManager;
-    }
-
-    /**
-     * @param \TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService
-     *
-     * @return void
-     */
-    public function injectTypoScriptService(\TYPO3\CMS\Core\TypoScript\TypoScriptService $typoScriptService): void
-    {
-        $this->typoScriptService = $typoScriptService;
-    }
-
-    /**
      * @param string $extKey
      *
      * @return void
@@ -105,8 +90,8 @@ class ConfigurationBuilder implements SingletonInterface
     {
         $tsExtKey = \TRAW\VhsCol\Utility\GeneralUtility::getTyposcriptExtensionKey($extKey);
         $typoscriptService = $this->getTypoScriptService();
-        if ($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']) {
-            $typoScript = $typoscriptService->convertTypoScriptArrayToPlainArray($GLOBALS['TSFE']->tmpl->setup['plugin.'][$tsExtKey . '.']);
+        if ($GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.'][$tsExtKey . '.']) {
+            $typoScript = $typoscriptService->convertTypoScriptArrayToPlainArray($GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.'][$tsExtKey . '.']);
         } else {
             $fullTypoScript = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
             $typoScript = $typoscriptService->convertTypoScriptArrayToPlainArray($fullTypoScript['plugin.'][$tsExtKey . '.']);

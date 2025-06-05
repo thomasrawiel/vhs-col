@@ -181,7 +181,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
         }
 
         if (empty($srcsets) || $result === null) {
-            throw new Exception('No valid source generated for picture.');
+            throw new Exception('No valid source generated for picture.', 2664373806);
         }
 
         $srcsets = array_map(function ($srcset) {
@@ -206,8 +206,8 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
     public function preprocessSourceUri(string $src): string
     {
-        if (!empty($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_vhscol.']['settings.']['prependPath'])) {
-            $src = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_vhscol.']['settings.']['prependPath'] . $src;
+        if (!empty($GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['tx_vhscol.']['settings.']['prependPath'])) {
+            $src = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['tx_vhscol.']['settings.']['prependPath'] . $src;
         } elseif (RequestType::isBackend() || !$this->arguments['relative']) {
             if (GeneralUtility::isValidUrl($src)) {
                 $src = ltrim($src, '/');

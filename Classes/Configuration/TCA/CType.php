@@ -88,13 +88,13 @@ final class CType
         $this->label = $cTypeConfiguration['label'];
         $this->value = $cTypeConfiguration['value'];
         if (empty($this->label) || empty($this->value)) {
-            throw new \Exception('A CType must have at least a label and a value');
+            throw new \Exception('A CType must have at least a label and a value', 2787735958);
         }
 
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
         if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for CType "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php');
+            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for CType "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 2455189151);
         };
 
         $this->group = $cTypeConfiguration['group'] ?? 'default';

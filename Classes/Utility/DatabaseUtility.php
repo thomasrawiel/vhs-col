@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace TRAW\VhsCol\Utility;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -16,15 +17,16 @@ class DatabaseUtility
      * @param string $attribute
      *
      * @return false|mixed
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
-    public static function getContentAttributeByUid(int $uid, string $attribute ='CType') {
+    public static function getContentAttributeByUid(int $uid, string $attribute ='CType'): mixed
+    {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         return $queryBuilder->select($attribute)
             ->from('tt_content')
             ->where($queryBuilder->expr()->eq(
                 'uid',
-                $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
-            ))->execute()->fetchOne();
+                $queryBuilder->createNamedParameter($uid, \Doctrine\DBAL\ParameterType::INTEGER)
+            ))->executeQuery()->fetchOne();
     }
 }

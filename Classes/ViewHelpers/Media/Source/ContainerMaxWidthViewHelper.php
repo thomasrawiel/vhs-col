@@ -15,7 +15,7 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
     /**
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('width', 'integer', 'Width of image to apply the math');
         $this->registerArgument('settings', 'array', 'Settings');

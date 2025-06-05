@@ -23,7 +23,7 @@ class ImageSizeViewHelper extends AbstractViewHelper
     /**
      * Initialize arguments
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('property', 'string', 'either width or height', true);
