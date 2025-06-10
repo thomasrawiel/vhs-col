@@ -104,7 +104,7 @@ final class CType
         $this->relativeToField = $cTypeConfiguration['relativeToField'] ?? null;
         $this->relativePosition = $cTypeConfiguration['relativePosition'] ?? null;
         $this->previewRenderer = $cTypeConfiguration['previewRenderer'] ?? null;
-        $this->registerInNewContentElementWizard = (bool)($cTypeConfiguration['registerInNewContentElementWizard'] ?? Typo3Version::getTypo3MajorVersion() > 12);
+        $this->registerInNewContentElementWizard = (bool)($cTypeConfiguration['registerInNewContentElementWizard'] ?? true);
         $this->defaultValues = $cTypeConfiguration['defaultValues'] ?? [];
         $this->saveAndClose = $cTypeConfiguration['saveAndClose'] ?? false;
     }
