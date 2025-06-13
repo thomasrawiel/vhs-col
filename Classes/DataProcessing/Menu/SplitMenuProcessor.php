@@ -82,6 +82,10 @@ class SplitMenuProcessor extends MenuProcessor
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
     {
+        if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {
+            return $processedData;
+        }
+
         $this->processorConfiguration = $processorConfiguration;
         $this->cObj = $cObj;
 
