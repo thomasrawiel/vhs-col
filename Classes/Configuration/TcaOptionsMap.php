@@ -110,16 +110,52 @@ class TcaOptionsMap
         if (!empty($this->mapping[$this->field])) {
             foreach ($this->mapping[$this->field] as $configuration) {
                 if (!empty($configuration['conditions'])) {
-                    if ($this->isConditionMatching($configuration['conditions'] ?? [])) {
-                        $this->items = array_merge($this->items, $configuration['options'] ?? []);
+                    if ($this->isConditionMatching($configuration['conditions'])) {
+                        $this->items = $this->mergeItems($configuration['options'] ?? []);
                     }
                 } else {
                     if (!empty($configuration['options'])) {
-                        $this->items = array_merge($this->items, $configuration['options'] ?? []);
+                        $this->items = $this->mergeItems($configuration['options']);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Merge items but ignore duplicate values
+     *
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function mergeItems(array $options): array
+    {
+        $existingValues = [];
+        foreach ($this->items as $item) {
+            if (is_array($item) && isset($item['value'])) {
+                $existingValues[] = $item['value'];
+            } elseif ($item instanceof \TYPO3\CMS\Core\Schema\Struct\SelectItem) {
+                $existingValues[] = $item->getValue();
+            }
+        }
+
+        $mergedItems = $this->items;
+        foreach ($options as $item) {
+            $value = null;
+            if (is_array($item) && isset($item['value'])) {
+                $value = $item['value'];
+            } elseif ($item instanceof \TYPO3\CMS\Core\Schema\Struct\SelectItem) {
+                $value = $item->getValue();
+            }
+
+            if ($value !== null && !in_array($value, $existingValues, true)) {
+                $mergedItems[] = $item;
+                $existingValues[] = $value; // Avoid duplicates in input itself
+            }
+        }
+
+        return $mergedItems;
     }
 
     /**
