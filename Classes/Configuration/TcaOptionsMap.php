@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace TRAW\VhsCol\Configuration;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -193,8 +192,7 @@ class TcaOptionsMap
      * @param array $configuration
      *
      * @return bool
-     * @throws DBALException
-     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     protected function parentPageProperties(array $configuration): bool
     {
@@ -205,12 +203,22 @@ class TcaOptionsMap
      * @param array $configuration
      *
      * @return bool
-     * @throws DBALException
-     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     protected function parentContainerProperties(array $configuration): bool
     {
         return $this->parentAnythingProperties($configuration, 'tt_content', 'tx_container_parent');
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return bool
+     * @throws \Doctrine\DBAL\Exception
+     */
+    protected function parentNewsRecordProperties(array $configuration): bool
+    {
+        return $this->parentAnythingProperties($configuration, 'tx_news_domain_model_news', 'tx_news_related_news');
     }
 
     /**
@@ -219,8 +227,7 @@ class TcaOptionsMap
      * @param string $parentDetectionField
      *
      * @return bool
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     protected function parentAnythingProperties(array $configuration, string $table, string $parentDetectionField): bool
     {
