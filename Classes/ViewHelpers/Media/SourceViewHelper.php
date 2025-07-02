@@ -102,9 +102,19 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             $tsfeBackup = FrontendSimulationUtility::simulateFrontendEnvironment();
         }
 
-        //news
-        if ($this->renderingContext->getControllerName() === 'News') {
-            $imageSource = $this->renderingContext->getVariableProvider()->get('file');
+        if (is_null($imageSource) || empty($imageSource) || !($imageSource instanceof FileReference)) {
+            //e.g. news, when we only have a uid
+            foreach($this->renderingContext->getVariableProvider()->getAll() as $value) {
+                switch (true) {
+                    case $value instanceof \TYPO3\CMS\Core\Resource\FileReference:
+                        $imageSource = $value;
+                        break 2;
+
+                    case $value instanceof \TYPO3\CMS\Extbase\Domain\Model\FileReference:
+                        $imageSource = $value->getOriginalResource();
+                        break 2;
+                }
+            }
         }
 
         if (is_null($imageSource) || empty($imageSource)) {
