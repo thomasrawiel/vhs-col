@@ -1,5 +1,6 @@
 plugin.tx_vhscol.settings {
     galleryProcessor {
         enableContainerFactors = 1
+        enableCustomGalleryWidthCalculation = 1
     }
 }

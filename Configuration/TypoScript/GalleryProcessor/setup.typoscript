@@ -1,6 +1,7 @@
 plugin.tx_vhscol {
     settings {
         maxGalleryWidth {
+            enable = {$plugin.tx_vhscol.settings.galleryProcessor.enableCustomGalleryWidthCalculation}
             #default config for all elements
             default {
                 #element colPos

@@ -17,7 +17,7 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
             $recordData = $this->contentObjectRenderer->data;
             $settings = ConfigurationUtility::getSettings();
 
-            if (!empty($settings['maxGalleryWidth']['default'])) {
+            if (!empty($settings['maxGalleryWidth']['default']) && (bool)($settings['maxGalleryWidth']['enable'] ?? 0)) {
                 $recordSettings = $this->determineRecordSettings($recordData, $settings['maxGalleryWidth']);
 
                 if (empty($recordSettings)) {
@@ -28,6 +28,8 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
                     }
                     $this->overrideMaxWidth($recordSettings);
                 }
+            } else {
+                parent::determineMaximumGalleryWidth();
             }
         } else {
             parent::determineMaximumGalleryWidth();
