@@ -44,7 +44,7 @@ final class CTypes
 
     private static function registerSelectItem(CType $cType, ?string $groupLabel): void
     {
-        if (!isset($GLOBALS['TCA']['tt_content']['ctrl']['itemGroups'][$cType->getGroup()])) {
+        if (!isset($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$cType->getGroup()])) {
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup('tt_content', 'CType', $cType->getGroup(), $groupLabel ?? $cType->getGroup());
         }
 

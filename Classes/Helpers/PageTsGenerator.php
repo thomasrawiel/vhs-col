@@ -62,10 +62,13 @@ final class PageTsGenerator
                 );
             }
 
-
-            // Optional: Use first label as header if not already set
+            // Set group header once
             if (!isset($headers[$group])) {
-                $headers[$group] = $group; // Fallback: use group key as label
+                if(isset($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group])) {
+                    $headers[$group] = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group];
+                }else {
+                    $headers[$group] = $group; // Fallback: use group key as label
+                }
             }
         }
 
