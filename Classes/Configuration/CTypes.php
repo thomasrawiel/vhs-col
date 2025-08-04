@@ -49,6 +49,7 @@ final class CTypes
             'CType',
             [
                 'label' => $cType->getLabel(),
+                'description' => $cType->getDescription(),
                 'value' => $cType->getValue(),
                 'icon' => $cType->getIconIdentifier(),
                 'group' => $groupLabel ?? $cType->getGroup(),
@@ -107,7 +108,7 @@ final class CTypes
 
     private static function storeCTypeForLaterUse(CType $cType): void
     {
-        if(!isset($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'])){
+        if (!isset($GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'])) {
             $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] = [];
         }
 
