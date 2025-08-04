@@ -149,7 +149,7 @@ final class PageTsGenerator
                 $tsLines[] = self::indentBlock($elementConfig, 6);
             }
             $tsLines[] = "    }";
-            $tsLines[] = "    show = " . implode(',', array_keys($elements));
+            $tsLines[] = sprintf("    show := addToList(%s)", implode(',', array_keys($elements)));
             $tsLines[] = "  }";
         }
 
