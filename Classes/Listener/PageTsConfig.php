@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Listener;
 
+use TRAW\VhsCol\Helpers\PageTsGenerator;
 use TYPO3\CMS\Core\TypoScript\IncludeTree\Event\ModifyLoadedPageTsConfigEvent;
 use TRAW\VhsCol\Information\Typo3Version;
 use TRAW\VhsCol\Configuration\CTypes;
@@ -23,7 +24,13 @@ final class PageTsConfig
             return;
         }
         $tsConfig = $event->getTsConfig();
-        $tsConfig = array_merge(['pagesTsConfig-package-vhscol' => CTypes::getPageTsString()], $tsConfig);
-        $event->setTsConfig($tsConfig);
+
+        $generated = PageTsGenerator::generate();
+
+        if(!empty($generated)) {
+            $tsConfig = array_merge(['pagesTsConfig-package-vhscol' => PageTsGenerator::generate()], $tsConfig);
+            $event->setTsConfig($tsConfig);
+        }
+
     }
 }

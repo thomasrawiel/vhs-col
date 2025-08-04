@@ -1,209 +1,164 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TRAW\VhsCol\Configuration\TCA;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use RuntimeException;
 
 /**
- * Class Doktype
+ * Represents a custom page doktype configuration.
  */
 final class Doktype
 {
-    /**
-     * @var string|mixed|null
-     */
     protected ?string $label;
-    /**
-     * @var string|mixed|null
-     */
-    protected ?string $value;
-    /**
-     * @var string|mixed|null
-     */
+    protected int|string|null $value;
     protected ?string $iconIdentifier;
-
-    /**
-     * @var string|mixed|null
-     */
     protected ?string $iconIdentifierHide;
-    /**
-     * @var string|mixed|null
-     */
     protected ?string $iconIdentifierRoot;
-    /**
-     * @var string|mixed|null
-     */
     protected ?string $iconIdentifierContentFromPid;
-    /**
-     * @var string
-     */
     protected string $group;
-
-    /**
-     * @var string|int|mixed|null
-     */
     protected ?string $itemType;
-
-    /**
-     * @var array|mixed|null
-     */
     protected ?array $columnsOverrides;
-    /**
-     * @var string|mixed|null
-     */
-    protected ?string $showitem;
-
-    protected ?string $additionalShowitem;
-
-    /**
-     * @var bool|mixed
-     */
+    protected ?string $showItem;
+    protected ?string $additionalShowItem;
     protected bool $registerInDragArea;
-
-    /**
-     * @var string|mixed|null
-     */
     protected ?string $allowedTables;
 
     /**
-     * @param array $doktypeConfiguration
+     * @param array<string, mixed> $doktypeConfiguration
      *
-     * @throws \Exception
+     * @throws RuntimeException if required fields or icons are invalid
      */
-    public function __construct(array $doktypeConfiguration) {
+    public function __construct(array $doktypeConfiguration)
+    {
         $this->label = $doktypeConfiguration['label'] ?? null;
         $this->value = $doktypeConfiguration['value'] ?? null;
-        if (empty($this->label) || empty($this->value)) {
-            throw new \Exception('A page type must have at least a label and a value', 5869846286);
-        }
-        if(!MathUtility::canBeInterpretedAsInteger($this->value)) {
-            throw new \Exception('A page type must have a value that can be interpreted as integer', 6038008085);
-        }
+
+        $this->assertRequiredFields();
+
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
         $this->iconIdentifier = $doktypeConfiguration['icon'] ?? null;
-        if (!empty($this->iconIdentifier) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifier)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifier . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 7520653051);
-        };
+        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
+
         $this->iconIdentifierHide = $doktypeConfiguration['icon-hide'] ?? null;
-        if (!empty($this->iconIdentifierHide) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierHide)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierHide . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 7101129442);
-        };
+        $this->assertIconExists($iconFactory, $this->iconIdentifierHide, 'icon-hide');
+
         $this->iconIdentifierRoot = $doktypeConfiguration['icon-root'] ?? null;
-        if (!empty($this->iconIdentifierRoot) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierRoot)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierRoot . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 8669148969);
-        };
+        $this->assertIconExists($iconFactory, $this->iconIdentifierRoot, 'icon-root');
+
         $this->iconIdentifierContentFromPid = $doktypeConfiguration['icon-contentFromPid'] ?? null;
-        if (!empty($this->iconIdentifierContentFromPid) && (GeneralUtility::makeInstance(IconFactory::class))->getIcon($this->iconIdentifierContentFromPid)->getIdentifier() === 'default-not-found') {
-            throw new \Exception('The icon "' . $this->iconIdentifierContentFromPid . '", registered for Page type "' . $this->value . '" does not exist. It must be registered in your Configuration/Icons.php', 8646205785);
-        };
+        $this->assertIconExists($iconFactory, $this->iconIdentifierContentFromPid, 'icon-contentFromPid');
+
         $this->group = $doktypeConfiguration['group'] ?? 'default';
-        $this->itemType = $doktypeConfiguration['itemType'] ?? \TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT;
+        $this->itemType = $doktypeConfiguration['itemType'] ?? (string)PageRepository::DOKTYPE_DEFAULT;
         $this->columnsOverrides = $doktypeConfiguration['columnsOverrides'] ?? null;
-        $this->showitem = $doktypeConfiguration['showitem'] ?? null;
-        $this->additionalShowitem = $doktypeConfiguration['additionalShowitem'] ?? null;
+        $this->showItem = $doktypeConfiguration['showItem'] ?? null;
+        $this->additionalShowItem = $doktypeConfiguration['additionalShowItem'] ?? null;
         $this->registerInDragArea = $doktypeConfiguration['registerInDragArea'] ?? true;
         $this->allowedTables = $doktypeConfiguration['allowedTables'] ?? '*';
     }
 
     /**
-     * @return string|null
+     * @throws RuntimeException if label or value are missing or invalid
      */
+    private function assertRequiredFields(): void
+    {
+        if (empty($this->label) || empty($this->value)) {
+            throw new RuntimeException('A page type must have at least a label and a value', 5869846286);
+        }
+
+        if (!MathUtility::canBeInterpretedAsInteger($this->value)) {
+            throw new RuntimeException('Page type value must be an integer or integer string', 6038008085);
+        }
+    }
+
+    /**
+     * @param IconFactory $iconFactory
+     * @param string|null $identifier
+     * @param string $identifierType
+     *
+     * @throws RuntimeException if the icon is set but not found
+     */
+    private function assertIconExists(IconFactory $iconFactory, ?string $identifier, string $identifierType): void
+    {
+        if (!empty($identifier) && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
+            throw new RuntimeException(sprintf(
+                'The icon "%s", registered for Page type "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
+                $identifier,
+                $this->value,
+                $identifierType
+            ), 7000000000 + crc32($identifier . $identifierType));
+        }
+    }
+
     public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getValue(): ?string
+    public function getValue(): int|string|null
     {
         return $this->value;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIconIdentifier(): ?string
     {
         return $this->iconIdentifier;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIconIdentifierHide(): ?string
     {
         return $this->iconIdentifierHide;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIconIdentifierRoot(): ?string
     {
         return $this->iconIdentifierRoot;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIconIdentifierContentFromPid(): ?string
     {
         return $this->iconIdentifierContentFromPid;
     }
 
-    /**
-     * @return string
-     */
     public function getGroup(): string
     {
         return $this->group;
     }
 
-    /**
-     * @return string|null
-     */
     public function getItemType(): ?string
     {
         return $this->itemType;
     }
 
-    /**
-     * @return array|null
-     */
     public function getColumnsOverrides(): ?array
     {
         return $this->columnsOverrides;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getShowitem(): ?string
+    public function getShowItem(): ?string
     {
-        return $this->showitem;
+        return $this->showItem;
     }
 
-    /**
-     * @return bool
-     */
+    public function getAdditionalShowItem(): ?string
+    {
+        return $this->additionalShowItem;
+    }
+
     public function isRegisterInDragArea(): bool
     {
         return $this->registerInDragArea;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAllowedTables(): ?string
     {
         return $this->allowedTables;
-    }
-
-    public function getAdditionalShowitem(): ?string
-    {
-        return $this->additionalShowitem;
     }
 }
