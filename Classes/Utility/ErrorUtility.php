@@ -1,4 +1,5 @@
 <?php
+
 namespace TRAW\VhsCol\Utility;
 
 /*
@@ -16,6 +17,6 @@ class ErrorUtility
 {
     public static function throwViewHelperException(?string $message = null, ?int $code = null): void
     {
-        throw new Exception((string) $message, (integer) $code);
+        throw new Exception((string)$message, (int)$code);
     }
 }

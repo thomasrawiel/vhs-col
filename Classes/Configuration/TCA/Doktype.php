@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use RuntimeException;
 
 /**
  * Represents a custom page doktype configuration.
@@ -16,23 +15,35 @@ use RuntimeException;
 final class Doktype
 {
     protected ?string $label;
+
     protected int|string|null $value;
+
     protected ?string $iconIdentifier;
+
     protected ?string $iconIdentifierHide;
+
     protected ?string $iconIdentifierRoot;
+
     protected ?string $iconIdentifierContentFromPid;
+
     protected string $group;
+
     protected ?string $itemType;
+
     protected ?array $columnsOverrides;
+
     protected ?string $showItem;
+
     protected ?string $additionalShowItem;
+
     protected bool $registerInDragArea;
+
     protected ?string $allowedTables;
 
     /**
      * @param array<string, mixed> $doktypeConfiguration
      *
-     * @throws RuntimeException if required fields or icons are invalid
+     * @throws \RuntimeException if required fields or icons are invalid
      */
     public function __construct(array $doktypeConfiguration)
     {
@@ -65,30 +76,26 @@ final class Doktype
     }
 
     /**
-     * @throws RuntimeException if label or value are missing or invalid
+     * @throws \RuntimeException if label or value are missing or invalid
      */
     private function assertRequiredFields(): void
     {
-        if (empty($this->label) || empty($this->value)) {
-            throw new RuntimeException('A page type must have at least a label and a value', 5869846286);
+        if ($this->label === null || $this->label === '' || $this->label === '0' || ($this->value === 0 || ($this->value === '' || $this->value === '0') || $this->value === null)) {
+            throw new \RuntimeException('A page type must have at least a label and a value', 5869846286);
         }
 
         if (!MathUtility::canBeInterpretedAsInteger($this->value)) {
-            throw new RuntimeException('Page type value must be an integer or integer string', 6038008085);
+            throw new \RuntimeException('Page type value must be an integer or integer string', 6038008085);
         }
     }
 
     /**
-     * @param IconFactory $iconFactory
-     * @param string|null $identifier
-     * @param string $identifierType
-     *
-     * @throws RuntimeException if the icon is set but not found
+     * @throws \RuntimeException if the icon is set but not found
      */
     private function assertIconExists(IconFactory $iconFactory, ?string $identifier, string $identifierType): void
     {
-        if (!empty($identifier) && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
-            throw new RuntimeException(sprintf(
+        if ($identifier !== null && $identifier !== '' && $identifier !== '0' && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
+            throw new \RuntimeException(sprintf(
                 'The icon "%s", registered for Page type "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
                 $identifier,
                 $this->value,

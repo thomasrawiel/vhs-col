@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
@@ -22,10 +24,10 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
         $this->imageService = GeneralUtility::makeInstance(ImageService::class);
     }
 
+    #[\Override]
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('alt', 'string', 'Specifies an alternate text for an image', false);
         $this->registerTagAttribute('ismap', 'string', 'Specifies an image as a server-side image-map. Rarely used. Look at usemap instead', false);
         $this->registerTagAttribute('longdesc', 'string', 'Specifies the URL to a document that contains a long description of an image', false);
@@ -52,10 +54,10 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
-     * @return string
      * @throws Exception
      */
-    public function render()
+    #[\Override]
+    public function render(): string
     {
         $src = (string)$this->arguments['src'];
         if (($src === '' && $this->arguments['image'] === null) || ($src !== '' && $this->arguments['image'] !== null)) {
@@ -63,20 +65,21 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
         }
 
         try {
-            $class = 'lazyload' . (!empty($this->arguments['class']) ? ' ' . $this->arguments['class'] : '');
+            $class = 'lazyload' . (empty($this->additionalArguments['class']) ? '' : ' ' . $this->additionalArguments['class']);
             $this->tag->addAttribute('class', $class);
 
             $tsConf = ConfigurationUtility::getSettings();
             $viewHelperSettings = $tsConf['viewHelpers']['lazySizesImage'];
-            $sizes = GeneralUtility::trimExplode(',', $this->arguments['sizes'] ? : $viewHelperSettings['defaultSizes'], true);
+            $sizes = GeneralUtility::trimExplode(',', $this->arguments['sizes'] ?: $viewHelperSettings['defaultSizes'], true);
 
             $image = $this->imageService->getImage($src, $this->arguments['image'], (bool)$this->arguments['treatIdAsReference']);
             $cropString = $this->arguments['crop'];
             if ($cropString === null && $image->hasProperty('crop') && $image->getProperty('crop')) {
                 $cropString = $image->getProperty('crop');
             }
+
             $cropVariantCollection = CropVariantCollection::create((string)$cropString);
-            $cropVariant = $this->arguments['cropVariant'] ? : 'default';
+            $cropVariant = $this->arguments['cropVariant'] ?: 'default';
             $cropArea = $cropVariantCollection->getCropArea($cropVariant);
 
             $processingInstructions = [
@@ -94,9 +97,9 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
             $this->tag->addAttribute('data-src', $imageUri);
 
             // there's no need to add lazysizes for a tiny image
-//            if ($processedOriginalImage->getProperty('width') < $sizes[0]) {
-//                return parent::render();
-//            }
+            //            if ($processedOriginalImage->getProperty('width') < $sizes[0]) {
+            //                return parent::render();
+            //            }
 
             $this->tag->addAttribute('data-parent-fit', 'contain');
             $this->tag->addAttribute('data-sizes', 'auto');
@@ -107,17 +110,21 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
 
             $addOriginalImage = false;
             foreach ($processingInstructions as $processingInstruction) {
-                if (!empty($processingInstruction)) $addOriginalImage = true;
+                if (!empty($processingInstruction)) {
+                    $addOriginalImage = true;
+                }
             }
+
             // add original image size (e.g. if width is explicitly given, this width should be available)
-            if ($addOriginalImage)
+            if ($addOriginalImage) {
                 $srcset[$processedOriginalImage->getProperty('width')] = $this->imageService->getImageUri($processedOriginalImage, $this->arguments['absolute']) . ' ' . $processedOriginalImage->getProperty('width') . 'w';
+            }
 
             foreach ($sizes as $width) {
                 // only add widths smaller than original image
-                if ($processedOriginalImage->getProperty('width') < $width) continue;
-                $height = ($this->arguments['height'] && $this->arguments['width'] ? (($this->arguments['height'] / $this->arguments['width']) * $width) : null);
-
+                if ($processedOriginalImage->getProperty('width') < $width) {
+                    continue;
+                }
                 $height = ($processedOriginalImage->getProperty('height') / $processedOriginalImage->getProperty('width')) * $width;
                 $processingInstructions = [
                     'width' => $width,
@@ -143,9 +150,10 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
             if (empty($this->arguments['alt'])) {
                 $this->tag->addAttribute('alt', $image->hasProperty('alternative') ? $image->getProperty('alternative') : '');
             }
+
             // Add title-attribute from property if not already set and the property is not an empty string
             $title = (string)($image->hasProperty('title') ? $image->getProperty('title') : '');
-            if (empty($this->arguments['title']) && $title !== '') {
+            if (empty($this->additionalArguments['title']) && $title !== '') {
                 $this->tag->addAttribute('title', $title);
             }
         } catch (ResourceDoesNotExistException $e) {
@@ -161,6 +169,7 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
             // thrown if file storage does not exist
             throw new Exception($e->getMessage(), 1509741914, $e);
         }
+
         return $this->tag->render();
     }
 }

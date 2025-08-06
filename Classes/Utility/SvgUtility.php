@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Utility;
 
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -8,30 +10,20 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SvgUtility implements SingletonInterface
 {
-    /**
-     * @var array
-     */
     protected array $settings = [];
 
-    /**
-     * @var array
-     */
     protected static array $svgCache = [];
 
     /**
-     * @param string             $name
-     * @param string             $path
-     * @param FileReference|null $file
-     * @param bool               $useThemePath
-     *
      * @return string
      */
     public function render(string $name = '', string $path = '', ?FileReference $file = null, bool $useThemePath = false)
     {
-        if (empty($path)) {
-            if (empty($this->settings)) {
+        if ($path === '' || $path === '0') {
+            if ($this->settings === []) {
                 $this->settings = ConfigurationUtility::getSettings();
             }
+
             if ($useThemePath && !empty($this->settings['viewHelpers']['image']['svg']['themePath'])) {
                 $path = $this->settings['viewHelpers']['image']['svg']['themePath'];
             } elseif (!empty($this->settings['viewHelpers']['image']['svg']['defaultPath'])) {
@@ -53,8 +45,8 @@ class SvgUtility implements SingletonInterface
             }
         }
 
-        if (!empty($name)) {
-            $svgPath = rtrim($path, '/') . '/' . $name . '.svg';
+        if ($name !== '' && $name !== '0') {
+            $svgPath = rtrim((string)$path, '/') . '/' . $name . '.svg';
             if (!empty(static::$svgCache[$svgPath])) {
                 $svgContent = static::$svgCache[$svgPath];
             } else {
@@ -62,10 +54,8 @@ class SvgUtility implements SingletonInterface
                 if (file_exists($svgRealPath)) {
                     $svgContent = GeneralUtility::getURL($svgRealPath);
                     static::$svgCache[$svgPath] = $svgContent;
-                } else {
-                    if ($this->settings['viewHelpers']['image']['svg']['fileNotFoundException']) {
-                        throw new \Exception('File not found: ' . $name . '.svg in ' . $this->settings['viewHelpers']['image']['svg']['themePath'] . ', ' . $this->settings['viewHelpers']['image']['svg']['defaultPath'], 2102940040);
-                    }
+                } elseif ($this->settings['viewHelpers']['image']['svg']['fileNotFoundException']) {
+                    throw new \Exception('File not found: ' . $name . '.svg in ' . $this->settings['viewHelpers']['image']['svg']['themePath'] . ', ' . $this->settings['viewHelpers']['image']['svg']['defaultPath'], 2102940040);
                 }
             }
         }

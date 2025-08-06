@@ -15,22 +15,15 @@ final class Doktypes
     /**
      * Call in TCA/Overrides/pages.php
      *
-     * @param array       $doktypes
-     * @param string|null $groupLabel
      *
-     * @return void
      * @throws \Exception
      */
     public static function registerDoktypes(array $doktypes, ?string $groupLabel = null): void
     {
         foreach ($doktypes as $doktype) {
             $d = null;
-            if ($doktype instanceof Doktype || is_array($doktype) && !empty($doktype)) {
-                if (is_array($doktype)) {
-                    $d = new Doktype($doktype);
-                } else {
-                    $d = $doktype;
-                }
+            if ($doktype instanceof Doktype || is_array($doktype) && $doktype !== []) {
+                $d = is_array($doktype) ? new Doktype($doktype) : $doktype;
             }
 
             if (!isset($GLOBALS['TCA']['pages']['columns']['doktype']['config']['itemGroups'][$d->getGroup()])) {
@@ -48,28 +41,31 @@ final class Doktypes
                 ],
             );
 
-            if (!empty($d->getIconIdentifier())) {
+            if (!in_array($d->getIconIdentifier(), [null, '', '0'], true)) {
                 $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue()] = $d->getIconIdentifier();
             }
-            if (!empty($d->getIconIdentifierHide())) {
+
+            if (!in_array($d->getIconIdentifierHide(), [null, '', '0'], true)) {
                 $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-hideinmenu'] = $d->getIconIdentifierHide();
             }
-            if (!empty($d->getIconIdentifierContentFromPid())) {
+
+            if (!in_array($d->getIconIdentifierContentFromPid(), [null, '', '0'], true)) {
                 $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-contentFromPid'] = $d->getIconIdentifierContentFromPid();
             }
-            if (!empty($d->getIconIdentifierRoot())) {
+
+            if (!in_array($d->getIconIdentifierRoot(), [null, '', '0'], true)) {
                 $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$d->getValue() . '-root'] = $d->getIconIdentifierRoot();
             }
 
             $showitem = $d->getShowItem() ?? $GLOBALS['TCA']['pages']['types'][(string)$d->getItemType()]['showitem'] ?? '';
 
-            if (!empty($d->getAdditionalShowitem())) {
+            if (!in_array($d->getAdditionalShowitem(), [null, '', '0'], true)) {
                 $showitem = $showitem . (str_starts_with($d->getAdditionalShowitem(), ',') ? '' : ',') . $d->getAdditionalShowitem();
             }
 
             $GLOBALS['TCA']['pages']['types'][(string)$d->getValue()]['showitem'] = $showitem;
 
-            if (!empty($d->getColumnsOverrides())) {
+            if (!in_array($d->getColumnsOverrides(), [null, []], true)) {
                 $GLOBALS['TCA']['pages']['types'][(string)$d->getValue()]['columnsOverrides'] = $d->getColumnsOverrides();
             }
 
@@ -89,12 +85,8 @@ final class Doktypes
 
             foreach ($doktypes as $doktype) {
                 $d = null;
-                if ($doktype instanceof Doktype || is_array($doktype) && !empty($doktype)) {
-                    if (is_array($doktype)) {
-                        $d = new Doktype($doktype);
-                    } else {
-                        $d = $doktype;
-                    }
+                if ($doktype instanceof Doktype || is_array($doktype) && $doktype !== []) {
+                    $d = is_array($doktype) ? new Doktype($doktype) : $doktype;
                 }
 
                 $dokTypeRegistry->add(
@@ -111,7 +103,7 @@ final class Doktypes
 
             $doktypesString = implode(',', $registerDoktypeInTSConfig);
 
-            if (!empty($doktypesString)) {
+            if ($doktypesString !== '' && $doktypesString !== '0') {
                 ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
             }
         }

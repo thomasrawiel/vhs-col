@@ -1,4 +1,5 @@
 <?php
+
 namespace TRAW\VhsCol\Utility;
 
 /**
@@ -30,9 +31,10 @@ class FrontendSimulationUtility
         if (!RequestType::isBackend()) {
             return null;
         }
+
         $tsfeBackup = $GLOBALS['TSFE'] ?? null;
 
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'] = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'] ?? 'fe_user';
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'] ??= 'fe_user';
 
         /** @var SiteFinder $siteFinder */
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
@@ -46,7 +48,7 @@ class FrontendSimulationUtility
         $pageArguments = GeneralUtility::makeInstance(
             PageArguments::class,
             0,
-            (string) PageRepository::DOKTYPE_DEFAULT,
+            (string)PageRepository::DOKTYPE_DEFAULT,
             []
         );
         /** @var FrontendUserAuthentication $frontendUser */
@@ -76,6 +78,7 @@ class FrontendSimulationUtility
         if (!RequestType::isBackend()) {
             return;
         }
+
         $GLOBALS['TSFE'] = $tsfeBackup;
     }
 }

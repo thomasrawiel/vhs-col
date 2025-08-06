@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration;
@@ -12,15 +13,10 @@ final class CTypes
     {
         foreach ($cTypes as $cType) {
             if (($cType instanceof \TRAW\VhsCol\Configuration\TCA\CType || is_array($cType)) && !empty($cType)) {
-                if (is_array($cType)) {
-                    $cType = new \TRAW\VhsCol\Configuration\TCA\CType($cType);
-                } else {
-                    $cType = $cType;
-                }
+                $cType = is_array($cType) ? new \TRAW\VhsCol\Configuration\TCA\CType($cType) : $cType;
             } else {
                 throw new \Exception('CType must be an instance of ' . CType::class . ' or array', 9552057115);
             }
-
 
             self::validateCType($cType);
             self::registerSelectItem($cType, $selectItemGroupLabel);
@@ -35,10 +31,11 @@ final class CTypes
     private static function validateCType(CType $cType): void
     {
         if (trim($cType->getValue()) === '') {
-            throw new \InvalidArgumentException('CType value must not be empty');
+            throw new \InvalidArgumentException('CType value must not be empty', 9856944126);
         }
+
         if (trim($cType->getLabel()) === '') {
-            throw new \InvalidArgumentException('CType label must not be empty');
+            throw new \InvalidArgumentException('CType label must not be empty', 9021369363);
         }
     }
 
@@ -84,7 +81,7 @@ final class CTypes
             $typeConfig['previewRenderer'] = $previewRenderer;
         }
 
-        if (!empty($typeConfig)) {
+        if ($typeConfig !== []) {
             $GLOBALS['TCA']['tt_content']['types'][$value] = array_replace_recursive(
                 $GLOBALS['TCA']['tt_content']['types'][$value] ?? [],
                 $typeConfig
@@ -105,7 +102,8 @@ final class CTypes
         if ($cType->getSaveAndClose() && Typo3Version::getTypo3MajorVersion() > 12) {
             $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['saveAndClose'] = true;
         }
-        if (!empty($cType->getDefaultValues()) && Typo3Version::getTypo3MajorVersion() > 12) {
+
+        if ($cType->getDefaultValues() !== [] && Typo3Version::getTypo3MajorVersion() > 12) {
             $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['defaultValues'] = $cType->getDefaultValues();
         }
     }

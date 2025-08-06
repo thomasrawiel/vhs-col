@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\Helpers;
@@ -25,7 +26,7 @@ final class PageTsGenerator
         $removeItems = [];
         $headers = [];
 
-        if (empty($cTypes)) {
+        if ($cTypes === []) {
             $cTypes = $GLOBALS['TCA']['tt_content']['tx_vhscol_ctypes'] ?? [];
         }
 
@@ -37,7 +38,6 @@ final class PageTsGenerator
             } else {
                 throw new \Exception('CType must be an instance of ' . \TRAW\VhsCol\Configuration\TCA\CType::class . ' or array', 9552057115);
             }
-
 
             $value = $cType->getValue();
             $label = $cType->getLabel();
@@ -64,9 +64,9 @@ final class PageTsGenerator
 
             // Set group header once
             if (!isset($headers[$group])) {
-                if(isset($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group])) {
+                if (isset($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group])) {
                     $headers[$group] = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'][$group];
-                }else {
+                } else {
                     $headers[$group] = $group; // Fallback: use group key as label
                 }
             }
@@ -91,24 +91,23 @@ final class PageTsGenerator
         string $label,
         string $description,
         string $iconIdentifier,
-        array  $defaultValues = [],
-    ): string
-    {
+        array $defaultValues = [],
+    ): string {
 
-        $defValueLines = 'CType = '.$value;
+        $defValueLines = 'CType = ' . $value;
         foreach ($defaultValues as $key => $val) {
-            $defValueLines .= LF."            $key = $val" . LF;
+            $defValueLines .= LF . sprintf('            %s = %s', $key, $val) . LF;
         }
 
         $defValueLines = rtrim($defValueLines, LF);
 
         return <<<TS
-            $value {
-                iconIdentifier = $iconIdentifier
-                title = $label
-                description = $description
+            {$value} {
+                iconIdentifier = {$iconIdentifier}
+                title = {$label}
+                description = {$description}
                 tt_content_defValues {
-                    $defValueLines
+                    {$defValueLines}
                 }
             }
         TS;
@@ -125,41 +124,37 @@ final class PageTsGenerator
         array $wizardItems,
         array $removeItems,
         array $headers
-    ): string
-    {
-        if (empty($wizardItems) && empty($removeItems)) {
+    ): string {
+        if ($wizardItems === [] && $removeItems === []) {
             return '';
         }
 
-        if (!empty($wizardItems)) {
-            $tsLines = ["mod.wizards.newContentElement.wizardItems {"];
-        } else {
-            $tsLines = [];
-        }
+        $tsLines = $wizardItems === [] ? [] : ['mod.wizards.newContentElement.wizardItems {'];
 
         foreach ($wizardItems as $group => $elements) {
-            $tsLines[] = "  $group {";
+            $tsLines[] = sprintf('  %s {', $group);
 
             if (isset($headers[$group])) {
-                $tsLines[] = "    header = " . $headers[$group];
+                $tsLines[] = '    header = ' . $headers[$group];
             }
 
-            $tsLines[] = "    elements {";
+            $tsLines[] = '    elements {';
             foreach ($elements as $elementConfig) {
                 $tsLines[] = self::indentBlock($elementConfig, 6);
             }
-            $tsLines[] = "    }";
-            $tsLines[] = sprintf("    show := addToList(%s)", implode(',', array_keys($elements)));
-            $tsLines[] = "  }";
+
+            $tsLines[] = '    }';
+            $tsLines[] = sprintf('    show := addToList(%s)', implode(',', array_keys($elements)));
+            $tsLines[] = '  }';
         }
 
-        if (!empty($wizardItems)) {
-            $tsLines[] = "}";
+        if ($wizardItems !== []) {
+            $tsLines[] = '}';
         }
 
         foreach ($removeItems as $group => $values) {
             $tsLines[] = sprintf(
-                "mod.wizards.newContentElement.wizardItems.%s.removeItems := addToList(%s)",
+                'mod.wizards.newContentElement.wizardItems.%s.removeItems := addToList(%s)',
                 $group,
                 implode(',', $values)
             );

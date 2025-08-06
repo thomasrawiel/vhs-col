@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\ViewHelpers\Media;
@@ -15,11 +16,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 class PictureViewHelper extends AbstractTagBasedViewHelper
 {
     public const SCOPE_VARIABLE_DEFAULT_SOURCE_WIDTH = 'default-source-width';
+
     public const SCOPE_VARIABLE_DEFAULT_SOURCE_HEIGHT = 'default-source-height';
-    const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
-    const SCOPE_VARIABLE_SRC = 'src';
-    const SCOPE_VARIABLE_ID = 'treatIdAsReference';
-    const SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
+
+    public const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
+
+    public const SCOPE_VARIABLE_SRC = 'src';
+
+    public const SCOPE_VARIABLE_ID = 'treatIdAsReference';
+
+    public const SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
 
     /**
      * name of the tag to be created by this view helper
@@ -29,6 +35,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'picture';
 
+    #[\Override]
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -51,14 +58,14 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
-     * @return string
      * @throws Exception
      */
-    public function render()
+    #[\Override]
+    public function render(): string
     {
         $src = $this->arguments['src'];
         $treatIdAsReference = (bool)$this->arguments['treatIdAsReference'];
-        if (is_object($src) && $src instanceof FileReference) {
+        if ($src instanceof FileReference) {
             $src = $src->getUid();
             $treatIdAsReference = true;
         }
@@ -66,6 +73,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         $viewHelperVariableContainer->addOrUpdate(static::SCOPE, static::SCOPE_VARIABLE_SRC, $src);
         $viewHelperVariableContainer->addOrUpdate(static::SCOPE, static::SCOPE_VARIABLE_ID, $treatIdAsReference);
+
         $content = $this->renderChildren();
         $viewHelperVariableContainer->remove(static::SCOPE, static::SCOPE_VARIABLE_SRC);
         $viewHelperVariableContainer->remove(static::SCOPE, static::SCOPE_VARIABLE_ID);
@@ -73,6 +81,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
         if (!$viewHelperVariableContainer->exists(static::SCOPE, static::SCOPE_VARIABLE_DEFAULT_SOURCE)) {
             throw new Exception('Please add a source without a media query as a default.', 1438116616);
         }
+
         $defaultSource = $viewHelperVariableContainer->get(static::SCOPE, static::SCOPE_VARIABLE_DEFAULT_SOURCE);
 
         /** @var string $alt */

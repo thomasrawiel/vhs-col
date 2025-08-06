@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\DataProcessing;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
 use TRAW\VhsCol\Utility\DatabaseUtility;
-use TRAW\VhsCol\Utility\EmConfigurationUtility;
 
 class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcessor
 {
     /**
      * Get the gallery width based on vertical position
      */
+    #[\Override]
     protected function determineMaximumGalleryWidth()
     {
         if (\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
@@ -26,6 +28,7 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
                     if (!is_array($recordSettings)) {
                         $recordSettings = ['maxW' => $recordSettings];
                     }
+
                     $this->overrideMaxWidth($recordSettings);
                 }
             } else {
@@ -37,9 +40,6 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
     }
 
     /**
-     * @param array $recordData
-     * @param array $settings
-     *
      * @return mixed|null
      *
      * todo: get settings of record when inside gridelement,
@@ -48,8 +48,8 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
     protected function determineRecordSettings(array $recordData, array $settings)
     {
         $CType = $recordData['CType'] ?? 'page';
-        $parentUid = intval($recordData['tx_container_parent'] ?? 0);
-        $colPos = $recordData['colPos'] ?? $recordData['doktype'] ?? 'default';;
+        $parentUid = (int)($recordData['tx_container_parent'] ?? 0);
+        $colPos = $recordData['colPos'] ?? $recordData['doktype'] ?? 'default';
 
         if ($parentUid === 0) {
             if (!empty($settings['CType'][$CType])) {
@@ -58,36 +58,34 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
                     ?? $settings['CType'][$CType]
                     ?? null;
             }
+
             if (!empty($settings[$CType])) {
                 return $settings[$CType][$colPos]
                     ?? $settings[$CType]['default']
                     ?? $settings['CType'][$CType]
                     ?? null;
             }
-        } else {
-            if (!empty($settings['container'])) {
-                $parentGridType = DatabaseUtility::getContentAttributeByUid($parentUid, 'CType');
+        } elseif (!empty($settings['container'])) {
+            $parentGridType = DatabaseUtility::getContentAttributeByUid($parentUid, 'CType');
+            if (empty($parentGridType)) {
+                return null;
+            }
 
-                if (empty($parentGridType)) return null;
-                $colPos = $recordData['colPos'];
-
-                if (!empty($settings['container'][$parentGridType])) {
-                    return $settings['container'][$parentGridType][$colPos]
-                        ?? $settings['container'][$parentGridType]['default']
-                        ?? $settings['container'][$parentGridType]
-                        ?? null;
-                }
+            $colPos = $recordData['colPos'];
+            if (!empty($settings['container'][$parentGridType])) {
+                return $settings['container'][$parentGridType][$colPos]
+                    ?? $settings['container'][$parentGridType]['default']
+                    ?? $settings['container'][$parentGridType]
+                    ?? null;
             }
         }
+
         return $settings['default'][$colPos]
             ?? $settings['default']['default']
             ?? $settings['default']
             ?? null;
     }
 
-    /**
-     * @param array $recordSettings
-     */
     protected function overrideMaxWidth(array $recordSettings): void
     {
         if ($this->galleryData['position']['vertical'] === 'intext') {

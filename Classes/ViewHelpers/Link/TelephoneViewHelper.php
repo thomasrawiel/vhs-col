@@ -21,7 +21,6 @@ use libphonenumber\PhoneNumberFormat;
 use Psr\Http\Message\ServerRequestInterface;
 use TRAW\VhsCol\Utility\PhoneNumberUtility;
 use TYPO3\CMS\Core\Http\ApplicationType;
-use TYPO3\CMS\Core\LinkHandling\EmailLinkHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -39,6 +38,7 @@ final class TelephoneViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'a';
 
+    #[\Override]
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -46,12 +46,13 @@ final class TelephoneViewHelper extends AbstractTagBasedViewHelper
 
     }
 
+    #[\Override]
     public function render(): string
     {
         $tel = $this->arguments['tel'];
         $linkHref = PhoneNumberUtility::parsePhoneNumber($tel, PhoneNumberFormat::RFC3966);
         $attributes = [];
-        $linkText = htmlspecialchars($tel);
+        $linkText = htmlspecialchars((string)$tel);
         /** @var RenderingContext $renderingContext */
         $renderingContext = $this->renderingContext;
         $request = $renderingContext->getRequest();
@@ -64,14 +65,16 @@ final class TelephoneViewHelper extends AbstractTagBasedViewHelper
                 $linkResult = GeneralUtility::makeInstance(LinkFactory::class)->create($linkText, ['parameter' => $linkHref], $frontend->cObj);
                 $linkText = (string)$linkResult->getLinkText();
                 $attributes = $linkResult->getAttributes();
-            } catch (UnableToLinkException $e) {
+            } catch (UnableToLinkException) {
                 // Just render the email as is (= Backend Context), if LinkBuilder failed
             }
         }
+
         $tagContent = $this->renderChildren();
         if ($tagContent !== null) {
             $linkText = $tagContent;
         }
+
         $this->tag->setContent($linkText);
         $this->tag->addAttribute('href', $linkHref);
         $this->tag->forceClosingTag(true);

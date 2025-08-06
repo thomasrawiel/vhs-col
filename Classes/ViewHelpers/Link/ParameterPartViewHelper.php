@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Link;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -18,8 +20,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * </f:if>
  *
  * As a normal tag: <vcol:link.parameterPart link="{data.header_link}" part="title" fallback="fallback text goes here" />
- *
- *
  */
 class ParameterPartViewHelper extends AbstractViewHelper
 {
@@ -28,9 +28,6 @@ class ParameterPartViewHelper extends AbstractViewHelper
      */
     protected array $allowedParts = ['url', 'target', 'class', 'title', 'additionalParams'];
 
-    /**
-     * @return void
-     */
     public function initializeArguments(): void
     {
         $this->registerArgument('part', 'string', 'Parameter part to be extracted', true);
@@ -38,9 +35,7 @@ class ParameterPartViewHelper extends AbstractViewHelper
         $this->registerArgument('fallback', 'string', 'Fallback text if parameter part is not set');
     }
 
-    /**
-     * @return string
-     */
+    #[\Override]
     public function render(): string
     {
         $part = $this->arguments['part'] ?? null;

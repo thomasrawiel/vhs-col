@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Extension;
 
 /**
@@ -19,6 +21,7 @@ class ExtensionLoadedViewHelper extends AbstractConditionViewHelper
     /**
      * Initialize additional argument
      */
+    #[\Override]
     public function initializeArguments(): void
     {
         $this->registerArgument('extensionKey', 'string', 'Extension which must be checked', true);
@@ -27,7 +30,6 @@ class ExtensionLoadedViewHelper extends AbstractConditionViewHelper
 
     /**
      * @param array|null $arguments
-     * @return bool
      */
     protected static function evaluateCondition($arguments = null): bool
     {

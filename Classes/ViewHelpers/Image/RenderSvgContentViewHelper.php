@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -18,6 +20,7 @@ class RenderSvgContentViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
+    #[\Override]
     public function render()
     {
         return $this->arguments['svgReference']->getContents();

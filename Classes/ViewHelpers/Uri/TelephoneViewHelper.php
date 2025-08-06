@@ -1,11 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\ViewHelpers\Uri;
 
-use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumberUtil;
 use TRAW\VhsCol\Utility\PhoneNumberUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -33,9 +32,7 @@ class TelephoneViewHelper extends AbstractViewHelper
         $this->registerArgument('format', 'integer', 'Phone number format', false, PhoneNumberFormat::RFC3966);
     }
 
-    /**
-     * @return string
-     */
+    #[\Override]
     public function render(): string
     {
         $inputNumberString = $this->arguments['phoneNumber'] ?? $this->renderChildren();

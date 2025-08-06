@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\ViewHelpers\Media;
@@ -7,16 +8,12 @@ namespace TRAW\VhsCol\ViewHelpers\Media;
  * This file is adapted from the FluidTYPO3/Vhs project SourceViewHelper
  */
 
-use TRAW\VhsCol\Utility\FrontendSimulationUtility;
-use Psr\Http\Message\ServerRequestInterface;
 use TRAW\VhsCol\Information\RequestType;
-use TYPO3\CMS\Core\Http\ApplicationType;
+use TRAW\VhsCol\Utility\FrontendSimulationUtility;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
@@ -28,11 +25,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 class SourceViewHelper extends AbstractTagBasedViewHelper
 {
     public const SCOPE_VARIABLE_DEFAULT_SOURCE_WIDTH = 'default-source-width';
+
     public const SCOPE_VARIABLE_DEFAULT_SOURCE_HEIGHT = 'default-source-height';
-    const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
-    const SCOPE_VARIABLE_SRC = 'src';
-    const SCOPE_VARIABLE_ID = 'treatIdAsReference';
-    const SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
+
+    public const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
+
+    public const SCOPE_VARIABLE_SRC = 'src';
+
+    public const SCOPE_VARIABLE_ID = 'treatIdAsReference';
+
+    public const SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
 
     /**
      * name of the tag to be created by this view helper
@@ -42,10 +44,10 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'source';
 
+    #[\Override]
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
         $this->registerArgument('media', 'string', 'Media query for which breakpoint this sources applies');
         $this->registerArgument(
             'width',
@@ -86,10 +88,9 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
     /**
      * Render method
-     *
-     * @return string
      */
-    public function render()
+    #[\Override]
+    public function render(): string
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         /** @var FileReference|string $imageSource */
@@ -104,7 +105,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
         if (is_null($imageSource) || empty($imageSource) || !($imageSource instanceof FileReference)) {
             //e.g. news, when we only have a uid
-            foreach($this->renderingContext->getVariableProvider()->getAll() as $value) {
+            foreach ($this->renderingContext->getVariableProvider()->getAll() as $value) {
                 switch (true) {
                     case $value instanceof \TYPO3\CMS\Core\Resource\FileReference:
                         $imageSource = $value;
@@ -143,7 +144,8 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
         if (!empty($format)) {
             $setup['ext'] = $format;
         }
-        if (0 < intval($quality)) {
+
+        if ((int)$quality > 0) {
             $quality = MathUtility::forceIntegerInRange($quality, 10, 100, 75);
             $setup['params'] .= ' -quality ' . $quality;
         }
@@ -158,23 +160,26 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
         $result = null;
         $media = $this->arguments['media'];
         // Iterate through pixel densities
-        $pixelDensities = GeneralUtility::trimExplode(',', $this->arguments['pixelDensities'] ? : '1', true);
+        $pixelDensities = GeneralUtility::trimExplode(',', $this->arguments['pixelDensities'] ?: '1', true);
+        $srcsets = [];
         foreach ($pixelDensities as $pixelDensity) {
             // Calculate image width
             $setup['width'] = $this->arguments['width'] * $pixelDensity;
+
             if ($imageSource instanceof FileReference) {
                 // Get original image width including cropped area
-                $imageCrop = json_decode($imageSource->getProperty('crop'), true);
+                $imageCrop = json_decode((string)$imageSource->getProperty('crop'), true);
                 $croppedWidth = $imageCrop[$cropVariant]['cropArea']['width'] ?? 1;
             } else {
                 $croppedWidth = 1;
             }
+
             $originalWidth = $originalFile->getProperty('width') * $croppedWidth;
 
             // If original image has a smaller width than our target image, we don't want to upscale.
             // But we need at least one processed image :)
             if ($setup['width'] > $originalWidth) {
-                if (empty($srcsets)) {
+                if ($srcsets === []) {
                     $setup['width'] = $originalWidth;
                     $result = $imageService->applyProcessingInstructions($imageSource, $setup);
                     $srcsets[] = $imageService->getImageUri($result);
@@ -182,7 +187,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             } else {
                 // Process image width new width and add pixel density notation
                 $result = $imageService->applyProcessingInstructions($imageSource, $setup);
-                $srcsets[] = $imageService->getImageUri($result) . (!empty($media) ? ' ' . $pixelDensity . 'x' : '');
+                $srcsets[] = $imageService->getImageUri($result) . (empty($media) ? '' : ' ' . $pixelDensity . 'x');
             }
         }
 
@@ -190,13 +195,11 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             FrontendSimulationUtility::resetFrontendEnvironment($tsfeBackup);
         }
 
-        if (empty($srcsets) || $result === null) {
+        if ($srcsets === [] || $result === null) {
             throw new Exception('No valid source generated for picture.', 2664373806);
         }
 
-        $srcsets = array_map(function ($srcset) {
-            return $this->preprocessSourceUri(rawurldecode($srcset));
-        }, $srcsets);
+        $srcsets = array_map(fn($srcset): string => $this->preprocessSourceUri(rawurldecode((string)$srcset)), $srcsets);
 
         $src = implode(', ', $srcsets);
 
@@ -229,6 +232,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
                 $src = $siteUrl . ltrim($src, '/');
             }
         }
+
         return $src;
     }
 }

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Media\Source;
 
 use TRAW\VhsCol\Utility\ConfigurationUtility;
@@ -19,9 +21,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
         $this->registerArgument('width', 'integer', 'Width of image');
     }
 
-    /**
-     * @return int
-     */
+    #[\Override]
     public function render(): int
     {
         if (empty(ConfigurationUtility::getSettings('vhs_col')['picture']['sources'])) {
@@ -44,6 +44,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
                 break;
             }
         }
+
         return (int)($imageWidth > 0 ? $imageWidth : $this->arguments['width']);
     }
 }

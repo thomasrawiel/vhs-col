@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TRAW\VhsCol\Utility;
@@ -12,18 +13,8 @@ use libphonenumber\PhoneNumberUtil;
  */
 class PhoneNumberUtility
 {
-    /**
-     *
-     */
     public const defaultFormat = PhoneNumberFormat::RFC3966;
 
-    /**
-     * @param string      $phoneNumberOrUriString
-     * @param int|null    $format
-     * @param string|null $region
-     *
-     * @return string
-     */
     public static function parsePhoneNumber(string $phoneNumberOrUriString, ?int $format = null, ?string $region = null): string
     {
         $phoneUtil = PhoneNumberUtil::getInstance();
@@ -37,9 +28,10 @@ class PhoneNumberUtility
 
         try {
             $phoneNumber = $phoneUtil->parse($inputNumberString, $region);
-        } catch (NumberParseException $e) {
+        } catch (NumberParseException) {
             return '';
         }
+
         $allowedFormats = [
             PhoneNumberFormat::E164,
             PhoneNumberFormat::INTERNATIONAL,
@@ -49,6 +41,7 @@ class PhoneNumberUtility
         if (!in_array($format, $allowedFormats, true)) {
             $format = self::defaultFormat;
         }
+
         $formattedNumber = $phoneUtil->format($phoneNumber, $format);
 
         if ($format === PhoneNumberFormat::RFC3966) {

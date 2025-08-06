@@ -1,9 +1,10 @@
 <?php
-declare(strict_types=1);
-defined('TYPO3') or die ('Access denied.');
 
-call_user_func(function($_EXTKEY = 'vhs_col', $table = 'sys_file_reference') {
-    if(\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
+declare(strict_types=1);
+defined('TYPO3') || die('Access denied.');
+
+call_user_func(function (string $_EXTKEY = 'vhs_col', $table = 'sys_file_reference'): void {
+    if (\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {
         // Set default crop variants (desktop, tablet, mobile)
         $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants']['default'] = [
             'title' => 'LLL:EXT:core/Resources/Private/Language/locallang_wizards.xlf:imwizard.crop_variant.default',
@@ -28,13 +29,14 @@ call_user_func(function($_EXTKEY = 'vhs_col', $table = 'sys_file_reference') {
                     'disabled' => 1,
                     'title' => '32:9',
                     'value' => 32 / 9,
-                ]
+                ],
             ],
         ];
         foreach (['desktop', 'tablet', 'mobile'] as $variant) {
             $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants'][$variant] = $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants']['default'];
-            $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants'][$variant]['title'] = 'LLL:EXT:'.$_EXTKEY.'/Resources/Private/Language/locallang_wizards.xlf:imwizard.crop_variant.' . $variant;
+            $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants'][$variant]['title'] = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_wizards.xlf:imwizard.crop_variant.' . $variant;
         }
+
         $GLOBALS['TCA'][$table]['columns']['crop']['config']['cropVariants']['default']['disabled'] = 1;
     }
 });

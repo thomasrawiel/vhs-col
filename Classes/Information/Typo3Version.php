@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Information;
 
 class Typo3Version
@@ -9,18 +11,13 @@ class Typo3Version
         return (new \TYPO3\CMS\Core\Information\Typo3Version())->getVersion();
     }
 
-    /**
-     * @return int
-     */
     public static function getTypo3MajorVersion(): int
     {
         return (new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion();
     }
 
     /**
-     * @param string      $version
      * @param string|null $operator #[ExpectedValues(values: ["<", "lt", "<=", "le", ">", "gt", ">=", "ge", "==", "=", "eq", "!=", "<>", "ne",])]
-     *
      * @return bool|int -1 if the current TYPO3 version is lower than the provided,
      *                  0 if they are equal, and
      *                  1 if the provided version is lower than the current TYPO3 verion.

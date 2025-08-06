@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use RuntimeException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Represents a custom CType configuration.
@@ -14,24 +13,37 @@ use RuntimeException;
 final class CType
 {
     protected string $label;
+
     protected string $description;
+
     protected string $value;
+
     protected ?string $iconIdentifier;
+
     protected ?string $group;
+
     protected ?string $showitem;
+
     protected ?string $flexform;
+
     protected ?array $columnsOverrides;
+
     protected ?string $relativeToField;
+
     protected ?string $relativePosition;
+
     protected ?string $previewRenderer;
+
     protected bool $registerInNewContentElementWizard;
+
     protected array $defaultValues;
+
     protected bool $saveAndClose;
 
     /**
      * @param array<string, mixed> $cTypeConfiguration
      *
-     * @throws RuntimeException if configuration is invalid
+     * @throws \RuntimeException if configuration is invalid
      */
     public function __construct(array $cTypeConfiguration)
     {
@@ -64,21 +76,19 @@ final class CType
     private function assertRequiredFields(): void
     {
         if ($this->label === '' || $this->value === '') {
-            throw new RuntimeException('A CType must have at least a label and a value', 2787735958);
+            throw new \RuntimeException('A CType must have at least a label and a value', 2787735958);
         }
     }
 
     /**
      * Checks whether the icon exists in IconRegistry.
      *
-     * @param IconFactory $iconFactory
-     * @param string|null $identifier
      * @param string      $fieldName
      */
     private function assertIconExists(IconFactory $iconFactory, ?string $identifier, string $identifierType): void
     {
-        if (!empty($identifier) && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
-            throw new RuntimeException(sprintf(
+        if ($identifier !== null && $identifier !== '' && $identifier !== '0' && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
+            throw new \RuntimeException(sprintf(
                 'The icon "%s", registered for CType "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
                 $identifier,
                 $this->value,

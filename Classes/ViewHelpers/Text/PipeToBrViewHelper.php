@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Text;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -21,9 +23,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class PipeToBrViewHelper extends AbstractViewHelper
 {
-    /**
-     * @return void
-     */
     public function initializeArguments(): void
     {
         $this->registerArgument('text', 'string', 'Text to convert');
@@ -34,6 +33,7 @@ class PipeToBrViewHelper extends AbstractViewHelper
     /**
      * @return string The converted String
      */
+    #[\Override]
     public function render()
     {
         return str_replace(

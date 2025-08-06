@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\Utility;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -11,7 +13,6 @@ class ConfigurationUtility
     /**
      * Get the typoscript configuration
      *
-     * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
     public static function getConfiguration(string $extKey = 'vhs_col', bool $returnFullConfiguration = false, bool $throwException = true): array
@@ -31,9 +32,6 @@ class ConfigurationUtility
     }
 
     /**
-     * @param string $extKey
-     *
-     * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
     public static function getViewSettings(string $extKey = 'vhs_col'): array
@@ -42,9 +40,6 @@ class ConfigurationUtility
     }
 
     /**
-     * @param string $extKey
-     *
-     * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
     public static function getPersistenceSettings(string $extKey = 'vhs_col'): array
@@ -52,19 +47,12 @@ class ConfigurationUtility
         return self::getConfiguration($extKey)['persistence'] ?? [];
     }
 
-    /**
-     * @return array
-     */
     public static function getSettings(string $extKey = 'vhs_col'): array
     {
         return self::getConfiguration($extKey);
     }
 
     /**
-     * @param string $extKey
-     * @param string $variable
-     *
-     * @return mixed
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
@@ -72,17 +60,13 @@ class ConfigurationUtility
     {
         $extConf = TYPO3GeneralUtility::makeInstance(ExtensionConfiguration::class);
 
-        return empty($variable)
+        return $variable === '' || $variable === '0'
             ? $extConf->get($extKey)
             : $extConf->get($extKey, $variable);
     }
 
     /**
      * Convert the typoscript array to a plain array
-     *
-     * @param array $configuration
-     *
-     * @return array
      */
     protected static function convert(array $configuration): array
     {

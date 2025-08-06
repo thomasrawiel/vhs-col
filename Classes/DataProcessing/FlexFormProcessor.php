@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\DataProcessing;
 
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -13,10 +15,6 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 class FlexFormProcessor implements DataProcessorInterface
 {
     /**
-     * @param ContentObjectRenderer $cObj
-     * @param array $contentObjectConfiguration
-     * @param array $processorConfiguration
-     * @param array $processedData
      * @return array
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
@@ -25,6 +23,7 @@ class FlexFormProcessor implements DataProcessorInterface
         if (!isset($processedData['data'][$fieldName])) {
             return $processedData;
         }
+
         $originalValue = $processedData['data'][$fieldName] ?? null;
         if (!is_string($originalValue)) {
             return $processedData;

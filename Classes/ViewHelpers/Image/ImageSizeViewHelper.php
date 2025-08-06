@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TYPO3\CMS\Core\Core\Environment;
@@ -8,7 +10,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class ImageSizeViewHelper
@@ -18,8 +19,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class ImageSizeViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * Initialize arguments
      */
@@ -34,31 +33,20 @@ class ImageSizeViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return int
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ): int {
+    #[\Override]
+    public function render(): int
+    {
         $value = 0;
-
         $typo3VersionNumber = VersionNumberUtility::convertVersionNumberToInteger(
             VersionNumberUtility::getNumericTypo3Version()
         );
-
         // If TYPO3 version is previous version 11
-        if ($typo3VersionNumber < 11000000) {
-            $usedImage = trim($arguments['image'], '/');
-        } else {
-            $usedImage = trim($arguments['image']);
-        }
-
+        $usedImage = $typo3VersionNumber < 11000000 ? trim((string)$this->arguments['image'], '/') : trim((string)$this->arguments['image']);
         $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
         $imagesOnPage = $assetCollector->getMedia();
-
         if (isset($imagesOnPage[$usedImage])) {
-            switch ($arguments['property']) {
+            switch ($this->arguments['property']) {
                 case 'width':
                     $value = $imagesOnPage[$usedImage][0];
                     break;
@@ -72,7 +60,6 @@ class ImageSizeViewHelper extends AbstractViewHelper
                     }
             }
         }
-
         return (int)$value;
     }
 }

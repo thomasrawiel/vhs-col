@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Link;
 
 /**
@@ -7,9 +9,6 @@ namespace TRAW\VhsCol\ViewHelpers\Link;
  */
 class SolrLinkViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
-    /**
-     * @return void
-     */
     public function initializeArguments(): void
     {
         $this->registerArgument('host', 'string', '', true);
@@ -18,16 +17,15 @@ class SolrLinkViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewH
 
     /**
      * prepend a / before the url, if the url doesn't start with a /
-     *
-     * @return string
      */
-    public function render()
+    #[\Override]
+    public function render(): string
     {
         $host = $this->arguments['host'];
         $url = $this->arguments['url'];
         $glue = '';
 
-        if (str_starts_with($url, '/') === false) {
+        if (str_starts_with((string)$url, '/') === false) {
             $glue = '/';
         }
 

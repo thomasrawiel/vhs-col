@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright notice
  *
@@ -31,56 +32,28 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration;
 
-use Doctrine\DBAL\DBALException;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-/**
- *
- */
 class TcaOptionsMap
 {
-
     /**
      * Usage:
      * Add a map to your table with conditions for when the items should be (or should not be) added
-     * @var array
      */
-
-
     protected array $mapping = [];
 
-    /**
-     * @var array
-     */
     protected array $properties = [];
 
-    /**
-     * @var array
-     */
     protected array $items = [];
 
-    /**
-     * @var string
-     */
     protected string $field = '';
 
-    /**
-     * @param array $params
-     *
-     * @return void
-     */
+    public function __construct(private readonly \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool) {}
+
     public function addOptions(array &$params): void
     {
         $this->initialize($params);
         $this->setOptions();
     }
 
-    /**
-     * @param array $params
-     *
-     * @return void
-     */
     protected function initialize(array &$params): void
     {
         $table = $params['table'];
@@ -88,7 +61,7 @@ class TcaOptionsMap
         $this->mapping = $GLOBALS['TCA'][$table]['tx_vhscol_option_map'] ?? [];
         $this->properties = $params['row'];
 
-        foreach ($this->mapping as $propertyName => $mapping) {
+        foreach (array_keys($this->mapping) as $propertyName) {
             if (isset($this->properties[$propertyName])) {
                 //if it's an array (tt_content) use the first entry
                 $this->properties[$propertyName] = $this->properties[$propertyName][0]
@@ -96,14 +69,13 @@ class TcaOptionsMap
                     ?? '';
             }
         }
-
+        /**
+         * $params Reference to TCA field configuration array (expects ['items'] to be passed by reference)
+         */
         $this->items = &$params['items'];
         $this->field = $params['field'];
     }
 
-    /**
-     * @return void
-     */
     protected function setOptions(): void
     {
         if (!empty($this->mapping[$this->field])) {
@@ -112,10 +84,8 @@ class TcaOptionsMap
                     if ($this->isConditionMatching($configuration['conditions'])) {
                         $this->items = $this->mergeItems($configuration['options'] ?? []);
                     }
-                } else {
-                    if (!empty($configuration['options'])) {
-                        $this->items = $this->mergeItems($configuration['options']);
-                    }
+                } elseif (!empty($configuration['options'])) {
+                    $this->items = $this->mergeItems($configuration['options']);
                 }
             }
         }
@@ -123,10 +93,6 @@ class TcaOptionsMap
 
     /**
      * Merge items but ignore duplicate values
-     *
-     * @param array $options
-     *
-     * @return array
      */
     protected function mergeItems(array $options): array
     {
@@ -157,41 +123,39 @@ class TcaOptionsMap
         return $mergedItems;
     }
 
-    /**
-     * @param array $conditions
-     *
-     * @return bool
-     */
     protected function isConditionMatching(array $conditions): bool
     {
-        if (isset($conditions['fields'])) {
-            foreach ($conditions['fields'] as $startField => $compareFields) {
-                if (!isset($this->properties[$startField]) || in_array(is_array($this->properties[$startField]) ? $this->properties[$startField][0] : $this->properties[$startField], $compareFields) === false) {
-                    return false;
-                }
+        foreach ($conditions['fields'] ?? [] as $startField => $compareFields) {
+            $needle = $this->extractNeedle($this->properties[$startField] ?? null);
+
+            if (!in_array($needle, $compareFields, true)) {
+                return false;
             }
         }
-        if (isset($conditions['notFields'])) {
-            foreach ($conditions['notFields'] as $startField => $compareFields) {
-                if (isset($this->properties[$startField]) && in_array(is_array($this->properties[$startField]) ? $this->properties[$startField][0] : $this->properties[$startField], $compareFields) === true) {
-                    return false;
-                }
+
+        foreach ($conditions['notFields'] ?? [] as $startField => $compareFields) {
+            $needle = $this->extractNeedle($this->properties[$startField] ?? null);
+
+            if (in_array($needle, $compareFields, true)) {
+                return false;
             }
         }
-        if (isset($conditions['functions'])) {
-            foreach ($conditions['functions'] as $function => $values) {
-                if (!method_exists($this, $function) || $this->{$function}($values) === false) {
-                    return false;
-                }
+
+        foreach ($conditions['functions'] ?? [] as $function => $values) {
+            if (!method_exists($this, $function) || $this->$function($values) === false) {
+                return false;
             }
         }
+
         return true;
     }
 
+    private function extractNeedle(mixed $value): mixed
+    {
+        return is_array($value) ? ($value[0] ?? null) : $value;
+    }
+
     /**
-     * @param array $configuration
-     *
-     * @return bool
      * @throws \Doctrine\DBAL\Exception
      */
     protected function parentPageProperties(array $configuration): bool
@@ -200,9 +164,6 @@ class TcaOptionsMap
     }
 
     /**
-     * @param array $configuration
-     *
-     * @return bool
      * @throws \Doctrine\DBAL\Exception
      */
     protected function parentContainerProperties(array $configuration): bool
@@ -211,9 +172,6 @@ class TcaOptionsMap
     }
 
     /**
-     * @param array $configuration
-     *
-     * @return bool
      * @throws \Doctrine\DBAL\Exception
      */
     protected function parentNewsRecordProperties(array $configuration): bool
@@ -222,20 +180,17 @@ class TcaOptionsMap
     }
 
     /**
-     * @param array  $configuration
-     * @param string $table
-     * @param string $parentDetectionField
-     *
-     * @return bool
      * @throws \Doctrine\DBAL\Exception
      */
     protected function parentAnythingProperties(array $configuration, string $table, string $parentDetectionField): bool
     {
         $parentUid = is_array($this->properties[$parentDetectionField]) ? $this->properties[$parentDetectionField][0] : ($this->properties[$parentDetectionField] ?? false);
 
-        if ($parentUid === false) return false;
+        if ($parentUid === false) {
+            return false;
+        }
 
-        $result = GeneralUtility::makeInstance(ConnectionPool::class)
+        $result = $this->connectionPool
             ->getConnectionForTable($table)
             ->select(
                 array_merge(['uid'], array_keys($configuration)),
@@ -243,7 +198,9 @@ class TcaOptionsMap
                 ['uid' => $parentUid]
             )->fetchAssociative();
 
-        if (empty($result) || $result === false) return false;
+        if (empty($result) || $result === false) {
+            return false;
+        }
 
         foreach ($configuration as $property => $values) {
             if (array_key_exists($property, $result) === false || in_array($result[$property], $values) === false) {

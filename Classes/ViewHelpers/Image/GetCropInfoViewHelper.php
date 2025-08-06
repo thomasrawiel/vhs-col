@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Image;
 
 use TYPO3\CMS\Core\Resource\FileReference;
@@ -7,13 +9,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class GetCropInfoViewHelper
- * @package TRAW\VhsCol\ViewHelpers\Image
  */
 class GetCropInfoViewHelper extends AbstractViewHelper
 {
-    /**
-     * @return void
-     */
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -22,7 +20,6 @@ class GetCropInfoViewHelper extends AbstractViewHelper
         //if you have multiple crop areas, tell the Viewhelper which one you want
         $this->registerArgument('crop', 'string', 'Crop area', false, 'default');
     }
-
 
     /**
      * Returns the crop information as array
@@ -36,18 +33,16 @@ class GetCropInfoViewHelper extends AbstractViewHelper
      *      selectedRatio
      *      focusArea => NULL
      *  ]
-     *
-     * @return array|null
      */
+    #[\Override]
     public function render(): ?array
     {
         $image = $this->arguments['image'];
         if ($image instanceof FileReference) {
             $crop = $image->getProperty('crop');
 
-            return !empty($crop) ? (json_decode($crop, true)[$this->arguments['crop']] ?? null) : null;
-        } else {
-            return null;
+            return empty($crop) ? (null) : json_decode((string)$crop, true)[$this->arguments['crop']] ?? null;
         }
+        return null;
     }
 }

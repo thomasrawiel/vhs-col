@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
+
 namespace TRAW\VhsCol\ViewHelpers\Media\Source;
 
 use TRAW\VhsCol\Utility\DatabaseUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ContainerMaxWidthViewHelper extends AbstractViewHelper
 {
+    public function __construct(private readonly \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool) {}
     /**
      * @api
      */
@@ -21,9 +22,7 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
         $this->registerArgument('settings', 'array', 'Settings');
     }
 
-    /**
-     * @return float
-     */
+    #[\Override]
     public function render(): float
     {
         $width = $this->arguments['width'];
@@ -31,7 +30,7 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
         $parentContainerUid = $this->renderingContext->getVariableProvider()->getByPath('data.tx_container_parent');
 
         if ($parentContainerUid > 0 && ($settings['enable'] ?? false)) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tt_content');
             $containerCType = DatabaseUtility::getContentAttributeByUid($parentContainerUid, 'CType');
             if (!empty($containerCType)) {
                 $parentContainerColPos = $this->renderingContext->getVariableProvider()->getByPath('data.colPos');

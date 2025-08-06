@@ -1,4 +1,5 @@
 <?php
+
 namespace TRAW\VhsCol\Traits;
 
 /*
@@ -46,11 +47,8 @@ trait ArrayConsumingViewHelperTrait
         string $argumentName,
         \Closure $renderChildrenClosure
     ): array {
-        if (!isset($arguments[$argumentName])) {
-            $value = $renderChildrenClosure();
-        } else {
-            $value = $arguments[$argumentName];
-        }
+        $value = $arguments[$argumentName] ?? $renderChildrenClosure();
+
         return static::arrayFromArrayOrTraversableOrCSVStatic($value);
     }
 
@@ -62,15 +60,19 @@ trait ArrayConsumingViewHelperTrait
         if ($candidate instanceof QueryResultInterface) {
             return $candidate->toArray();
         }
+
         if (is_array($candidate)) {
             return $candidate;
         }
+
         if ($candidate instanceof \Traversable) {
             return iterator_to_array($candidate, $useKeys);
         }
+
         if (is_string($candidate)) {
             return GeneralUtility::trimExplode(',', $candidate, true);
         }
+
         ErrorUtility::throwViewHelperException('Unsupported input type; cannot convert to array!');
         return [];
     }
@@ -91,6 +93,6 @@ trait ArrayConsumingViewHelperTrait
      */
     protected static function assertIsArrayOrIterator($subject): bool
     {
-        return is_array($subject) || $subject instanceof \Traversable;
+        return is_iterable($subject);
     }
 }

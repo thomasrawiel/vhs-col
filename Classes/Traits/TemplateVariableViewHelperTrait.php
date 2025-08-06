@@ -1,4 +1,5 @@
 <?php
+
 namespace TRAW\VhsCol\Traits;
 
 /*
@@ -54,10 +55,10 @@ trait TemplateVariableViewHelperTrait
         $as = $this->arguments['as'];
         if (empty($as)) {
             return $variable;
-        } else {
-            $variables = [$as => $variable];
-            $content = $this->renderChildrenWithVariables($variables);
         }
+        $variables = [$as => $variable];
+        $content = $this->renderChildrenWithVariables($variables);
+
         return $content;
     }
 
@@ -71,16 +72,16 @@ trait TemplateVariableViewHelperTrait
         RenderingContextInterface $renderingContext,
         \Closure $renderChildrenClosure
     ) {
-        if (empty($as)) {
+        if ($as === null || $as === '' || $as === '0') {
             return $variable;
-        } else {
-            $variables = [$as => $variable];
-            $content = static::renderChildrenWithVariablesStatic(
-                $variables,
-                $renderingContext->getVariableProvider(),
-                $renderChildrenClosure
-            );
         }
+        $variables = [$as => $variable];
+        $content = static::renderChildrenWithVariablesStatic(
+            $variables,
+            $renderingContext->getVariableProvider(),
+            $renderChildrenClosure
+        );
+
         return $content;
     }
 
@@ -130,8 +131,10 @@ trait TemplateVariableViewHelperTrait
                 $backups[$variableName] = $templateVariableContainer->get($variableName);
                 $templateVariableContainer->remove($variableName);
             }
+
             $templateVariableContainer->add($variableName, $variableValue);
         }
+
         return $backups;
     }
 
@@ -140,7 +143,7 @@ trait TemplateVariableViewHelperTrait
         array $backups,
         VariableProviderInterface $templateVariableContainer
     ): void {
-        foreach ($variables as $variableName => $variableValue) {
+        foreach (array_keys($variables) as $variableName) {
             $templateVariableContainer->remove($variableName);
             if (isset($backups[$variableName])) {
                 $templateVariableContainer->add($variableName, $backups[$variableName]);

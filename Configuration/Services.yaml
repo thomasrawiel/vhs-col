@@ -7,6 +7,11 @@ services:
   TRAW\VhsCol\:
     resource: '../Classes/*'
 
+  TRAW\VhsCol\Configuration\TcaOptionsMap:
+    public: true
+  TRAW\VhsCol\ViewHelpers\Media\Source\ContainerMaxWidthViewHelper:
+    public: true
+
   TRAW\VhsCol\DataProcessing\FlexFormProcessor:
     tags:
       - name: 'data.processor'
