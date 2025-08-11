@@ -67,7 +67,7 @@ final class Doktype
         $this->assertIconExists($iconFactory, $this->iconIdentifierContentFromPid, 'icon-contentFromPid');
 
         $this->group = $doktypeConfiguration['group'] ?? 'default';
-        $this->itemType = $doktypeConfiguration['itemType'] ?? (string)PageRepository::DOKTYPE_DEFAULT;
+        $this->itemType = (string)($doktypeConfiguration['itemType'] ?? PageRepository::DOKTYPE_DEFAULT);
         $this->columnsOverrides = $doktypeConfiguration['columnsOverrides'] ?? null;
         $this->showItem = $doktypeConfiguration['showItem'] ?? null;
         $this->additionalShowItem = $doktypeConfiguration['additionalShowItem'] ?? null;
