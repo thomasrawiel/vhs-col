@@ -35,7 +35,7 @@ class ParameterPartViewHelper extends AbstractViewHelper
         $this->registerArgument('fallback', 'string', 'Fallback text if parameter part is not set');
     }
 
-    #[\Override]
+    
     public function render(): string
     {
         $part = $this->arguments['part'] ?? null;

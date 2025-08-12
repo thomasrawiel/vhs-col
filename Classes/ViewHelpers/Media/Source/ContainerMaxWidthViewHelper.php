@@ -22,7 +22,7 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
         $this->registerArgument('settings', 'array', 'Settings');
     }
 
-    #[\Override]
+    
     public function render(): float
     {
         $width = $this->arguments['width'];

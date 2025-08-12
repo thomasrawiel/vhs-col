@@ -38,7 +38,7 @@ final class TelephoneViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'a';
 
-    #[\Override]
+    
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -46,7 +46,7 @@ final class TelephoneViewHelper extends AbstractTagBasedViewHelper
 
     }
 
-    #[\Override]
+    
     public function render(): string
     {
         $tel = $this->arguments['tel'];

@@ -20,7 +20,7 @@ class RenderSvgContentViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
-    #[\Override]
+    
     public function render()
     {
         return $this->arguments['svgReference']->getContents();

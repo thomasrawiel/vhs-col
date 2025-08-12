@@ -35,7 +35,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'picture';
 
-    #[\Override]
+    
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -60,7 +60,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
     /**
      * @throws Exception
      */
-    #[\Override]
+    
     public function render(): string
     {
         $src = $this->arguments['src'];

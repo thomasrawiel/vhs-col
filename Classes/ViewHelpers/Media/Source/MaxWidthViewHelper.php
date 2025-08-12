@@ -21,7 +21,7 @@ class MaxWidthViewHelper extends AbstractViewHelper
         $this->registerArgument('width', 'integer', 'Width of image');
     }
 
-    #[\Override]
+    
     public function render(): int
     {
         if (empty(ConfigurationUtility::getSettings('vhs_col')['picture']['sources'])) {

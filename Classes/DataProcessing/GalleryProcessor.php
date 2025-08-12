@@ -12,7 +12,7 @@ class GalleryProcessor extends \TYPO3\CMS\Frontend\DataProcessing\GalleryProcess
     /**
      * Get the gallery width based on vertical position
      */
-    #[\Override]
+    
     protected function determineMaximumGalleryWidth()
     {
         if (\TRAW\VhsCol\Utility\Custom\EmConfigurationUtility::isGalleryProcessorEnabled()) {

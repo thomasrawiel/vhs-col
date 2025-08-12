@@ -18,7 +18,7 @@ class SolrLinkViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewH
     /**
      * prepend a / before the url, if the url doesn't start with a /
      */
-    #[\Override]
+    
     public function render(): string
     {
         $host = $this->arguments['host'];

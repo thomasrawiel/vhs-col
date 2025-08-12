@@ -34,7 +34,7 @@ class ImageSizeViewHelper extends AbstractViewHelper
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      */
-    #[\Override]
+    
     public function render(): int
     {
         $value = 0;

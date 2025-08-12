@@ -25,7 +25,7 @@ class DateRangeViewHelper extends AbstractViewHelper
         $this->registerArgument('sep', 'string', 'format', false);
     }
 
-    #[\Override]
+    
     public function render(): string
     {
         $arguments = $this->arguments;

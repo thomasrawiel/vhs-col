@@ -24,7 +24,7 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
         $this->imageService = GeneralUtility::makeInstance(ImageService::class);
     }
 
-    #[\Override]
+    
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -56,7 +56,7 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
     /**
      * @throws Exception
      */
-    #[\Override]
+    
     public function render(): string
     {
         $src = (string)$this->arguments['src'];

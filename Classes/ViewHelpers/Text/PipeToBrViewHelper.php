@@ -33,7 +33,7 @@ class PipeToBrViewHelper extends AbstractViewHelper
     /**
      * @return string The converted String
      */
-    #[\Override]
+    
     public function render()
     {
         return str_replace(

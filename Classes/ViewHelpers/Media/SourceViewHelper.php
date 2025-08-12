@@ -44,7 +44,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'source';
 
-    #[\Override]
+    
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -89,7 +89,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
     /**
      * Render method
      */
-    #[\Override]
+    
     public function render(): string
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();

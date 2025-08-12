@@ -74,7 +74,7 @@ class SplitMenuProcessor extends MenuProcessor
     /**
      * @return array
      */
-    #[\Override]
+    
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
     {
         if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {

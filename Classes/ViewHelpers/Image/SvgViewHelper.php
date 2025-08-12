@@ -22,7 +22,7 @@ class SvgViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
      *
      * @return string the resulting string which is directly shown
      */
-    #[\Override]
+    
     public function render()
     {
         return GeneralUtility::makeInstance(SvgUtility::class)->render((string)$this->arguments['name'], $this->arguments['path'] ?? '', $this->arguments['file'] ?? null, (bool)($this->arguments['useThemePath'] ?? false));

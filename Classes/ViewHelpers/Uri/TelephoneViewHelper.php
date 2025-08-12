@@ -32,7 +32,7 @@ class TelephoneViewHelper extends AbstractViewHelper
         $this->registerArgument('format', 'integer', 'Phone number format', false, PhoneNumberFormat::RFC3966);
     }
 
-    #[\Override]
+    
     public function render(): string
     {
         $inputNumberString = $this->arguments['phoneNumber'] ?? $this->renderChildren();

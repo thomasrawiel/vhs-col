@@ -34,7 +34,7 @@ class GetCropInfoViewHelper extends AbstractViewHelper
      *      focusArea => NULL
      *  ]
      */
-    #[\Override]
+    
     public function render(): ?array
     {
         $image = $this->arguments['image'];
