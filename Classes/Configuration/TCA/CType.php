@@ -14,6 +14,8 @@ final class CType
 {
     protected string $label;
 
+    protected string $wizardLabel;
+
     protected string $description;
 
     protected string $value;
@@ -52,6 +54,7 @@ final class CType
 
         $this->assertRequiredFields();
 
+        $this->wizardLabel = $cTypeConfiguration['wizardLabel'] ?? $this->label;
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
 
@@ -100,6 +103,11 @@ final class CType
     public function getLabel(): string
     {
         return $this->label;
+    }
+
+    public function getWizardLabel(): string
+    {
+        return $this->wizardLabel;
     }
 
     public function getDescription(): string
@@ -171,6 +179,7 @@ final class CType
     {
         return [
             'label' => $this->label,
+            'wizardLabel' => $this->wizardLabel,
             'value' => $this->value,
             'description' => $this->description,
             'icon' => $this->iconIdentifier,

@@ -40,7 +40,7 @@ final class PageTsGenerator
             }
 
             $value = $cType->getValue();
-            $label = $cType->getLabel();
+            $label = $cType->getWizardLabel();
             $description = $cType->getDescription() ?? '';
             $iconIdentifier = $cType->getIconIdentifier() ?? 'content-special';
             $group = $cType->getGroup() ?? 'common';
