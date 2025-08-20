@@ -16,6 +16,10 @@ services:
     tags:
       - name: 'data.processor'
         identifier: 'traw-flexform'
+  TRAW\VhsCol\DataProcessing\Records\RecordDataProcessor:
+    tags:
+      - name: 'data.processor'
+        identifier: 'traw-record-data'
 
   TRAW\VhsCol\DataProcessing\GalleryProcessor:
     tags:
