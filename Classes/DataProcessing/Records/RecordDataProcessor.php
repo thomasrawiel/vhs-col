@@ -2,14 +2,40 @@
 
 namespace TRAW\VhsCol\DataProcessing\Records;
 
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\ParameterType;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentDataProcessor;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 
+/**
+ * Class RecordDataProcessor
+ *
+ * Field must be type=category
+ * Field can be type=select (with foreign_table=sys_category, etc. -> deprecated)
+ * Usage:
+ *
+ * dataProcessing {
+ *      10 = traw-record-data
+ *      10 {
+ *          fieldName = pages
+ *          pidInList = root
+ *          recursive = 99
+ *
+ *          fetchCategories = 1/0
+ *          as = records
+ *      }
+ * }
+ */
 final class RecordDataProcessor implements DataProcessorInterface
 {
-    public function __construct(private readonly ContentDataProcessor $contentDataProcessor)
+    public function __construct(
+        private readonly ContentDataProcessor $contentDataProcessor,
+        private readonly ConnectionPool       $connectionPool
+    )
     {
     }
 
@@ -93,8 +119,46 @@ final class RecordDataProcessor implements DataProcessorInterface
             if ($currentRecord['uid'] !== $record['uid']) {
                 $processedRecordVariables[$key]['mount'] = $record['uid'];
             }
+
+            if ($cObj->stdWrapValue('fetchCategories', $processorConfiguration, 0)) {
+                $tcaCategoryFieldName = $cObj->stdWrapValue('categoryFieldName', $processorConfiguration, 'categories');
+                $categoryFieldTCA = $GLOBALS['TCA'][$tableName]['columns'][$tcaCategoryFieldName] ?? [];
+                //check if that's really a category field
+                if (
+                    $categoryFieldTCA !== []
+                    && (
+                        $categoryFieldTCA['config']['type'] ?? null) === 'category'
+                    || (
+                        ($categoryFieldTCA['config']['type'] ?? null) === 'select' &&
+                        ($categoryFieldTCA['config']['foreign_table'] ?? null) === 'sys_category' &&
+                        ($categoryFieldTCA['config']['MM_match_fields']['fieldname'] ?? null) === $tcaCategoryFieldName
+                    )
+
+                ) {
+                    $categories = $this->fetchCategories($record['uid'], $tableName, $tcaCategoryFieldName);
+                    $processedRecordVariables[$key]['categories'] = $cObj->getRecords('sys_category', [
+                        'uidInList' => implode(',', array_column($categories, 'uid_local')),
+                        'pidInList' => 0,
+                    ]);
+                }
+            }
         }
 
         return $processedRecordVariables;
+    }
+
+    protected function fetchCategories(int $recordUid, string $tableName, string $categoryFieldName): array
+    {
+        $qb = $this->connectionPool->getQueryBuilderForTable('sys_category');
+        return $qb
+            ->select('uid_local')
+            ->from('sys_category_record_mm')
+            ->where(
+                $qb->expr()->eq('uid_foreign', $qb->createNamedParameter($recordUid, ParameterType::INTEGER)),
+                $qb->expr()->eq('tablenames', $qb->createNamedParameter($tableName, ParameterType::STRING)),
+            )
+            ->orderBy('sorting')
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 }
