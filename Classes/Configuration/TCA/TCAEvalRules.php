@@ -3,6 +3,23 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\Configuration\TCA;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+/**
+ * Class TCAEvalRules
+ *
+ * @see https://docs.typo3.org/m/typo3/reference-tca/main/en-us/ColumnsConfig/Type/Input/#confval-input-eval
+ *
+ * Usage example:
+ *  Add trim rule to tt-content header
+ * \TRAW\VhsCol\Configuration\TCA\TCAEvalRules::addEvalRules('tt_content', 'header', ['trim']);
+ *      result 'eval' => 'trim'
+ *
+ * Add alphanum and unique rule to the existing trim rule for pages title
+ * \TRAW\VhsCol\Configuration\TCA\TCAEvalRules::addEvalRules('pages', 'title', ['alphanum', 'unique]);
+ *      result 'eval' => 'trim,alphanum,unique'
+ *
+ */
 final class TCAEvalRules
 {
     /**
@@ -22,14 +39,14 @@ final class TCAEvalRules
             return;
         }
 
-        $config = &$GLOBALS['TCA'][$table]['columns'][$fieldName]['config'];
-
-        $existingEval = $config['eval'] ?? '';
-        $eval = array_filter(array_map('trim', explode(',', (string)$existingEval)));
+        $existingEval = $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] ?? '';
+        $eval = array_filter(GeneralUtility::trimExplode(',', (string)$existingEval, true));
         $eval = array_unique(array_merge($eval, $evalValues));
         $eval = array_filter($eval, static fn(string $value): bool => self::evalRuleIsValid($value));
 
-        $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+        if(!empty($eval)){
+            $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+        }
     }
 
     /**
@@ -50,14 +67,12 @@ final class TCAEvalRules
         }
 
         $existingEval = $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] ?? '';
-        $eval = array_filter(array_map('trim', explode(',', (string)$existingEval)));
+        $eval = array_filter(GeneralUtility::trimExplode(',', (string)$existingEval, true));
+        $eval = array_values(array_filter($eval, static fn(string $value): bool => !in_array($value, $evalValues, true)));
 
-        $eval = array_values(array_filter(
-            $eval,
-            static fn(string $value): bool => !in_array($value, $evalValues, true)
-        ));
-
-        $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+        if(!empty($eval)){
+            $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+        }
     }
 
     /**
@@ -77,18 +92,20 @@ final class TCAEvalRules
             return;
         }
         $eval = array_unique(array_filter($eval, static fn(string $value): bool => self::evalRuleIsValid($value)));
-        
-        $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+
+        if(!empty($eval)){
+            $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
+        }
     }
 
     /**
      * Check if eval rules are valid
      *
-     * @param string $eval
+     * @param string|null $eval
      *
      * @return bool
      */
-    private static function evalRuleIsValid(string $eval): bool
+    private static function evalRuleIsValid(?string $eval): bool
     {
         $allowedEvalValues = ['alpha', 'alphanum', 'alphanum_x', 'domainname', 'is_in', 'lower', 'md5', 'nospace', 'num', 'trim', 'unique', 'uniqueInPid', 'upper', 'year'];
 
