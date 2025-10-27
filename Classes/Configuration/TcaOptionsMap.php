@@ -210,4 +210,22 @@ class TcaOptionsMap
 
         return true;
     }
+
+    public static function addToOptionMap(string $table, string $field, array $options): void
+    {
+        $currentFunc = $GLOBALS['TCA'][$table]['columns'][$field]['config']['itemsProcFunc'] ?? null;
+        $targetFunc = \TRAW\VhsCol\Configuration\TcaOptionsMap::class . '->addOptions';
+
+        // If another itemsProcFunc is already set, abort
+        if ($currentFunc !== null && $currentFunc !== $targetFunc) {
+            throw new \Exception("Can't set option map because $field in $table already has an itemsProcFunc ($currentFunc)");
+        }
+
+        if ($currentFunc !== $targetFunc) {
+            $GLOBALS['TCA'][$table]['columns'][$field]['config']['itemsProcFunc'] = $targetFunc;
+        }
+
+        $GLOBALS['TCA'][$table]['tx_vhscol_option_map'][$field] =
+            array_merge($GLOBALS['TCA'][$table]['tx_vhscol_option_map'][$field] ?? [], array_values($options));
+    }
 }
