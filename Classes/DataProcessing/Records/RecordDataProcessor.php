@@ -59,7 +59,13 @@ final class RecordDataProcessor implements DataProcessorInterface
         }
 
         foreach ($recordData as $data) {
-            [$table, $uid] = preg_split('~.*\K_~', $data);
+            if (strpos($data, '_') !== false) {
+                [$table, $uid] = [$table, $uid] = preg_split('~.*\K_~', $data);
+            } else {
+                $table = $cObj->stdWrapValue('table', $processorConfiguration, 'pages');
+                $uid = $data;
+            }
+
             $uidList[$table][] = $uid;
             $uidSequence[] = $uid;
         }
