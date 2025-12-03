@@ -94,6 +94,12 @@ class SortViewHelper extends AbstractViewHelper
         $this->registerAsArgument();
     }
 
+    public function render()
+    {
+        // TODO: Implement render() method.
+    }
+
+
     /**
      * "Render" method - sorts a target list-type target. Either $array or
      * $objectStorage must be specified. If both are, ObjectStorage takes precedence.

@@ -3,6 +3,7 @@
 namespace TRAW\VhsCol\Configuration;
 
 use TRAW\VhsCol\Configuration\TCA\Doktype;
+use TRAW\VhsCol\Information\Typo3Version;
 use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -100,12 +101,15 @@ final class Doktypes
                     $registerDoktypeInTSConfig[] = $d->getValue();
                 }
             }
+            if(Typo3Version::getTypo3MajorVersion() < 14) {
+                $doktypesString = implode(',', $registerDoktypeInTSConfig);
 
-            $doktypesString = implode(',', $registerDoktypeInTSConfig);
-
-            if ($doktypesString !== '' && $doktypesString !== '0') {
-                ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
+                if ($doktypesString !== '' && $doktypesString !== '0') {
+                    //deprecated in 13, removed in 14
+                    ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
+                }
             }
+
         }
     }
 }

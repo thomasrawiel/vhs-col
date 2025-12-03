@@ -52,19 +52,19 @@ final class Doktype
 
         $this->assertRequiredFields();
 
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        //$iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
         $this->iconIdentifier = $doktypeConfiguration['icon'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
+        //$this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
 
         $this->iconIdentifierHide = $doktypeConfiguration['icon-hide'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierHide, 'icon-hide');
+        //$this->assertIconExists($iconFactory, $this->iconIdentifierHide, 'icon-hide');
 
         $this->iconIdentifierRoot = $doktypeConfiguration['icon-root'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierRoot, 'icon-root');
+        //$this->assertIconExists($iconFactory, $this->iconIdentifierRoot, 'icon-root');
 
         $this->iconIdentifierContentFromPid = $doktypeConfiguration['icon-contentFromPid'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierContentFromPid, 'icon-contentFromPid');
+        //$this->assertIconExists($iconFactory, $this->iconIdentifierContentFromPid, 'icon-contentFromPid');
 
         $this->group = $doktypeConfiguration['group'] ?? 'default';
         $this->itemType = (string)($doktypeConfiguration['itemType'] ?? PageRepository::DOKTYPE_DEFAULT);

@@ -58,8 +58,8 @@ final class CType
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
 
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
+//        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+//        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
 
         $this->group = $cTypeConfiguration['group'] ?? 'default';
         $this->showitem = $cTypeConfiguration['showitem'] ?? null;
