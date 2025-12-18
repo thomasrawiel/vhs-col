@@ -1,0 +1,8 @@
+<?php
+declare(strict_types=1);
+
+namespace TRAW\VhsCol\Event;
+
+class AfterAdditionalCropVariantsAddedEvent extends AbstractAdditionalCropVariantsEvent
+{
+}
