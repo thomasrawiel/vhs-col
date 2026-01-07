@@ -29,16 +29,16 @@ class TelephoneViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('phoneNumber', 'string', 'The phone number to convert to a link');
         $this->registerArgument('defaultRegion', 'string', 'Region that we are expecting the number to be from');
-        $this->registerArgument('format', 'integer', 'Phone number format', false, PhoneNumberFormat::RFC3966);
+        $this->registerArgument('format', 'integer', 'Phone number format');
     }
 
-    
+
     public function render(): string
     {
         $inputNumberString = $this->arguments['phoneNumber'] ?? $this->renderChildren();
         return PhoneNumberUtility::parsePhoneNumber(
             $inputNumberString,
-            $this->arguments['format'] ?? null,
+            $this->arguments['format'] ?? PhoneNumberFormat::RFC3966,
             $this->arguments['defaultRegion'] ?? null
         );
     }
