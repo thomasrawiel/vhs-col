@@ -103,16 +103,13 @@ class SortViewHelper extends AbstractViewHelper
      *
      * @return mixed
      */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
+    public function render()
+    {
         /** @var string|null $as */
-        $as = $arguments['as'] ?? null;
-        $candidate = $arguments['subject'] ?? $renderChildrenClosure();
+        $as = $this->arguments['as'] ?? null;
+        $candidate = $arguments['subject'] ?? $this->renderChildren();
         if ($candidate instanceof ObjectStorage) {
-            $sorted = static::sortObjectStorage($candidate, $arguments);
+            $sorted = static::sortObjectStorage($candidate, $this->arguments);
         } elseif (!is_iterable($candidate)) {
             throw new Exception(
                 'v:iterator.sort requires an "iterable" object or array, as "subject" argument or as child node.',
@@ -120,14 +117,14 @@ class SortViewHelper extends AbstractViewHelper
             );
         } else {
             $subject = static::arrayFromArrayOrTraversableOrCSVStatic($candidate);
-            $sorted = static::sortArray($subject, $arguments);
+            $sorted = static::sortArray($subject, $this->arguments);
         }
 
         return static::renderChildrenWithVariableOrReturnInputStatic(
             $sorted,
             $as,
-            $renderingContext,
-            $renderChildrenClosure
+            $this->renderingContext,
+            $this->buildRenderChildrenClosure()
         );
     }
 
@@ -184,7 +181,7 @@ class SortViewHelper extends AbstractViewHelper
      *
      * @return ObjectStorage
      */
-    protected static function sortObjectStorage($storage, $arguments)
+    protected function sortObjectStorage($storage, $arguments)
     {
         /** @var ObjectStorage $temp */
         $temp = GeneralUtility::makeInstance(ObjectStorage::class);
