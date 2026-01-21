@@ -1,29 +1,29 @@
 {
-  "name": "traw/vhs-col",
-  "type": "typo3-cms-extension",
-  "description": "A collection of more or less useful ViewHelpers and Utilities",
-  "authors": [
-    {
-      "name": "Thomas Rawiel",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": "^8.1",
-    "typo3/cms-core": "^12 || ^13 || ^14",
-    "typo3/cms-extbase": "^12 || ^13 || ^14",
-    "typo3/cms-fluid-styled-content": "^12 || ^13 || ^14",
-    "giggsey/libphonenumber-for-php": "^9.0"
-  },
-  "license": "GPL-3.0-or-later",
-  "autoload": {
-    "psr-4": {
-      "TRAW\\VhsCol\\": "Classes/"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "vhs_col"
-    }
-  }
+	"name": "traw/vhs-col",
+	"type": "typo3-cms-extension",
+	"description": "A collection of more or less useful ViewHelpers and Utilities",
+	"authors": [
+		{
+			"name": "Thomas Rawiel",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^8.1",
+		"typo3/cms-core": "^13 || ^14",
+		"typo3/cms-extbase": "^13 || ^14",
+		"typo3/cms-fluid-styled-content": "^13 || ^14",
+		"giggsey/libphonenumber-for-php": "^9.0"
+	},
+	"license": "GPL-3.0-or-later",
+	"autoload": {
+		"psr-4": {
+			"TRAW\\VhsCol\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "vhs_col"
+		}
+	}
 }

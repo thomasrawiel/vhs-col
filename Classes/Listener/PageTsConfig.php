@@ -23,10 +23,6 @@ final class PageTsConfig
      */
     public function __invoke(ModifyLoadedPageTsConfigEvent $event): void
     {
-        if (Typo3Version::getTypo3MajorVersion() < 12) {
-            return;
-        }
-
         $tsConfig = $event->getTsConfig();
 
         $generated = PageTsGenerator::generate();
