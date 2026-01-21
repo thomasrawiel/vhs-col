@@ -58,9 +58,6 @@ final class CType
         $this->description = $cTypeConfiguration['description'] ?? '';
         $this->iconIdentifier = $cTypeConfiguration['icon'] ?? null;
 
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
-
         $this->group = $cTypeConfiguration['group'] ?? 'default';
         $this->showitem = $cTypeConfiguration['showitem'] ?? null;
         $this->flexform = $cTypeConfiguration['flexform'] ?? null;
@@ -80,23 +77,6 @@ final class CType
     {
         if ($this->label === '' || $this->value === '') {
             throw new \RuntimeException('A CType must have at least a label and a value', 2787735958);
-        }
-    }
-
-    /**
-     * Checks whether the icon exists in IconRegistry.
-     *
-     * @param string      $fieldName
-     */
-    private function assertIconExists(IconFactory $iconFactory, ?string $identifier, string $identifierType): void
-    {
-        if ($identifier !== null && $identifier !== '' && $identifier !== '0' && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
-            throw new \RuntimeException(sprintf(
-                'The icon "%s", registered for CType "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
-                $identifier,
-                $this->value,
-                $identifierType
-            ), 7000000000 + crc32($identifier . $identifierType));
         }
     }
 

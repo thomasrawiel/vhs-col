@@ -52,19 +52,10 @@ final class Doktype
 
         $this->assertRequiredFields();
 
-        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-
         $this->iconIdentifier = $doktypeConfiguration['icon'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifier, 'icon');
-
         $this->iconIdentifierHide = $doktypeConfiguration['icon-hide'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierHide, 'icon-hide');
-
         $this->iconIdentifierRoot = $doktypeConfiguration['icon-root'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierRoot, 'icon-root');
-
         $this->iconIdentifierContentFromPid = $doktypeConfiguration['icon-contentFromPid'] ?? null;
-        $this->assertIconExists($iconFactory, $this->iconIdentifierContentFromPid, 'icon-contentFromPid');
 
         $this->group = $doktypeConfiguration['group'] ?? 'default';
         $this->itemType = (string)($doktypeConfiguration['itemType'] ?? PageRepository::DOKTYPE_DEFAULT);
@@ -86,21 +77,6 @@ final class Doktype
 
         if (!MathUtility::canBeInterpretedAsInteger($this->value)) {
             throw new \RuntimeException('Page type value must be an integer or integer string', 6038008085);
-        }
-    }
-
-    /**
-     * @throws \RuntimeException if the icon is set but not found
-     */
-    private function assertIconExists(IconFactory $iconFactory, ?string $identifier, string $identifierType): void
-    {
-        if ($identifier !== null && $identifier !== '' && $identifier !== '0' && $iconFactory->getIcon($identifier)->getIdentifier() === 'default-not-found') {
-            throw new \RuntimeException(sprintf(
-                'The icon "%s", registered for Page type "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
-                $identifier,
-                $this->value,
-                $identifierType
-            ), 7000000000 + crc32($identifier . $identifierType));
         }
     }
 
@@ -167,5 +143,14 @@ final class Doktype
     public function getAllowedTables(): ?string
     {
         return $this->allowedTables;
+    }
+    
+    public function getIconIdentifiers(): array {
+        return [
+            'icon' => $this->iconIdentifier,
+            'icon-hide' => $this->iconIdentifierHide,
+            'icon-root' => $this->iconIdentifierRoot,
+            'icon-contentFromPid' => $this->iconIdentifierContentFromPid,
+        ];
     }
 }
