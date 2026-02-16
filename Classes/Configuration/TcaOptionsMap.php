@@ -184,7 +184,11 @@ class TcaOptionsMap
      */
     protected function parentAnythingProperties(array $configuration, string $table, string $parentDetectionField): bool
     {
-        $parentUid = is_array($this->properties[$parentDetectionField]) ? $this->properties[$parentDetectionField][0] : ($this->properties[$parentDetectionField] ?? false);
+        if(!isset($this->properties[$parentDetectionField])) {
+            return false;
+        }
+
+        $parentUid = is_array($this->properties[$parentDetectionField]) ? ($this->properties[$parentDetectionField][0] ?? false) : ($this->properties[$parentDetectionField] ?? false);
 
         if ($parentUid === false) {
             return false;
