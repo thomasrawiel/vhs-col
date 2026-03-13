@@ -40,26 +40,12 @@ final class PageTsGenerator
             }
 
             $value = $cType->getValue();
-            $label = $cType->getWizardLabel();
-            $description = $cType->getDescription() ?? '';
-            $iconIdentifier = $cType->getIconIdentifier() ?? 'content-special';
             $group = $cType->getGroup() ?? 'common';
             $register = $cType->getRegisterInNewContentElementWizard();
-            $defaultValues = $cType->getDefaultValues();
 
-            if ($register === false && self::isTypo3v13OrHigher()) {
+            if ($register === false) {
                 $removeItems[$group][] = $value;
                 continue;
-            }
-
-            if (!self::isTypo3v13OrHigher()) {
-                $wizardItems[$group][$value] = self::renderWizardConfig(
-                    $value,
-                    $label,
-                    $description,
-                    $iconIdentifier,
-                    $defaultValues,
-                );
             }
 
             // Set group header once
@@ -73,14 +59,6 @@ final class PageTsGenerator
         }
 
         return self::renderPageTs($wizardItems, $removeItems, $headers);
-    }
-
-    /**
-     * Checks if current TYPO3 version is 13 or higher.
-     */
-    private static function isTypo3v13OrHigher(): bool
-    {
-        return Typo3Version::getTypo3MajorVersion() >= 13;
     }
 
     /**

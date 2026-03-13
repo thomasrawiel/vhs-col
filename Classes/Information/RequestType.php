@@ -16,12 +16,12 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RequestType
 {
-    public static function isFrontend(ServerRequestInterface $request = null): bool
+    public static function isFrontend(?ServerRequestInterface $request = null): bool
     {
         return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request))->isFrontend();
     }
 
-    public static function isBackend(ServerRequestInterface $request = null): bool
+    public static function isBackend(?ServerRequestInterface $request = null): bool
     {
         return \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request))->isBackend();
     }
@@ -30,7 +30,7 @@ class RequestType
      * @param ServerRequestInterface|null $request
      * @param bool                        $abbreviate - return "BE" or ""FE" if true
      */
-    public static function getRequestType(ServerRequestInterface $request = null, bool $abbreviate = true): string
+    public static function getRequestType(?ServerRequestInterface $request = null, bool $abbreviate = true): string
     {
         $applicationType = \TYPO3\CMS\Core\Http\ApplicationType::fromRequest(self::fetchRequest($request));
 
@@ -40,7 +40,7 @@ class RequestType
     /**
      * @param ServerRequestInterface|null $request
      */
-    protected static function fetchRequest(ServerRequestInterface $request = null): ServerRequestInterface
+    protected static function fetchRequest(?ServerRequestInterface $request = null): ServerRequestInterface
     {
         $r = $request ?? $GLOBALS['TYPO3_REQUEST'] ?? null;
 

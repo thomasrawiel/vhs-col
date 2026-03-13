@@ -1,2 +1,8 @@
 # cat=Image Processing; type=boolean; label=Enable the gallery processor
 enableGalleryProcessor = 0
+
+# cat=Image Processing; type=string; label=Crop variants
+cropVariants = desktop|16:9,tablet|4:3,mobile|1:1
+
+# cat=Image Processing; type=boolean; label=Disable default crop variant
+disableDefaultCropVariant = 1

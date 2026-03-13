@@ -3,8 +3,8 @@
 namespace TRAW\VhsCol\Configuration;
 
 use TRAW\VhsCol\Configuration\TCA\Doktype;
-use TRAW\VhsCol\Information\Typo3Version;
 use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -82,34 +82,63 @@ final class Doktypes
         $doktypes = $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'] ?? null;
         if (!empty($doktypes)) {
             $dokTypeRegistry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
-            $registerDoktypeInTSConfig = [];
 
             foreach ($doktypes as $doktype) {
                 $d = null;
                 if ($doktype instanceof Doktype || is_array($doktype) && $doktype !== []) {
                     $d = is_array($doktype) ? new Doktype($doktype) : $doktype;
-                }
 
-                $dokTypeRegistry->add(
-                    $d->getValue(),
-                    [
-                        'allowedTables' => $d->getAllowedTables() ?? '*',
-                    ],
-                );
+                    foreach ($d->getIconIdentifiers() as $iconIdentifierType => $iconIdentifier) {
+                        if (!is_null($iconIdentifier) && !self::assertIconExists($iconIdentifier, $iconIdentifierType, $d->getValue())) {
+                            throw new \RuntimeException(sprintf(
+                                'The icon "%s", registered for Page type "%s" in field "%s", does not exist. It must be registered in your Configuration/Icons.php',
+                                $iconIdentifier,
+                                $d->getValue(),
+                                $iconIdentifierType
+                            ), 7000000000 + crc32($iconIdentifier . $iconIdentifierType));
+                        }
+                    }
 
-                if ($d->isRegisterInDragArea()) {
-                    $registerDoktypeInTSConfig[] = $d->getValue();
+                    $dokTypeRegistry->add(
+                        $d->getValue(),
+                        [
+                            'allowedTables' => $d->getAllowedTables() ?? '*',
+                        ],
+                    );
                 }
             }
-            if(Typo3Version::getTypo3MajorVersion() < 14) {
-                $doktypesString = implode(',', $registerDoktypeInTSConfig);
-
-                if ($doktypesString !== '' && $doktypesString !== '0') {
-                    //deprecated in 13, removed in 14
-                    ExtensionManagementUtility::addUserTSConfig('options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')');
-                }
-            }
-
         }
+    }
+
+    private static function assertIconExists(?string $identifier): bool
+    {
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
+        return $iconFactory->getIcon($identifier)->getIdentifier() === $identifier;
+    }
+
+    public static function registerDoktypesInDragArea(): ?string
+    {
+        $doktypes = $GLOBALS['TCA']['pages']['tx_vhscol_doktypes'] ?? null;
+        if (!empty($doktypes)) {
+            $registerDoktypeInTSConfig = [];
+            foreach ($doktypes as $doktype) {
+                $d = null;
+                if ($doktype instanceof Doktype || (is_array($doktype) && $doktype !== [])) {
+                    $d = is_array($doktype) ? new Doktype($doktype) : $doktype;
+
+                    if ($d->isRegisterInDragArea() && !is_null($d->getIconIdentifier())) {
+                        $registerDoktypeInTSConfig[] = $d->getValue();
+                    }
+                }
+            }
+
+            if (!empty($registerDoktypeInTSConfig)) {
+                $doktypesString = implode(',', $registerDoktypeInTSConfig);
+                return 'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktypesString . ')';
+            }
+        }
+
+        return null;
     }
 }

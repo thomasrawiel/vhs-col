@@ -38,11 +38,7 @@ class ImageSizeViewHelper extends AbstractViewHelper
     public function render(): int
     {
         $value = 0;
-        $typo3VersionNumber = VersionNumberUtility::convertVersionNumberToInteger(
-            VersionNumberUtility::getNumericTypo3Version()
-        );
-        // If TYPO3 version is previous version 11
-        $usedImage = $typo3VersionNumber < 11000000 ? trim((string)$this->arguments['image'], '/') : trim((string)$this->arguments['image']);
+        $usedImage = trim((string)$this->arguments['image']);
         $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
         $imagesOnPage = $assetCollector->getMedia();
         if (isset($imagesOnPage[$usedImage])) {

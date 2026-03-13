@@ -22,7 +22,7 @@ final class CTypes
             self::registerSelectItem($cType, $selectItemGroupLabel);
             self::registerTcaTypeConfiguration($cType);
             self::registerIconIfAvailable($cType);
-            self::registerCreationOptionsIfSupported($cType);
+            self::registerCreationOptions($cType);
 
             self::storeCTypeForLaterUse($cType);
         }
@@ -97,15 +97,10 @@ final class CTypes
         }
     }
 
-    private static function registerCreationOptionsIfSupported(CType $cType): void
+    private static function registerCreationOptions(CType $cType): void
     {
-        if ($cType->getSaveAndClose() && Typo3Version::getTypo3MajorVersion() > 12) {
-            $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['saveAndClose'] = true;
-        }
-
-        if ($cType->getDefaultValues() !== [] && Typo3Version::getTypo3MajorVersion() > 12) {
-            $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['defaultValues'] = $cType->getDefaultValues();
-        }
+        $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['saveAndClose'] = true;
+        $GLOBALS['TCA']['tt_content']['types'][$cType->getValue()]['creationOptions']['defaultValues'] = $cType->getDefaultValues();
     }
 
     private static function storeCTypeForLaterUse(CType $cType): void

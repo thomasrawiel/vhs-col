@@ -13,41 +13,34 @@ use libphonenumber\PhoneNumberUtil;
  */
 class PhoneNumberUtility
 {
-    public const defaultFormat = PhoneNumberFormat::RFC3966;
+    public const PhoneNumberFormat defaultFormat = PhoneNumberFormat::RFC3966;
 
-    public static function parsePhoneNumber(string $phoneNumberOrUriString, ?int $format = null, ?string $region = null): string
+    public static function parsePhoneNumber(string $phoneNumberOrUriString, PhoneNumberFormat|int|null $format = null, ?string $region = null): string
     {
         $phoneUtil = PhoneNumberUtil::getInstance();
 
-        $inputNumberString = $phoneNumberOrUriString;
-
-        //if it's already a uri, then we just want the number
-        if (str_starts_with('tel:', $inputNumberString)) {
-            $inputNumberString = substr($inputNumberString, 4);
-        }
+        $input = str_starts_with($phoneNumberOrUriString, 'tel:')
+            ? substr($phoneNumberOrUriString, 4)
+            : $phoneNumberOrUriString;
 
         try {
-            $phoneNumber = $phoneUtil->parse($inputNumberString, $region);
+            $phoneNumber = $phoneUtil->parse($input, $region);
         } catch (NumberParseException) {
             return '';
         }
 
-        $allowedFormats = [
-            PhoneNumberFormat::E164,
-            PhoneNumberFormat::INTERNATIONAL,
-            PhoneNumberFormat::NATIONAL,
-            PhoneNumberFormat::RFC3966,
-        ];
-        if (!in_array($format, $allowedFormats, true)) {
-            $format = self::defaultFormat;
+        if ($format instanceof PhoneNumberFormat) {
+            $enumFormat = $format;
+        } elseif (is_int($format)) {
+            $enumFormat = PhoneNumberFormat::tryFrom($format) ?? self::defaultFormat;
+        } else {
+            $enumFormat = self::defaultFormat;
         }
 
-        $formattedNumber = $phoneUtil->format($phoneNumber, $format);
+        $formattedNumber = $phoneUtil->format($phoneNumber, $enumFormat);
 
-        if ($format === PhoneNumberFormat::RFC3966) {
-            return $formattedNumber;
-        }
-
-        return 'tel:' . $formattedNumber;
+        return $enumFormat === PhoneNumberFormat::RFC3966
+            ? $formattedNumber
+            : 'tel:' . $formattedNumber;
     }
 }
