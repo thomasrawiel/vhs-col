@@ -18,6 +18,7 @@
             </trans-unit>
             <trans-unit id="dateFormatSeperator" resname="dateFormatSeperator">
                 <source>-</source>
+                <target>-</target>
             </trans-unit>
         </body>
     </file>
