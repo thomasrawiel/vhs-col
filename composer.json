@@ -13,7 +13,8 @@
 		"typo3/cms-core": "^13 || ^14",
 		"typo3/cms-extbase": "^13 || ^14",
 		"typo3/cms-fluid-styled-content": "^13 || ^14",
-		"giggsey/libphonenumber-for-php": "^9.0"
+		"giggsey/libphonenumber-for-php": "^9.0",
+		"traw/tca-helper": "^1.0 || dev-main"
 	},
 	"license": "GPL-3.0-or-later",
 	"autoload": {
