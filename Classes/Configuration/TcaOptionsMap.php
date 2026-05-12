@@ -125,25 +125,21 @@ class TcaOptionsMap
 
     protected function isConditionMatching(array $conditions): bool
     {
-        foreach ($conditions['fields'] ?? [] as $startField => $compareFields) {
-            $needle = $this->extractNeedle($this->properties[$startField] ?? null);
+        foreach (['fields' => true, 'notFields' => false,] as $key => $expected) {
+            foreach ($conditions[$key] ?? [] as $startField => $compareFields) {
+                $needle = $this->extractNeedle($this->properties[$startField] ?? null);
 
-            if (!in_array($needle, $compareFields, true)) {
-                return false;
+                if (in_array($needle, $compareFields, true) !== $expected) {
+                    return false;
+                }
             }
         }
 
-        foreach ($conditions['notFields'] ?? [] as $startField => $compareFields) {
-            $needle = $this->extractNeedle($this->properties[$startField] ?? null);
-
-            if (in_array($needle, $compareFields, true)) {
-                return false;
-            }
-        }
-
-        foreach ($conditions['functions'] ?? [] as $function => $values) {
-            if (!method_exists($this, $function) || $this->$function($values) === false) {
-                return false;
+        foreach (['functions' => true, 'notFunctions' => false] as $key => $expected) {
+            foreach ($conditions[$key] ?? [] as $function => $values) {
+                if (!method_exists($this, $function) || $this->$function($values) !== $expected) {
+                    return false;
+                }
             }
         }
 
@@ -184,7 +180,7 @@ class TcaOptionsMap
      */
     protected function parentAnythingProperties(array $configuration, string $table, string $parentDetectionField): bool
     {
-        if(!isset($this->properties[$parentDetectionField])) {
+        if (!isset($this->properties[$parentDetectionField])) {
             return false;
         }
 
