@@ -27,7 +27,7 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
 {
     private array $checkTables = [
         'pages' => ['media'],
-        'tt_content' => ['image', 'assets'],
+        'tt_content' => ['image', 'assets', 'media'],
         'tx_news_domain_model_news' => ['fal_media'],
         'tt_address' => ['image'],
     ];
@@ -69,7 +69,7 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
     {
         return [
             DatabaseUpdatedPrerequisite::class,
-            ReferenceIndexUpdatedPrerequisite::class,
+            //ReferenceIndexUpdatedPrerequisite::class,
         ];
     }
 

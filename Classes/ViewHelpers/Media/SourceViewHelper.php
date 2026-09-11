@@ -10,6 +10,7 @@ namespace TRAW\VhsCol\ViewHelpers\Media;
 
 use TRAW\VhsCol\Information\RequestType;
 use TRAW\VhsCol\Utility\FrontendSimulationUtility;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -219,13 +220,19 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
     public function preprocessSourceUri(string $src): string
     {
-        if (!empty($GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['tx_vhscol.']['settings.']['prependPath'])) {
-            $src = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['tx_vhscol.']['settings.']['prependPath'] . $src;
+        $request = $GLOBALS['TYPO3_REQUEST'];
+
+        $setupArray = $request->getAttribute('frontend.typoscript')->getSetupArray();
+
+        if (!empty($setupArray['plugin.']['tx_vhscol.']['settings.']['prependPath'])) {
+            $src = $setupArray['plugin.']['tx_vhscol.']['settings.']['prependPath'] . $src;
         } elseif (RequestType::isBackend() || !$this->arguments['relative']) {
             if (GeneralUtility::isValidUrl($src)) {
                 $src = ltrim($src, '/');
             } elseif (RequestType::isFrontend()) {
-                $src = $GLOBALS['TSFE']->absRefPrefix . ltrim($src, '/');
+                $absRefPrefix = $setupArray['config.']['absRefPrefix'] ?? '/';
+                $prefix = $absRefPrefix === 'auto' ? $request->getAttribute('normalizedParams')->getSitePath() : $absRefPrefix;
+                $src = $prefix . ltrim($src, '/');
             } else {
                 /** @var string $siteUrl */
                 $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
