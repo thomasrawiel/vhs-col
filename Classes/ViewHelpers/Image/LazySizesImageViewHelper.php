@@ -24,16 +24,16 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
         $this->imageService = GeneralUtility::makeInstance(ImageService::class);
     }
 
-    
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerTagAttribute('alt', 'string', 'Specifies an alternate text for an image', false);
-        $this->registerTagAttribute('ismap', 'string', 'Specifies an image as a server-side image-map. Rarely used. Look at usemap instead', false);
-        $this->registerTagAttribute('longdesc', 'string', 'Specifies the URL to a document that contains a long description of an image', false);
-        $this->registerTagAttribute('usemap', 'string', 'Specifies an image as a client-side image-map', false);
-        $this->registerTagAttribute('loading', 'string', 'Native lazy-loading for images property. Can be "lazy", "eager" or "auto"', false);
-        $this->registerTagAttribute('decoding', 'string', 'Provides an image decoding hint to the browser. Can be "sync", "async" or "auto"', false);
+        $this->registerArgument('alt', 'string', 'Specifies an alternate text for an image', false);
+        $this->registerArgument('ismap', 'string', 'Specifies an image as a server-side image-map. Rarely used. Look at usemap instead', false);
+        $this->registerArgument('longdesc', 'string', 'Specifies the URL to a document that contains a long description of an image', false);
+        $this->registerArgument('usemap', 'string', 'Specifies an image as a client-side image-map', false);
+        $this->registerArgument('loading', 'string', 'Native lazy-loading for images property. Can be "lazy", "eager" or "auto"', false);
+        $this->registerArgument('decoding', 'string', 'Provides an image decoding hint to the browser. Can be "sync", "async" or "auto"', false);
 
         $this->registerArgument('src', 'string', 'a path to a file, a combined FAL identifier or an uid (int). If $treatIdAsReference is set, the integer is considered the uid of the sys_file_reference record. If you already got a FAL object, consider using the $image parameter instead', false, '');
         $this->registerArgument('treatIdAsReference', 'bool', 'given src argument is a sys_file_reference record', false, false);
@@ -50,13 +50,13 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('maxHeight', 'int', 'maximum height of the image');
         $this->registerArgument('absolute', 'bool', 'Force absolute URL', false, false);
 
-        $this->registerArgument('sizes', 'string', 'Comma separated list of sizes widths to generate responsive images', false, null);
+        $this->registerArgument('sizes', 'string', 'Comma separated list of sizes widths to generate responsive images', false);
     }
 
     /**
      * @throws Exception
      */
-    
+
     public function render(): string
     {
         $src = (string)$this->arguments['src'];
@@ -125,6 +125,7 @@ class LazySizesImageViewHelper extends AbstractTagBasedViewHelper
                 if ($processedOriginalImage->getProperty('width') < $width) {
                     continue;
                 }
+
                 $height = ($processedOriginalImage->getProperty('height') / $processedOriginalImage->getProperty('width')) * $width;
                 $processingInstructions = [
                     'width' => $width,

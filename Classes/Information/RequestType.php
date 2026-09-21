@@ -27,7 +27,6 @@ class RequestType
     }
 
     /**
-     * @param ServerRequestInterface|null $request
      * @param bool                        $abbreviate - return "BE" or ""FE" if true
      */
     public static function getRequestType(?ServerRequestInterface $request = null, bool $abbreviate = true): string
@@ -37,9 +36,6 @@ class RequestType
         return $abbreviate ? $applicationType->abbreviate() : $applicationType;
     }
 
-    /**
-     * @param ServerRequestInterface|null $request
-     */
     protected static function fetchRequest(?ServerRequestInterface $request = null): ServerRequestInterface
     {
         $r = $request ?? $GLOBALS['TYPO3_REQUEST'] ?? null;

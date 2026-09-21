@@ -5,7 +5,7 @@ namespace TRAW\VhsCol\Event;
 
 class GetTableImageFields
 {
-    public function __construct(private string $table, private array $fields)
+    public function __construct(private readonly string $table, private array $fields)
     {
     }
 

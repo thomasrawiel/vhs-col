@@ -56,10 +56,10 @@ trait TemplateVariableViewHelperTrait
         if (empty($as)) {
             return $variable;
         }
-        $variables = [$as => $variable];
-        $content = $this->renderChildrenWithVariables($variables);
 
-        return $content;
+        $variables = [$as => $variable];
+
+        return $this->renderChildrenWithVariables($variables);
     }
 
     /**
@@ -72,17 +72,17 @@ trait TemplateVariableViewHelperTrait
         RenderingContextInterface $renderingContext,
         \Closure $renderChildrenClosure
     ) {
-        if ($as === null || $as === '' || $as === '0') {
+        if (in_array($as, [null, '', '0'], true)) {
             return $variable;
         }
+
         $variables = [$as => $variable];
-        $content = static::renderChildrenWithVariablesStatic(
+
+        return static::renderChildrenWithVariablesStatic(
             $variables,
             $renderingContext->getVariableProvider(),
             $renderChildrenClosure
         );
-
-        return $content;
     }
 
     /**

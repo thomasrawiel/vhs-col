@@ -32,7 +32,7 @@ class SvgViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
     {
         parent::initializeArguments();
 
-        $this->registerArgument('file', \TYPO3\CMS\Core\Resource\FileReference::class, 'FileReference', false, null);
+        $this->registerArgument('file', \TYPO3\CMS\Core\Resource\FileReference::class, 'FileReference', false);
         $this->registerArgument('name', 'string', 'FileName of SVG without extension. Either prefixable with path.', false, '');
         $this->registerArgument('path', 'string', 'Optional path to directory', false);
         $this->registerArgument('useThemePath', 'integer', 'Use the configured theme path', false, false);

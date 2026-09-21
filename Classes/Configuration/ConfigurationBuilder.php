@@ -67,9 +67,7 @@ class ConfigurationBuilder implements SingletonInterface
      */
     protected function getTypoScriptService(): TypoScriptService
     {
-        if (is_null($this->typoScriptService)) {
-            $this->typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class);
-        }
+        $this->typoScriptService ??= GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TypoScriptService::class);
 
         return $this->typoScriptService;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'ViewHelpers Collection',
     'description' => 'A collection of more or less useful ViewHelpers',
@@ -10,7 +12,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '1.18.5',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.0-14.4.99',
+            'typo3' => '13.4.0-14.4.99',
             'extbase' => '12.4.0-14.4.99',
             'fluid_styled_content' => '12.4.0-13.4.99',
         ],

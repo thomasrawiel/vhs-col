@@ -29,7 +29,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
     public const SCOPE_VARIABLE_DEFAULT_SOURCE_HEIGHT = 'default-source-height';
 
-    public const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
+    public const SCOPE = \TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper::class;
 
     public const SCOPE_VARIABLE_SRC = 'src';
 
@@ -45,7 +45,15 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'source';
 
-    
+    /**
+     * Constructor
+     */
+    public function __construct(private readonly \TYPO3\CMS\Extbase\Service\ImageService $imageService)
+    {
+        parent::__construct();
+    }
+
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -90,7 +98,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
     /**
      * Render method
      */
-    
+
     public function render(): string
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
@@ -119,7 +127,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             }
         }
 
-        if (is_null($imageSource) || empty($imageSource)) {
+        if (empty($imageSource)) {
             $imageSource = $viewHelperVariableContainer->get('image');
         }
 
@@ -137,9 +145,9 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             'params' => '',
             'crop' => $cropArea->isEmpty() ? null : $cropArea->makeAbsoluteBasedOnFile($imageSource),
         ];
-        /** @var int $quality */
+
         $quality = $this->arguments['quality'];
-        /** @var string $format */
+        // @extensionScannerIgnoreLine
         $format = $this->arguments['format'];
 
         if (!empty($format)) {
@@ -151,7 +159,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             $setup['params'] .= ' -quality ' . $quality;
         }
 
-        $imageService = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\ImageService::class);
+        $imageService = $this->imageService;
         $originalFile = $imageService->getImage(
             is_string($imageSource) || is_int($imageSource) ? $imageSource : '',
             is_object($imageSource) ? $imageSource : null,
@@ -196,11 +204,11 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             FrontendSimulationUtility::resetFrontendEnvironment($tsfeBackup);
         }
 
-        if ($srcsets === [] || $result === null) {
+        if ($srcsets === [] || !$result instanceof \TYPO3\CMS\Core\Resource\ProcessedFile) {
             throw new Exception('No valid source generated for picture.', 2664373806);
         }
 
-        $srcsets = array_map(fn($srcset): string => $this->preprocessSourceUri(rawurldecode((string)$srcset)), $srcsets);
+        $srcsets = array_map(fn($srcset): string => $this->preprocessSourceUri(rawurldecode($srcset)), $srcsets);
 
         $src = implode(', ', $srcsets);
 
@@ -234,8 +242,8 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
                 $prefix = $absRefPrefix === 'auto' ? $request->getAttribute('normalizedParams')->getSitePath() : $absRefPrefix;
                 $src = $prefix . ltrim($src, '/');
             } else {
-                /** @var string $siteUrl */
-                $siteUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+                $normalizedParams = $request->getAttribute('normalizedParams');
+                $siteUrl = $normalizedParams->getSiteUrl();
                 $src = $siteUrl . ltrim($src, '/');
             }
         }

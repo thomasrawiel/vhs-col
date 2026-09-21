@@ -30,11 +30,11 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  *      }
  * }
  */
-final class RecordDataProcessor implements DataProcessorInterface
+final readonly class RecordDataProcessor implements DataProcessorInterface
 {
     public function __construct(
-        private readonly ContentDataProcessor $contentDataProcessor,
-        private readonly ConnectionPool       $connectionPool
+        private ContentDataProcessor $contentDataProcessor,
+        private ConnectionPool       $connectionPool
     )
     {
     }
@@ -54,13 +54,13 @@ final class RecordDataProcessor implements DataProcessorInterface
         $uidSequence = [];
 
         $recordData = GeneralUtility::trimExplode(',', $processedData['data'][$fieldName], true);
-        if (empty($recordData)) {
+        if ($recordData === []) {
             return $processedData;
         }
 
         foreach ($recordData as $data) {
-            if (strpos($data, '_') !== false) {
-                [$table, $uid] = [$table, $uid] = preg_split('~.*\K_~', $data);
+            if (str_contains($data, '_')) {
+                [$table, $uid] = preg_split('~.*\K_~', $data);
             } else {
                 $table = $cObj->stdWrapValue('table', $processorConfiguration, 'pages');
                 $uid = $data;
@@ -77,7 +77,7 @@ final class RecordDataProcessor implements DataProcessorInterface
             $processorConfiguration['table'] = $tableName;
 
             $records = $cObj->getRecords($tableName, $processorConfiguration);
-            if (!empty($records)) {
+            if ($records !== []) {
                 foreach ($this->processRecords($records, $cObj, $tableName, $processorConfiguration) as $record) {
                     $recordList[] = $record;
                 }
@@ -85,7 +85,7 @@ final class RecordDataProcessor implements DataProcessorInterface
         }
 
         $targetVariableName = $cObj->stdWrapValue('as', $processorConfiguration, 'record');
-        if (!empty($recordList)) {
+        if ($recordList !== []) {
             $processedData[$targetVariableName] = $this->sortRecordListByUidList($recordList, $uidSequence);
         }
 
@@ -96,15 +96,16 @@ final class RecordDataProcessor implements DataProcessorInterface
     {
         $orderMap = array_flip($uidList); // [13 => 0, 7 => 1, 42 => 2]
 
-        usort($recordList, static function (array $a, array $b) use ($orderMap): int {
-            return ($orderMap[$a['data']['uid']] ?? PHP_INT_MAX)
-                <=> ($orderMap[$b['data']['uid']] ?? PHP_INT_MAX);
-        });
+        usort($recordList, static fn(array $a, array $b): int => ($orderMap[$a['data']['uid']] ?? PHP_INT_MAX)
+            <=> ($orderMap[$b['data']['uid']] ?? PHP_INT_MAX));
 
         return $recordList;
     }
 
-    protected function processRecords(array $records, ContentObjectRenderer $cObj, string $tableName, array $processorConfiguration)
+    /**
+     * @return mixed[]
+     */
+    protected function processRecords(array $records, ContentObjectRenderer $cObj, string $tableName, array $processorConfiguration): array
     {
         $processedRecordVariables = [];
 
@@ -116,6 +117,7 @@ final class RecordDataProcessor implements DataProcessorInterface
 
                 $currentRecord = $mountedRecords[0];
             }
+
             /** @var ContentObjectRenderer $recordContentObjectRenderer */
             $recordContentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
             $recordContentObjectRenderer->start($currentRecord, $tableName);

@@ -7,20 +7,16 @@ use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Output\OutputInterface;
 use TRAW\VhsCol\Configuration\CropVariants;
 use TRAW\VhsCol\Event\BeforeTablesAreCheckedEvent;
-use TRAW\VhsCol\Event\GetPageMediaFieldsEvent;
 use TRAW\VhsCol\Event\GetTableImageFields;
-use TRAW\VhsCol\Utility\ConfigurationUtility;
+use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Install\Updates\ChattyInterface;
-use TYPO3\CMS\Install\Updates\ConfirmableInterface;
-use TYPO3\CMS\Install\Updates\Confirmation;
-use TYPO3\CMS\Install\Updates\RepeatableInterface;
-use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
+use TYPO3\CMS\Core\Upgrades\ChattyInterface;
+use TYPO3\CMS\Core\Upgrades\ConfirmableInterface;
+use TYPO3\CMS\Core\Upgrades\RepeatableInterface;
+use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
+use TYPO3\CMS\Core\Upgrades\Confirmation;
 use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
-use TYPO3\CMS\Core\Upgrades\ReferenceIndexUpdatedPrerequisite;
 
 #[UpgradeWizard('vhscol_cropAreaMigrate')]
 final class FileReferenceCropAreas implements UpgradeWizardInterface, ConfirmableInterface, RepeatableInterface, ChattyInterface
@@ -85,6 +81,7 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
             if (empty($GLOBALS['TCA'][$table]['types'])) {
                 continue;
             }
+
             $imageFields = $this->eventDispatcher->dispatch(new GetTableImageFields($table, $tableImageFields))->getFields();
             foreach ($GLOBALS['TCA'][$table]['types'] as $typeId => $type) {
                 foreach ($imageFields as $imageField) {
@@ -187,13 +184,13 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
                 ->fetchOne();
 
             if ($fileType !== false && (int)$fileType !== \TYPO3\CMS\Core\Resource\FileType::IMAGE) {
-                $this->output->writeln('<info>File reference ' . $fileReference['uid'] . ' skipped because it\'s not an image</info>');
+                $this->output->writeln('<info>File reference ' . $fileReference['uid'] . " skipped because it's not an image</info>");
                 return;
             }
         }
 
         $crop = json_decode($fileReference['crop'] ?? '', true);
-        if (!is_array($crop) || empty($crop)) {
+        if (!is_array($crop) || $crop === []) {
             $this->output->writeln('<info>File reference ' . $fileReference['uid'] . ' skipped because no crop</info>');
             return;
         }
@@ -203,6 +200,7 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
             unset($crop['default']);
             $fileReference['crop'] = json_encode($crop);
         }
+
         $qb = $this->connectionPool->getConnectionForTable('sys_file_reference');
         $result = $qb->update('sys_file_reference', $fileReference, ['uid' => $fileReference['uid']]);
         if ($result) {
@@ -220,7 +218,8 @@ final class FileReferenceCropAreas implements UpgradeWizardInterface, Confirmabl
         $references = $this->getFileReferences($ignoreTableFields);
         foreach ($references as $fileReference) {
             $this->updateCrop($fileReference);
-        };
+        }
+        ;
         $this->output->writeln('<info>' . count($references) . ' File references updated</info>');
         $this->output->writeln('<success>Done</success>');
 

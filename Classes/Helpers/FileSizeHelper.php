@@ -37,9 +37,10 @@ final class FileSizeHelper
     ): string {
         $units ??= GeneralUtility::trimExplode(',', (string)LocalizationUtility::translate($translateKey, $translateExtension), true);
 
-        if (empty($units) || (count($units) === 1 && trim($units[0]) === '')) {
+        if ($units === [] || (count($units) === 1 && trim($units[0]) === '')) {
             $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         }
+
         $value = (float)$value;
 
         $bytes = max($value, 0);

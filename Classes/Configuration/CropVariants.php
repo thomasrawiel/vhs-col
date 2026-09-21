@@ -51,7 +51,7 @@ final class CropVariants
     {
     }
 
-    public function setupCropVariants(string $_EXTKEY = 'vhs_col', string $table = 'sys_file_reference')
+    public function setupCropVariants(string $_EXTKEY = 'vhs_col', string $table = 'sys_file_reference'): void
     {
         // Set default crop variants (desktop, tablet, mobile)
         //TYPO3\CMS\Backend\Form\Element\ImageManipulationElement::$defaultConfig

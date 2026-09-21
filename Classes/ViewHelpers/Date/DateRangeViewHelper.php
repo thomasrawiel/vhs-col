@@ -69,6 +69,7 @@ class DateRangeViewHelper extends AbstractViewHelper
                 . ' ' . $formats['sep'] . ' '
                 . $endDate->format($formats['date']);
         }
+
         return $startDate->format($formats['date']);
     }
 

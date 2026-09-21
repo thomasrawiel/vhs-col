@@ -132,9 +132,8 @@ class SortViewHelper extends AbstractViewHelper
      * Sort an array
      *
      * @param array|\Iterator $array
-     * @param array           $arguments
      */
-    protected static function sortArray($array, $arguments): array
+    protected static function sortArray($array, array $arguments): array
     {
         $sorted = [];
         foreach ($array as $index => $object) {
@@ -177,11 +176,10 @@ class SortViewHelper extends AbstractViewHelper
      * Sort an ObjectStorage instance
      *
      * @param ObjectStorage<object> $storage
-     * @param array                 $arguments
      *
      * @return ObjectStorage
      */
-    protected function sortObjectStorage($storage, $arguments)
+    protected function sortObjectStorage($storage, array $arguments)
     {
         /** @var ObjectStorage $temp */
         $temp = GeneralUtility::makeInstance(ObjectStorage::class);
@@ -202,7 +200,6 @@ class SortViewHelper extends AbstractViewHelper
     /**
      * Gets the value to use as sorting value from $object
      *
-     * @param mixed $object
      *
      * @return mixed
      */

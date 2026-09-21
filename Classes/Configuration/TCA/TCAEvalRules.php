@@ -25,11 +25,7 @@ final class TCAEvalRules
     /**
      * Add eval rules
      *
-     * @param string $table
-     * @param string $fieldName
-     * @param array  $evalValues
      *
-     * @return void
      */
     public static function addEvalRules(string $table, string $fieldName, array $evalValues): void
     {
@@ -42,9 +38,9 @@ final class TCAEvalRules
         $existingEval = $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] ?? '';
         $eval = array_filter(GeneralUtility::trimExplode(',', (string)$existingEval, true));
         $eval = array_unique(array_merge($eval, $evalValues));
-        $eval = array_filter($eval, static fn(string $value): bool => self::evalRuleIsValid($value));
+        $eval = array_filter($eval, self::evalRuleIsValid(...));
 
-        if(!empty($eval)){
+        if($eval !== []){
             $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
         }
     }
@@ -52,11 +48,7 @@ final class TCAEvalRules
     /**
      * Remove eval rules
      *
-     * @param string $table
-     * @param string $fieldName
-     * @param array  $evalValues
      *
-     * @return void
      */
     public static function removeEvalRules(string $table, string $fieldName, array $evalValues): void
     {
@@ -70,7 +62,7 @@ final class TCAEvalRules
         $eval = array_filter(GeneralUtility::trimExplode(',', (string)$existingEval, true));
         $eval = array_values(array_filter($eval, static fn(string $value): bool => !in_array($value, $evalValues, true)));
 
-        if(!empty($eval)){
+        if($eval !== []){
             $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
         }
     }
@@ -78,22 +70,19 @@ final class TCAEvalRules
     /**
      * Set eval rules, regardless of existing rules
      *
-     * @param string $table
-     * @param string $fieldName
-     * @param array  $evalValues
      *
-     * @return void
      */
-    public static function setEvalRules(string $table, string $fieldName, array $evalValues): void
+    public static function setEvalRules(string $table, string $fieldName): void
     {
         if (empty($GLOBALS['TCA'][$table]['columns'][$fieldName]['config'])
             || !is_array($GLOBALS['TCA'][$table]['columns'][$fieldName]['config'])
         ) {
             return;
         }
-        $eval = array_unique(array_filter($eval, static fn(string $value): bool => self::evalRuleIsValid($value)));
 
-        if(!empty($eval)){
+        $eval = array_unique(array_filter($eval, self::evalRuleIsValid(...)));
+
+        if($eval !== []){
             $GLOBALS['TCA'][$table]['columns'][$fieldName]['config']['eval'] = implode(',', $eval);
         }
     }
@@ -101,23 +90,17 @@ final class TCAEvalRules
     /**
      * Check if eval rules are valid
      *
-     * @param string|null $eval
      *
-     * @return bool
      */
     private static function evalRuleIsValid(?string $eval): bool
     {
         $allowedEvalValues = ['alpha', 'alphanum', 'alphanum_x', 'domainname', 'is_in', 'lower', 'md5', 'nospace', 'num', 'trim', 'unique', 'uniqueInPid', 'upper', 'year'];
 
-        if (in_array($eval, $allowedEvalValues)) {
+        if (in_array($eval, $allowedEvalValues, true)) {
             return true;
         }
 
         //Custom eval rules
-        if (class_exists($eval) && isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][$eval])) {
-            return true;
-        }
-
-        return false;
+        return class_exists($eval) && isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][$eval]);
     }
 }

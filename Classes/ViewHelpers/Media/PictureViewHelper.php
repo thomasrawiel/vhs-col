@@ -15,17 +15,17 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 
 class PictureViewHelper extends AbstractTagBasedViewHelper
 {
-    public const SCOPE_VARIABLE_DEFAULT_SOURCE_WIDTH = 'default-source-width';
+    public const string SCOPE_VARIABLE_DEFAULT_SOURCE_WIDTH = 'default-source-width';
 
-    public const SCOPE_VARIABLE_DEFAULT_SOURCE_HEIGHT = 'default-source-height';
+    public const string SCOPE_VARIABLE_DEFAULT_SOURCE_HEIGHT = 'default-source-height';
 
-    public const SCOPE = 'TRAW\VhsCol\ViewHelpers\Media\PictureViewHelper';
+    public const string SCOPE = PictureViewHelper::class;
 
-    public const SCOPE_VARIABLE_SRC = 'src';
+    public const string SCOPE_VARIABLE_SRC = 'src';
 
-    public const SCOPE_VARIABLE_ID = 'treatIdAsReference';
+    public const string SCOPE_VARIABLE_ID = 'treatIdAsReference';
 
-    public const SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
+    public const string SCOPE_VARIABLE_DEFAULT_SOURCE = 'default-source';
 
     /**
      * name of the tag to be created by this view helper
@@ -35,7 +35,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
      */
     protected $tagName = 'picture';
 
-    
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -60,7 +60,7 @@ class PictureViewHelper extends AbstractTagBasedViewHelper
     /**
      * @throws Exception
      */
-    
+
     public function render(): string
     {
         $src = $this->arguments['src'];

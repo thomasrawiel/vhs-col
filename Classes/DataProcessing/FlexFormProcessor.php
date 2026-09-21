@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace TRAW\VhsCol\DataProcessing;
 
-use TYPO3\CMS\Core\Service\FlexFormService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 
 /**
  * Class FlexformProcessor
  */
-class FlexFormProcessor implements DataProcessorInterface
+readonly class FlexFormProcessor implements DataProcessorInterface
 {
-    /**
-     * @return array
-     */
-    public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData)
+    public function __construct(private FlexFormTools $flexFormTools)
+    {
+    }
+
+    public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
         if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {
             return $processedData;
@@ -34,7 +34,7 @@ class FlexFormProcessor implements DataProcessorInterface
         }
 
         $targetVariableName = $cObj->stdWrapValue('as', $processorConfiguration, 'flexFormData');
-        $flexFormData = GeneralUtility::makeInstance(FlexFormService::class)
+        $flexFormData = $this->flexFormTools
             ->convertFlexFormContentToArray($originalValue);
 
         $processedData[$targetVariableName] = $flexFormData;

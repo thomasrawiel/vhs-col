@@ -19,6 +19,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ImageSizeViewHelper extends AbstractViewHelper
 {
+    public function __construct(private readonly \TYPO3\CMS\Core\Page\AssetCollector $assetCollector)
+    {
+    }
+
     /**
      * Initialize arguments
      */
@@ -34,12 +38,12 @@ class ImageSizeViewHelper extends AbstractViewHelper
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      */
-    
+
     public function render(): int
     {
         $value = 0;
         $usedImage = trim((string)$this->arguments['image']);
-        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
+        $assetCollector = $this->assetCollector;
         $imagesOnPage = $assetCollector->getMedia();
         if (isset($imagesOnPage[$usedImage])) {
             switch ($this->arguments['property']) {
@@ -56,6 +60,7 @@ class ImageSizeViewHelper extends AbstractViewHelper
                     }
             }
         }
+
         return (int)$value;
     }
 }

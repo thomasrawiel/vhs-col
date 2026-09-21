@@ -31,7 +31,7 @@ class ExtensionLoadedViewHelper extends AbstractConditionViewHelper
     /**
      * @param array|null $arguments
      */
-    protected static function evaluateCondition($arguments = null): bool
+    public static function verdict(array $arguments, \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext): bool
     {
         return ExtensionManagementUtility::isLoaded($arguments['extensionKey']);
     }

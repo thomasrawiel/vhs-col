@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 class ContainerMaxWidthViewHelper extends AbstractViewHelper
 {
     public function __construct(private readonly \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool) {}
+
     /**
      * @api
      */
@@ -22,7 +23,7 @@ class ContainerMaxWidthViewHelper extends AbstractViewHelper
         $this->registerArgument('settings', 'array', 'Settings');
     }
 
-    
+
     public function render(): float
     {
         $width = $this->arguments['width'];

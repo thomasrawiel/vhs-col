@@ -43,6 +43,7 @@ class GetCropInfoViewHelper extends AbstractViewHelper
 
             return empty($crop) ? (null) : json_decode((string)$crop, true)[$this->arguments['crop']] ?? null;
         }
+
         return null;
     }
 }

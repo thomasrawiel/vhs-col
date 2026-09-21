@@ -38,6 +38,7 @@ class TelephoneViewHelper extends AbstractViewHelper
         $inputNumberString = $this->arguments['phoneNumber'] ?? $this->renderChildren();
         return PhoneNumberUtility::parsePhoneNumber(
             $inputNumberString,
+            // @extensionScannerIgnoreLine
             $this->arguments['format'] ?? PhoneNumberFormat::RFC3966,
             $this->arguments['defaultRegion'] ?? null
         );

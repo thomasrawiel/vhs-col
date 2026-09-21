@@ -44,13 +44,13 @@ class SplitMenuProcessor extends AbstractSplitMenuProcessor
             return $menu;
         }
 
-        $spacerKeys = array_keys(array_filter($menu, fn($item): bool => $item['spacer'] === 1));
+        $spacerKeys = array_keys(array_filter($menu, fn(array $item): bool => $item['spacer'] === 1));
         if (count($spacerKeys) > $maxSplits) {
             $spacerKeys = array_slice($spacerKeys, 0, $maxSplits);
         }
 
         $menuKeys = array_keys($menu);
-        $splitIndexes = array_map(fn($key): int|false => array_search($key, $menuKeys, true), $spacerKeys);
+        $splitIndexes = array_map(fn(int|string $key): int|false => array_search($key, $menuKeys, true), $spacerKeys);
 
         $splitMenu = [];
         $start = 0;
@@ -77,7 +77,7 @@ class SplitMenuProcessor extends AbstractSplitMenuProcessor
                 continue;
             }
 
-            $filtered = array_filter($part, fn($item): bool => ($item['spacer'] ?? 0) !== 1);
+            $filtered = array_filter($part, fn(array $item): bool => ($item['spacer'] ?? 0) !== 1);
             $menu[$key] = array_values($filtered);
         }
 
