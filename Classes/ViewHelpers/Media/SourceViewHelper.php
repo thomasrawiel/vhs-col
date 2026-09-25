@@ -183,7 +183,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
                 $croppedWidth = 1;
             }
 
-            $originalWidth = $originalFile->getProperty('width') * $croppedWidth;
+            $originalWidth = (int)($originalFile->getProperty('width') * $croppedWidth);
 
             // If original image has a smaller width than our target image, we don't want to upscale.
             // But we need at least one processed image :)
