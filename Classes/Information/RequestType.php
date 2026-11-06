@@ -36,7 +36,7 @@ class RequestType
         return $abbreviate ? $applicationType->abbreviate() : $applicationType;
     }
 
-    protected static function fetchRequest(?ServerRequestInterface $request = null): ServerRequestInterface
+    public static function fetchRequest(?ServerRequestInterface $request = null): ServerRequestInterface
     {
         $r = $request ?? $GLOBALS['TYPO3_REQUEST'] ?? null;
 

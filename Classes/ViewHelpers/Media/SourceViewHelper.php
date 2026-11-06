@@ -13,6 +13,7 @@ use TRAW\VhsCol\Utility\FrontendSimulationUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\FileReference;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3Fluid\Fluid\Core\Exception;
@@ -90,7 +91,7 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
             false,
             $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] ?? 90
         );
-        $this->registerArgument('relative', 'boolean', 'Produce a relative URL instead of absolute', false, false);
+        $this->registerArgument('absolute', 'boolean', 'Produce an absolute URL instead of relative', false, false);
         $this->registerArgument('cropVariant', 'string', 'CropVariant to apply', false, 'default');
         $this->registerArgument('pixelDensities', 'string', 'Pixel densities to apply', false, '1');
     }
@@ -228,23 +229,25 @@ class SourceViewHelper extends AbstractTagBasedViewHelper
 
     public function preprocessSourceUri(string $src): string
     {
-        $request = $GLOBALS['TYPO3_REQUEST'];
+        $request = RequestType::fetchRequest();
 
         $setupArray = $request->getAttribute('frontend.typoscript')->getSetupArray();
 
         if (!empty($setupArray['plugin.']['tx_vhscol.']['settings.']['prependPath'])) {
             $src = $setupArray['plugin.']['tx_vhscol.']['settings.']['prependPath'] . $src;
-        } elseif (RequestType::isBackend() || !$this->arguments['relative']) {
+        } elseif (RequestType::isBackend() || $this->arguments['absolute']) {
             if (GeneralUtility::isValidUrl($src)) {
                 $src = ltrim($src, '/');
             } elseif (RequestType::isFrontend()) {
-                $absRefPrefix = $setupArray['config.']['absRefPrefix'] ?? '/';
-                $prefix = $absRefPrefix === 'auto' ? $request->getAttribute('normalizedParams')->getSitePath() : $absRefPrefix;
-                $src = $prefix . ltrim($src, '/');
+                $site = $request->getAttribute('site');
+
+                if ($site instanceof Site) {
+                    $base = (string)$site->getBase();
+                    $src = $base . ltrim($src, str_ends_with($base, '/') ? '/' : '');
+                }
             } else {
-                $normalizedParams = $request->getAttribute('normalizedParams');
-                $siteUrl = $normalizedParams->getSiteUrl();
-                $src = $siteUrl . ltrim($src, '/');
+                $base = $request->getAttribute('normalizedParams')?->getSiteUrl();
+                $src = $base . ltrim($src, str_ends_with($base, '/') ? '/' : '');
             }
         }
 
